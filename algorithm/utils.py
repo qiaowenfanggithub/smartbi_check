@@ -9,7 +9,7 @@ Description :
 
 Author : leiliang
 
-Date : 2020/6/28 3:17 下午
+Date : 2020/7/9 3:54 下午
 
 --------------------------------------------------------
 
@@ -24,27 +24,29 @@ import pymysql
 
 # ======================= 算法预处理 =============================
 # 特征编码
-def data_encoder(data: pd.DataFrame, column_name, use_onehot=False, default_value=0):
-    if use_onehot:
-        if column_name not in data.columns:
-            raise ValueError("{} not in {} columns".format(column_name, data))
-        data = data.join(pd.get_dummies(data[column_name]))
-        data.drop([column_name], axis=1, inplace=True)
-    else:
-        # Replace missing values with "U0"
-        data[column_name][data[column_name].isnull()] = default_value
-        # convert the distinct cabin letters with incremental integer values
-        data[column_name] = pd.factorize(data[column_name].iloc[:, 0])[0]
+def data_encoder(data: pd.DataFrame, column_name_list, use_onehot=False, default_value=0):
+    for column_name in column_name_list:
+        if use_onehot:
+            if column_name not in data.columns:
+                raise ValueError("{} not in {} columns".format(column_name, data))
+            data = data.join(pd.get_dummies(data[column_name]))
+            data.drop([column_name], axis=1, inplace=True)
+        else:
+            # Replace missing values with "default_value"
+            data[column_name][data[column_name].isnull()] = default_value
+            # convert the distinct cabin letters with incremental integer values
+            data[column_name] = pd.factorize(data[column_name])[0]
     return data
 
 
 # 归一化
-def data_standard(data: pd.DataFrame, column_name, method="normal"):
-    if method == "normal":
-        data[column_name] = (data[column_name] - data[column_name].min()) / (
-                data[column_name].max() - data[column_name].min())
-    else:
-        data[column_name] = (data[column_name] - data[column_name].mean()) / (data[column_name].std())
+def data_standard(data: pd.DataFrame, column_name_list, method="normal"):
+    for column_name in column_name_list:
+        if method == "normal":
+            data[column_name] = (data[column_name] - data[column_name].min()) / (
+                    data[column_name].max() - data[column_name].min())
+        else:
+            data[column_name] = (data[column_name] - data[column_name].mean()) / (data[column_name].std())
     return data
 
 
@@ -135,7 +137,7 @@ def data_corr_plot(data, figsize=(20, 16)):
     corr = data.corr()
     plt.figure(figsize=figsize)
     sns.heatmap(corr, xticklabels=corr.columns, yticklabels=corr.columns,
-                     linewidths=0.2, cmap="YlGnBu", annot=True)
+                linewidths=0.2, cmap="YlGnBu", annot=True)
     plt.title("Correlation between variables")
     plt.savefig("corr_plot.png")
 
@@ -147,15 +149,11 @@ def data_scatter_plot(data, col_name_X, col_name_Y):
     plt.savefig("scatter_plot_{}_by_{}.png".format(col_name_Y, col_name_X))
 
 
-def get_data_from_mysql(sql_sentence, host=None, port=None, user=None, password=None, database=None):
+def get_dataframe_from_mysql(sql_sentence, host=None, port=None, user=None, password=None, database=None):
     conn = pymysql.connect(host='rm-2ze5vz4174qj2epm7so.mysql.rds.aliyuncs.com', port=3306, user='yzkj',
                            password='yzkj2020@', database='sophia_manager', charset='utf8')
-    curs = conn.cursor()
     try:
-        sql = sql_sentence
-        curs.execute(sql)
-        res = curs.fetchall()
-        return res
+        df = pd.read_sql(sql_sentence, conn)
+        return df
     except Exception as e:
         raise e
-
