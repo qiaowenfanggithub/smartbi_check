@@ -1,0 +1,828 @@
+# -*- coding = 'utf-8' -*-
+"""
+
+--------------------------------------------------------
+
+File Name : single_samples_t
+
+Description : 
+
+Author : leiliang
+
+Date : 2020/7/1 3:30 下午
+
+--------------------------------------------------------
+
+"""
+from __future__ import print_function
+from flask import Flask, request, jsonify
+import logging
+import time
+import json
+import numpy as np
+import pandas as pd
+from flask_cors import *
+from utils import get_dataframe_from_mysql
+from flask.json import JSONEncoder as _JSONEncoder
+from anova_one_way import normal_test, levene_test, anova_analysis, multiple_test
+from anova_all_way import anova_analysis_multivariate, multiple_test_multivariate
+from t_single import t_single_analysis
+from t_two_independent import t_two_independent_analysis
+from nonparametric_two_independent import wilcoxon_ranksums_test, mannwhitneyu_test
+from nonparametric_two_pair import mannwhitneyu_test_with_diff
+from nonparametric_multi_independent import kruskal_test, median_test
+
+log = logging.getLogger(__name__)
+
+app = Flask(__name__)
+CORS(app, supports_credentials=True)
+
+
+class JSONEncoder(_JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        else:
+            return super(JSONEncoder, self).default(obj)
+
+
+def init_route():
+    log_file = "statistic.log"
+    logging.basicConfig(filename=log_file,
+                        format="%(asctime)s [ %(levelname)-6s ] %(message)s",
+                        level='INFO')
+    logging.getLogger().addFilter(logging.StreamHandler())
+    logging.getLogger("requests").setLevel(logging.WARNING)
+    try:
+        request_data = request.json
+        log.info(request_data)
+    except Exception as e:
+        log.info(e)
+        raise e
+    log.info("receive request :{}".format(request_data))
+    return request_data
+
+
+# ================================ 单因素方差分析 ==============================
+@app.route('/anovaOneWay/test', methods=['POST', 'GET'])
+def test_anova_one_way():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1", "x2"], # list,自变量
+        "Y": ["y"], # list,因变量
+        "alpha": "0.05", # str,置信区间百分比
+        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+    }
+    :return:
+    """
+    log.info('anova_one_way_test_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        alpha = float(request_data['alpha'])
+        table_direction = request_data['table_direction']
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    try:
+        """
+            正太分布检验
+        """
+        if table_direction == "v":
+            every_level_data_index = [d for d in data[X[0]].unique()]
+            every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
+        elif table_direction == "h":
+            every_level_data_index = X
+            every_level_data = [data[l].astype("float16") for l in X]
+        else:
+            raise ValueError("table direction must be h or v")
+        normal_res = normal_test(every_level_data_index, every_level_data, alpha)
+        """
+            方差齐性检验
+        """
+        equal_variances_res = levene_test(*every_level_data, alpha=alpha)
+        response_data = {"normalTest": normal_res,
+                         "equalVariancesTest": equal_variances_res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
+
+
+@app.route('/anovaOneWay/results', methods=['POST', 'GET'])
+def results_anova_one_way():
+    """
+    单因素方差分析结果展示
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1", "x2"], # list,自变量
+        "Y": ["y"], # list,因变量
+        "alpha": "0.05", # str,置信区间百分比
+        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+    }
+    :return:
+    """
+    log.info('anova_one_way_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        alpha = float(request_data['alpha'])
+        table_direction = request_data['table_direction']
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    data_info = {"row": data.describe().index.values,
+                 "col": data.describe().columns.values,
+                 "data": data.describe().values.tolist()}
+    assert len(X) == 1
+    if table_direction == "h":
+        level_index = []
+        value = []
+        for x in X:
+            level_index.extend([x] * len(data[x]))
+            value.extend(data[x].values.to_list())
+        data = pd.DataFrame({"level": level_index, "value": value}, dtype="float16")
+        X = ["levle"]
+        Y = ["value"]
+    elif table_direction == "v":
+        data[Y[0]] = data[Y[0]].astype("float16")
+    else:
+        raise ValueError("table direction must be v or h")
+    """
+        单因素方差分析
+    """
+    anova_res = anova_analysis(data, X[0], Y[0])
+    """
+        多重比较
+    """
+    multiple_res = multiple_test(data, alpha=alpha)
+    response_data = {"anova_res": anova_res,
+                     "data_info": data_info,
+                     "multiple_res": multiple_res,
+                     "code": "200",
+                     "msg": "ok!"}
+    return jsonify(response_data)
+
+
+# ================================ 多因素方差分析 ==============================
+@app.route('/anovaAllWay/test', methods=['POST', 'GET'])
+def test_anova_all_way():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1", "x2"], # list,自变量
+        "Y": ["y"], # list,因变量
+        "alpha": "0.05", # str,置信区间百分比
+        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+    }
+    :return:
+    """
+    log.info('anova_all_way_test_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        alpha = float(request_data['alpha'])
+        # todo:暂时只支持竖向表格
+        table_direction = request_data['table_direction']
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    try:
+        normal_res_list = []
+        equal_variances_res_list = []
+        for i in range(len(X)):
+            every_level_data_index = [d for d in data[X[i]].unique()]
+            every_level_data = [data[data[X[i]] == d][Y[0]].astype("float16") for d in data[X[i]].unique()]
+            """
+                正太分布检验
+            """
+            normal_res = normal_test(every_level_data_index, every_level_data, alpha)
+            normal_res_list.append((X[i], normal_res))
+            """
+                方差齐性检验
+            """
+            equal_variances_res = levene_test(*every_level_data, alpha=alpha)
+            equal_variances_res_list.append((X[i], equal_variances_res))
+        response_data = {"normalTest": normal_res_list,
+                         "equalVariancesTest": equal_variances_res_list,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
+
+
+@app.route('/anovaAllWay/results', methods=['POST', 'GET'])
+def results_anova_all_way():
+    """
+    单因素方差分析结果展示
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1", "x2"], # list,自变量
+        "Y": ["y"], # list,因变量
+        "alpha": "0.05", # str,置信区间百分比
+        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+    }
+    :return:
+    """
+    log.info('anova_all_way_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        alpha = float(request_data['alpha'])
+        # todo:暂时只支持竖向表格
+        table_direction = request_data['table_direction']
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    data[Y[0]] = data[Y[0]].astype("float16")
+    """
+        多因素方差分析
+    """
+    anova_res_multivariate = anova_analysis_multivariate(data, X, Y)
+    """
+        多重比较
+    """
+    multiple_res_multivariate = multiple_test_multivariate(data, X, Y, alpha=alpha)
+    response_data = {"anova_res": anova_res_multivariate,
+                     "multiple_res": multiple_res_multivariate,
+                     "code": "200",
+                     "msg": "ok!"}
+    return jsonify(response_data)
+
+
+# ================================ 单样本t检验 ==============================
+@app.route('/tSingle/test', methods=['POST', 'GET'])
+def test_t_single():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["value"], # list,自变量
+        "alpha": "0.05", # str,置信区间百分比
+    }
+    :return:
+    """
+    log.info('t_single_test_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        alpha = float(request_data['alpha'])
+        X = request_data['X']
+        Y = request_data['Y']
+    except Exception as e:
+        log.info(e)
+        raise e
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    try:
+        data_x = [np.float16(d) for d in data[X[0]]]
+        normal_res = normal_test([X[0]], [data_x], alpha=alpha)
+        response_data = {"normalTest": normal_res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
+
+
+@app.route('/tSingle/results', methods=['POST', 'GET'])
+def results_t_single():
+    """
+    单因素方差分析结果展示
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["value"], # list,自变量
+        "mean": "0", # str,样本均值
+        "alpha": "0.05", # str,置信区间百分比
+    }
+    :return:
+    """
+    log.info('t_single_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        data_mean = float(request_data['mean'])
+        # todo:alpha在这里怎么用
+        alpha = float(request_data['alpha'])
+        X = request_data['X']
+        Y = request_data['Y']
+    except Exception as e:
+        log.info(e)
+        raise e
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    """
+        单样本t检验
+    """
+    t_single_res = t_single_analysis(data[X[0]].astype("float16"), data_mean)
+    response_data = {"res": t_single_res,
+                     "code": "200",
+                     "msg": "ok!"}
+    return jsonify(response_data)
+
+
+# ================================ 独立样本t检验 ==============================
+@app.route('/tTwoIndependent/test', methods=['POST', 'GET'])
+def test_t_two_independent():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1", "x2"], # list,自变量
+        "Y": ["y"], # list,因变量
+        "alpha": "0.05", # str,置信区间百分比
+        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+    }
+    :return:
+    """
+    log.info('t_two_independent_test_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        alpha = float(request_data['alpha'])
+        table_direction = request_data['table_direction']
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    try:
+        """
+            正太分布检验
+        """
+        if table_direction == "v":
+            every_level_data_index = [d for d in data[X[0]].unique()]
+            every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
+        elif table_direction == "h":
+            every_level_data_index = X
+            every_level_data = [data[l].astype("float16") for l in X]
+        else:
+            raise ValueError("table direction must be h or v")
+        normal_res = normal_test(every_level_data_index, every_level_data, alpha)
+        response_data = {"normalTest": normal_res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
+
+
+@app.route('/tTwoIndependent/results', methods=['POST', 'GET'])
+def results_t_two_independent():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1", "x2"], # list,自变量
+        "Y": ["y"], # list,因变量
+        "alpha": "0.05", # str,置信区间百分比
+        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+    }
+    :return:
+    """
+    log.info('t_two_independent_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        alpha = float(request_data['alpha'])
+        table_direction = request_data['table_direction']
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    try:
+        """
+            两独立样本t检验分析
+        """
+        if table_direction == "v":
+            assert len(data[X[0]].unique()) == 2, "input x must only 2 level"
+            every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
+        elif table_direction == "h":
+            every_level_data = [data[l].astype("float16") for l in X]
+        else:
+            raise ValueError("table direction must be h or v")
+        t_two_independent_res = t_two_independent_analysis(every_level_data[0], every_level_data[1], alpha=alpha)
+        response_data = {"res": t_two_independent_res,
+                         "row": X,
+                         "col": ["equal_var", "F值", "Significance", "t值", "p值"],
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
+
+
+# ================================ 配对样本t检验 ==============================
+@app.route('/tTwoPair/test', methods=['POST', 'GET'])
+def test_t_two_pair():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1", "x2"], # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["y"], # list,因变量,当表格方向为v是使用
+        "alpha": "0.05", # str,置信区间百分比
+        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+    }
+    :return:
+    """
+    log.info('t_two_pair_test_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        table_direction = request_data['table_direction']
+        alpha = float(request_data['alpha'])
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    try:
+        """
+            正太分布检验
+        """
+        if table_direction == "v":
+            assert Y[0] != "", "input Y must not be empty when table direction is v"
+            every_level_data_index = [d for d in data[X[0]].unique()]
+            every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
+        elif table_direction == "h":
+            every_level_data_index = X
+            every_level_data = [data[l].astype("float16") for l in X]
+        else:
+            raise ValueError("table direction must be h or v")
+        normal_res = normal_test(every_level_data_index, every_level_data, alpha)
+        response_data = {"normalTest": normal_res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
+
+
+@app.route('/tTwoPair/results', methods=['POST', 'GET'])
+def results_t_two_pair():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1", "x2"], # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["y"], # list,因变量,当表格方向为v是使用
+        "alpha": "0.05", # str,置信区间百分比
+        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+    }
+    :return:
+    """
+    log.info('t_two_pair_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        table_direction = request_data['table_direction']
+        alpha = float(request_data['alpha'])
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    try:
+        """
+            两独立样本t检验分析
+        """
+        if table_direction == "v":
+            assert len(data[X[0]].unique()) == 2, "input x must only 2 level"
+            assert Y[0] != "", "input Y must not be empty when table direction is v"
+            every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
+        elif table_direction == "h":
+            assert Y[0] == "", "input Y must not be empty when table direction is h"
+            every_level_data = [data[l].astype("float16") for l in X]
+        else:
+            raise ValueError("table direction must be h or v")
+        t_two_independent_res = t_two_independent_analysis(every_level_data[0], every_level_data[1], alpha=alpha)
+        response_data = {"res": t_two_independent_res,
+                         "row": X,
+                         "col": ["equal_var", "F值", "Significance", "t值", "p值"],
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
+
+
+# ================================ 两独立样本非参数检验 ==============================
+@app.route('/nonparametricTwoIndependent/results', methods=['POST', 'GET'])
+def results_nonparametric_two_independent():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1", "x2"], # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["y"], # list,因变量,当表格方向为v是使用
+        "alpha": "0.05", # str,置信区间百分比
+        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+    }
+    :return:
+    """
+    log.info('nonparametric_two_independent_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        table_direction = request_data['table_direction']
+        alpha = float(request_data['alpha'])
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    try:
+        if table_direction == "v":
+            every_level_data_index = [d for d in data[X[0]].unique()]
+            every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
+        elif table_direction == "h":
+            every_level_data_index = X
+            every_level_data = [data[l].astype("float16") for l in X]
+        else:
+            raise ValueError("table direction must be h or v")
+        res = [{"mannwhitneyu_test": mannwhitneyu_test(every_level_data[0], every_level_data[1])},
+               {"wilcoxon_ranksums": wilcoxon_ranksums_test(every_level_data[0], every_level_data[1])}]
+        response_data = {"res": res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
+
+
+# ================================ 两配对样本非参数检验 ==============================
+@app.route('/nonparametricTwoPair/results', methods=['POST', 'GET'])
+def results_nonparametric_two_pair():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1", "x2"], # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["y"], # list,因变量,当表格方向为v是使用
+        "alpha": "0.05", # str,置信区间百分比
+        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+    }
+    :return:
+    """
+    log.info('nonparametric_two_pair_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        table_direction = request_data['table_direction']
+        alpha = float(request_data['alpha'])
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    try:
+        if table_direction == "v":
+            every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
+        elif table_direction == "h":
+            every_level_data = [data[l].astype("float16") for l in X]
+        else:
+            raise ValueError("table direction must be h or v")
+        if len(X) == 2:
+            mannwhitneyu_test_res = mannwhitneyu_test(every_level_data[0], every_level_data[1])
+        elif len(X) == 1:
+            mannwhitneyu_test_res = mannwhitneyu_test_with_diff(data[X[0]].astype("float16"))
+        else:
+            raise ValueError("input X must be 1 or 2")
+        # todo:这里应该是要加入秩和检验
+        res = [{"mannwhitneyu_test": mannwhitneyu_test_res}]
+        response_data = {"res": res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
+
+
+# ================================ 多个独立样本非参数检验 ==============================
+@app.route('/nonparametricMultiIndependent/results', methods=['POST', 'GET'])
+def results_nonparametric_multi_independent():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1", "x2"], # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["y"], # list,因变量,当表格方向为v是使用
+        "alpha": "0.05", # str,置信区间百分比
+        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+    }
+    :return:
+    """
+    log.info('nonparametric_multi_independent_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        table_direction = request_data['table_direction']
+        alpha = float(request_data['alpha'])
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    try:
+        if table_direction == "v":
+            every_level_data_index = [d for d in data[X[0]].unique()]
+            every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
+        elif table_direction == "h":
+            every_level_data_index = X
+            every_level_data = [data[l].astype("float16") for l in X]
+        else:
+            raise ValueError("table direction must be h or v")
+        kw_res = kruskal_test(*every_level_data)
+        median_res = median_test(*every_level_data, col_list=every_level_data_index)
+        response_data = {"kw_res": kw_res,
+                         "median_res": median_res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
+
+
+if __name__ == '__main__':
+    app.json_encoder = JSONEncoder
+    app.config['JSON_AS_ASCII'] = False
+    app.run(debug=True, port=5000)
