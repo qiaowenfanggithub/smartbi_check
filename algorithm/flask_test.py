@@ -72,12 +72,12 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logistics/train', json=kwargs, timeout=30)
 
     # ======================= 逻辑回归-预测(多个测试样本) =============================
-    # kwargs = {
-    #     "oneSample": False,  # 是否批量上传数据进行预测
-    #     "tableName": "buy_computer_new",  # str,数据库表名
-    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logistics/predict', json=kwargs, timeout=30)
+    kwargs = {
+        "oneSample": False,  # 是否批量上传数据进行预测
+        "tableName": "buy_computer_new",  # str,数据库表名
+        "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/logistics/predict', json=kwargs, timeout=30)
 
     # ======================= 逻辑回归-预测(单个测试样本) =============================
     # kwargs = {
@@ -128,10 +128,10 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/predict', json=kwargs, timeout=30)
 
     # ======================= 决策树-预测(单个测试样本) =============================
-    kwargs = {
-        "oneSample": True,  # 是否批量上传数据进行预测
-        "tableName": "buy_computer_new",  # str,数据库表名
-        "X": [0, 0, 0, 0],  # list,自变量，每个元素是浮点类型
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/decisionTree/predict', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "oneSample": True,  # 是否批量上传数据进行预测
+    #     "tableName": "buy_computer_new",  # str,数据库表名
+    #     "X": [0, 0, 0, 0],  # list,自变量，每个元素是浮点类型
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/decisionTree/predict', json=kwargs, timeout=30)
     print(res.text)

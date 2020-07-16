@@ -2,8 +2,6 @@
 from scipy.stats import ttest_1samp, stats
 import numpy as np
 
-
-
 '''
 二、T检验
 '''
@@ -23,6 +21,20 @@ def t_single_analysis(data, u):
     return [("样本个数", sample_num), ("t值", ttest), ("p值", pval),
             ("样本均值", sample_mean), ("样本标准差", sample_std), ("样本标准误差平均值", se),
             ("差值的95%置信区间上限", upper), ("差值的95%置信区间下限", lower)]
+
+
+"""
+    描述性统计分析
+"""
+
+
+def t_single_describe_info(data, X):
+    return {
+        "row": X[0],
+        "col": ["count", "mean", "std", "std_err"],
+        "data": [data[X[0]].count(), data[X[0]].mean(),
+                 data[X[0]].std(), data[X[0]].std() / np.sqrt(data[X[0]].count())]
+    }
 
 
 if __name__ == '__main__':

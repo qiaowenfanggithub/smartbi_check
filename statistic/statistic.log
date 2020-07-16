@@ -779,3 +779,157 @@
 2020-07-09 14:56:14,054 [ INFO   ] 单侧检测，备择假设为"<"：
 2020-07-09 14:56:14,059 [ INFO   ] 127.0.0.1 - - [09/Jul/2020 14:56:14] "[37mPOST /nonparametricTwoPair/results HTTP/1.1[0m" 200 -
 2020-07-09 15:00:29,935 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistic/main.py', reloading
+2020-07-15 23:04:30,468 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05'}
+2020-07-15 23:04:30,478 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05'}
+2020-07-15 23:04:30,478 [ INFO   ] 'table_direction'
+2020-07-15 23:04:30,497 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:04:30] "[1m[35mPOST /anovaOneWay/test HTTP/1.1[0m" 500 -
+2020-07-15 23:04:30,502 [ INFO   ] nonparametric_two_pair_get_results_init...
+2020-07-15 23:04:30,502 [ INFO   ] {'table_name': 'nonparametric_two_pair_diff', 'X': ['x1'], 'Y': [''], 'alpha': '0.05', 'table_direction': 'h'}
+2020-07-15 23:04:30,502 [ INFO   ] receive request :{'table_name': 'nonparametric_two_pair_diff', 'X': ['x1'], 'Y': [''], 'alpha': '0.05', 'table_direction': 'h'}
+2020-07-15 23:04:30,811 [ INFO   ] 输入数据大小:12
+2020-07-15 23:04:30,813 [ ERROR  ] 'numpy.ndarray' object has no attribute 'to_list'
+2020-07-15 23:04:30,832 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:04:30] "[1m[35mPOST /nonparametricTwoPair/results HTTP/1.1[0m" 500 -
+2020-07-15 23:04:41,293 [ INFO   ] anova_one_way_test_init...
+2020-07-15 23:04:41,293 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05'}
+2020-07-15 23:04:41,293 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05'}
+2020-07-15 23:04:41,293 [ INFO   ] 'table_direction'
+2020-07-15 23:04:41,306 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:04:41] "[1m[35mPOST /anovaOneWay/test HTTP/1.1[0m" 500 -
+2020-07-15 23:04:41,309 [ INFO   ] nonparametric_two_pair_get_results_init...
+2020-07-15 23:04:41,310 [ INFO   ] {'table_name': 'nonparametric_two_pair_diff', 'X': ['x1'], 'Y': [''], 'alpha': '0.05', 'table_direction': 'h'}
+2020-07-15 23:04:41,310 [ INFO   ] receive request :{'table_name': 'nonparametric_two_pair_diff', 'X': ['x1'], 'Y': [''], 'alpha': '0.05', 'table_direction': 'h'}
+2020-07-15 23:04:41,360 [ INFO   ] 输入数据大小:12
+2020-07-15 23:04:41,361 [ ERROR  ] 'numpy.ndarray' object has no attribute 'to_list'
+2020-07-15 23:04:41,385 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:04:41] "[1m[35mPOST /nonparametricTwoPair/results HTTP/1.1[0m" 500 -
+2020-07-15 23:04:41,543 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/utils.py', reloading
+2020-07-15 23:05:14,879 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05'}
+2020-07-15 23:05:14,880 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05'}
+2020-07-15 23:05:14,880 [ INFO   ] 'table_direction'
+2020-07-15 23:05:14,893 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:05:14] "[1m[35mPOST /anovaOneWay/test HTTP/1.1[0m" 500 -
+2020-07-15 23:05:14,897 [ INFO   ] nonparametric_two_pair_get_results_init...
+2020-07-15 23:05:14,898 [ INFO   ] {'table_name': 'nonparametric_two_pair_diff', 'X': ['x1'], 'Y': [''], 'alpha': '0.05', 'table_direction': 'h'}
+2020-07-15 23:05:14,898 [ INFO   ] receive request :{'table_name': 'nonparametric_two_pair_diff', 'X': ['x1'], 'Y': [''], 'alpha': '0.05', 'table_direction': 'h'}
+2020-07-15 23:05:15,146 [ INFO   ] 输入数据大小:12
+2020-07-15 23:05:50,143 [ ERROR  ] 'levle'
+2020-07-15 23:05:50,641 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:05:50] "[1m[35mPOST /nonparametricTwoPair/results HTTP/1.1[0m" 500 -
+2020-07-15 23:05:57,806 [ INFO   ] anova_one_way_test_init...
+2020-07-15 23:05:57,807 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05'}
+2020-07-15 23:05:57,807 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05'}
+2020-07-15 23:05:57,807 [ INFO   ] 'table_direction'
+2020-07-15 23:05:57,819 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:05:57] "[1m[35mPOST /anovaOneWay/test HTTP/1.1[0m" 500 -
+2020-07-15 23:05:57,823 [ INFO   ] nonparametric_two_pair_get_results_init...
+2020-07-15 23:05:57,823 [ INFO   ] {'table_name': 'nonparametric_two_pair_diff', 'X': ['x1'], 'Y': [''], 'alpha': '0.05', 'table_direction': 'h'}
+2020-07-15 23:05:57,823 [ INFO   ] receive request :{'table_name': 'nonparametric_two_pair_diff', 'X': ['x1'], 'Y': [''], 'alpha': '0.05', 'table_direction': 'h'}
+2020-07-15 23:05:57,893 [ INFO   ] 输入数据大小:12
+2020-07-15 23:06:01,443 [ ERROR  ] 'levle'
+2020-07-15 23:06:01,503 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:06:01] "[1m[35mPOST /nonparametricTwoPair/results HTTP/1.1[0m" 500 -
+2020-07-15 23:06:04,626 [ INFO   ] anova_one_way_test_init...
+2020-07-15 23:06:04,626 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05'}
+2020-07-15 23:06:04,627 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05'}
+2020-07-15 23:06:04,627 [ INFO   ] 'table_direction'
+2020-07-15 23:06:04,640 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:06:04] "[1m[35mPOST /anovaOneWay/test HTTP/1.1[0m" 500 -
+2020-07-15 23:06:04,644 [ INFO   ] nonparametric_two_pair_get_results_init...
+2020-07-15 23:06:04,644 [ INFO   ] {'table_name': 'nonparametric_two_pair_diff', 'X': ['x1'], 'Y': [''], 'alpha': '0.05', 'table_direction': 'h'}
+2020-07-15 23:06:04,644 [ INFO   ] receive request :{'table_name': 'nonparametric_two_pair_diff', 'X': ['x1'], 'Y': [''], 'alpha': '0.05', 'table_direction': 'h'}
+2020-07-15 23:06:04,703 [ INFO   ] 输入数据大小:12
+2020-07-15 23:06:04,707 [ ERROR  ] 'levle'
+2020-07-15 23:06:04,762 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:06:04] "[1m[35mPOST /nonparametricTwoPair/results HTTP/1.1[0m" 500 -
+2020-07-15 23:06:31,869 [ INFO   ] anova_one_way_test_init...
+2020-07-15 23:06:31,869 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05'}
+2020-07-15 23:06:31,869 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05'}
+2020-07-15 23:06:31,869 [ INFO   ] 'table_direction'
+2020-07-15 23:06:31,882 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:06:31] "[1m[35mPOST /anovaOneWay/test HTTP/1.1[0m" 500 -
+2020-07-15 23:07:06,554 [ INFO   ] anova_one_way_test_init...
+2020-07-15 23:07:06,554 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:07:06,555 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:07:06,617 [ INFO   ] 输入数据大小:90
+2020-07-15 23:07:06,640 [ ERROR  ] No numeric types to aggregate
+2020-07-15 23:07:06,673 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:07:06] "[1m[35mPOST /anovaOneWay/test HTTP/1.1[0m" 500 -
+2020-07-15 23:07:35,130 [ INFO   ] anova_one_way_test_init...
+2020-07-15 23:07:35,131 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:07:35,131 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:07:35,243 [ INFO   ] 输入数据大小:90
+2020-07-15 23:07:50,645 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:07:50,645 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:07:50,892 [ INFO   ] 输入数据大小:90
+2020-07-15 23:07:59,030 [ INFO   ] anova_one_way_test_init...
+2020-07-15 23:07:59,030 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:07:59,030 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:07:59,092 [ INFO   ] 输入数据大小:90
+2020-07-15 23:18:34,913 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:18:34,913 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:18:35,275 [ INFO   ] 输入数据大小:90
+2020-07-15 23:18:47,844 [ ERROR  ] unsupported operand type(s) for -: 'float' and 'str'
+2020-07-15 23:18:47,891 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:18:47] "[1m[35mPOST /anovaOneWay/test HTTP/1.1[0m" 500 -
+2020-07-15 23:19:04,500 [ INFO   ] anova_one_way_test_init...
+2020-07-15 23:19:04,501 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:19:04,501 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:19:04,560 [ INFO   ] 输入数据大小:90
+2020-07-15 23:20:21,643 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:20:21,644 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:20:21,874 [ INFO   ] 输入数据大小:90
+2020-07-15 23:22:46,890 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:22:46,890 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:22:47,131 [ INFO   ] 输入数据大小:90
+2020-07-15 23:24:37,603 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:24:37,604 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:24:37,832 [ INFO   ] 输入数据大小:90
+2020-07-15 23:25:27,200 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:25:27,200 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:25:27,487 [ INFO   ] 输入数据大小:90
+2020-07-15 23:25:30,554 [ INFO   ] 统计量:2.7722199654115256,P值:0.25004609885321805
+2020-07-15 23:25:30,554 [ INFO   ] use normaltest
+2020-07-15 23:25:30,554 [ INFO   ] data are normal distributed
+2020-07-15 23:25:30,557 [ INFO   ] 统计量:1.7629668380223937,P值:0.414168070970821
+2020-07-15 23:25:30,557 [ INFO   ] use normaltest
+2020-07-15 23:25:30,557 [ INFO   ] data are normal distributed
+2020-07-15 23:25:30,560 [ INFO   ] 统计量:0.461496339476071,P值:0.7939393788238944
+2020-07-15 23:25:30,561 [ INFO   ] use normaltest
+2020-07-15 23:25:30,561 [ INFO   ] data are normal distributed
+2020-07-15 23:25:30,565 [ INFO   ] variances of groups are equal
+2020-07-15 23:25:30,569 [ INFO   ] variances of groups are equal
+2020-07-15 23:25:30,571 [ INFO   ] variances of groups are equal
+2020-07-15 23:25:30,575 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:25:30] "[37mPOST /anovaOneWay/test HTTP/1.1[0m" 200 -
+2020-07-15 23:27:58,806 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:27:58,806 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:27:59,064 [ INFO   ] 输入数据大小:90
+2020-07-15 23:27:59,109 [ INFO   ] ---------------------multiple test------------------
+2020-07-15 23:27:59,149 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:27:59] "[37mPOST /anovaOneWay/results HTTP/1.1[0m" 200 -
+2020-07-15 23:28:55,732 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/statistic/anova_one_way.py', reloading
+2020-07-15 23:29:58,483 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:29:58,483 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:29:58,788 [ INFO   ] 输入数据大小:90
+2020-07-15 23:29:58,835 [ INFO   ] ---------------------multiple test------------------
+2020-07-15 23:29:58,878 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:29:58] "[37mPOST /anovaOneWay/results HTTP/1.1[0m" 200 -
+2020-07-15 23:30:09,640 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:30:09,640 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:30:09,931 [ INFO   ] 输入数据大小:90
+2020-07-15 23:30:09,980 [ INFO   ] ---------------------multiple test------------------
+2020-07-15 23:30:10,016 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:30:10] "[37mPOST /anovaOneWay/results HTTP/1.1[0m" 200 -
+2020-07-15 23:30:52,892 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:30:52,892 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-15 23:30:53,134 [ INFO   ] 输入数据大小:90
+2020-07-15 23:30:53,180 [ INFO   ] ---------------------multiple test------------------
+2020-07-15 23:30:53,216 [ INFO   ] 127.0.0.1 - - [15/Jul/2020 23:30:53] "[37mPOST /anovaOneWay/results HTTP/1.1[0m" 200 -
+2020-07-15 23:34:12,554 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/statistic/main.py', reloading
+2020-07-16 15:31:20,841 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-16 15:31:20,842 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-16 15:31:21,202 [ INFO   ] 输入数据大小:90
+2020-07-16 15:31:21,256 [ INFO   ] 统计量:2.7722199654115256,P值:0.25004609885321805
+2020-07-16 15:31:21,256 [ INFO   ] use normaltest
+2020-07-16 15:31:21,257 [ INFO   ] data are normal distributed
+2020-07-16 15:31:21,258 [ INFO   ] 统计量:1.7629668380223937,P值:0.414168070970821
+2020-07-16 15:31:21,258 [ INFO   ] use normaltest
+2020-07-16 15:31:21,259 [ INFO   ] data are normal distributed
+2020-07-16 15:31:21,260 [ INFO   ] 统计量:0.461496339476071,P值:0.7939393788238944
+2020-07-16 15:31:21,261 [ INFO   ] use normaltest
+2020-07-16 15:31:21,261 [ INFO   ] data are normal distributed
+2020-07-16 15:31:21,263 [ INFO   ] variances of groups are equal
+2020-07-16 15:31:21,264 [ INFO   ] variances of groups are equal
+2020-07-16 15:31:21,265 [ INFO   ] variances of groups are equal
+2020-07-16 15:31:21,269 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 15:31:21] "[37mPOST /anovaOneWay/test HTTP/1.1[0m" 200 -
+2020-07-16 15:32:29,459 [ INFO   ] anova_one_way_get_results_init...
+2020-07-16 15:32:29,462 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-16 15:32:29,462 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-16 15:32:29,648 [ INFO   ] 输入数据大小:90
+2020-07-16 15:32:29,729 [ INFO   ] ---------------------multiple test------------------
+2020-07-16 15:32:29,774 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 15:32:29] "[37mPOST /anovaOneWay/results HTTP/1.1[0m" 200 -

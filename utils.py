@@ -157,3 +157,15 @@ def get_dataframe_from_mysql(sql_sentence, host=None, port=None, user=None, pass
         return df
     except Exception as e:
         raise e
+
+
+def transform_h_table_data_to_v(data: pd.DataFrame, X):
+    level_index = []
+    value = []
+    for x in X:
+        level_index.extend([x] * len(data[x]))
+        value.extend(data[x].values.tolist())
+    data = pd.DataFrame({"level": level_index, "value": value}, dtype="float16")
+    X = ["levle"]
+    Y = ["value"]
+    return data, X, Y

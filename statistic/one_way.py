@@ -1,7 +1,6 @@
 # !/usr/bin/python3
 # -*- coding: utf-8 -*-
 import os
-os.chdir('/Users/chuckzhao/Documents/qwf/pyworkspace/')
 import numpy as np
 import pandas as pd
 import itertools
@@ -13,12 +12,10 @@ import scipy,math
 from itertools import combinations
 from statsmodels.stats.multicomp import pairwise_tukeyhsd,MultiComparison
 
-
-
 '''
 准备数据
 '''
-data = pd.read_excel('one_v.xlsx',index = False)
+data = pd.read_excel('./data/one_v.xlsx',index = False)
 level1 = data[data['method'] == 1]['score']
 level2 = data[data['method'] == 2]['score']
 level3 = data[data['method'] == 3]['score']
@@ -109,6 +106,7 @@ def Levene_test(*args,alpha = 0.05):
 # 单因素方差分析
 model = ols('score ~ C(method)',data).fit()
 anova_result = anova_lm(model)
+print("ok")
 
 
 #多因素方差分析
@@ -197,7 +195,7 @@ Levene_test(level1,level2,level3,alpha=0.05)
 print(anova_result)
 
 # 四、两两比较
-Multiple_test(list_levels)
+# Multiple_test(list_levels)
 print(more_result)
 
 

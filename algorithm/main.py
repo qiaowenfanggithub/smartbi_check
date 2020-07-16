@@ -69,7 +69,7 @@ def init_route():
     return request_data
 
 
-def show_results(x, y, model, label_list):
+def show_results(x, y, model):
     """
     预测结果输出
     :param x: 测试集特征
@@ -85,21 +85,22 @@ def show_results(x, y, model, label_list):
     # recall_score = metrics.recall_score(y, y_predict)
     # f1_score = metrics.f1_score(y, y_predict)
     confusion_matrix = metrics.confusion_matrix(y, y_predict)
-    report = metrics.classification_report(y, y_predict, target_names=label_list)
+    report = metrics.classification_report(y, y_predict, target_names=model.classes_.tolist())
     roc_auc_res = {}
-    for idx, label in enumerate(label_list):
+    for idx, label in enumerate(model.classes_):
         # fpr,tpr用于绘制曲线
         fpr, tpr, threshold = metrics.roc_curve(y, y_predict_proba[:, idx], pos_label=label)
         auc_score = metrics.auc(fpr, tpr)
         roc_auc_res.update({label: {
-            "fpr": fpr,
-            "tpr": tpr,
-            "threshold": threshold,
+            "fpr": fpr.tolist(),
+            "tpr": tpr.tolist(),
+            "threshold": threshold.tolist(),
             "auc_score": auc_score,
         }})
+
+
     return {
-        "pred_label": y_predict,
-        "confusion_matrix": confusion_matrix,
+        "confusion_matrix": confusion_matrix.tolist(),
         "roc_auc_res": roc_auc_res,
         "report": report,
     }
@@ -337,6 +338,9 @@ def logistics_train():
         log.info(e.args)
         raise e
     log.info("输入数据大小:{}".format(len(data)))
+    # 数据类型统一为float
+    data[X] = data[X].astype("float16")
+    data[Y] = data[Y].astype("str")
     try:
         # 测试模型
         if not is_train:
@@ -346,15 +350,29 @@ def logistics_train():
             test_model = joblib.load(lastest_model_path)
             x_test = data.loc[:, X].values
             y_test = data[Y[0]].values
+            # 输出测试集分类结果
+            classifier_res = show_results(x_test, y_test, test_model)
 
-            label_list = np.unique(y_test)
-            # 输出测试集结果
-            test_results = show_results(x_test, y_test, test_model, label_list)
+            # 拟合优度结果
+            try:
+                import statsmodels.api as sm
+            except:
+                raise ImportError("statsmodels.api cannot import")
+            try:
+                x = sm.add_constant(x_test)
+                logit_stats_model = sm.Logit(y_test.astype("int16"), x)
+                logit_stats_res = logit_stats_model.fit()
+                # 拟合优度
+                logit_regression_res = logit_stats_res.summary().tables[0].data
+                # 系数解读
+                coef_explain = logit_stats_res.summary().tables[1].data
+            except Exception as e:
+                log.error("statsmodels analysis error")
+                raise e
 
-            # 可视化决策树图
-            # generate_tree_graph(test_model, x_test.columns, label_list)
-
-            response_data = {"res": test_results,
+            response_data = {"classifier_res": classifier_res,
+                             "logit_regression_res": logit_regression_res,
+                             "coef_explain": coef_explain,
                              "code": "200",
                              "msg": "ok!"}
             return jsonify(response_data)
@@ -379,17 +397,32 @@ def logistics_train():
             joblib.dump(model, "./model/LogisticRegression/{}.pkl".format(
                 time.strftime("%y-%m-%d-%H-%M-%S", time.localtime())))
 
-            label_list = np.unique(y_train)
             # 输出测试集结果
-            test_results = show_results(x_test, y_test, model, label_list)
+            classifier_res = show_results(x_test, y_test, model)
 
-            # 可视化决策树图
-            # generate_tree_graph(model, X, label_list)
+            # 拟合优度结果
+            try:
+                import statsmodels.api as sm
+            except:
+                raise ImportError("statsmodels.api cannot import")
+            try:
+                x = sm.add_constant(x_test)
+                logit_stats_model = sm.Logit(y_test.astype("int16"), x)
+                logit_stats_res = logit_stats_model.fit()
+                # 拟合优度
+                logit_regression_res = logit_stats_res.summary().tables[0].data
+                # 系数解读
+                coef_explain = logit_stats_res.summary().tables[1].data
+            except Exception as e:
+                log.error("statsmodels analysis error")
+                raise e
 
-            response_data = {"res": test_results,
-                             "graph": "",
+            response_data = {"classifier_res": classifier_res,
+                             "logit_regression_res": logit_regression_res,
+                             "coef_explain": coef_explain,
                              "code": "200",
-                             "msg": "ok!"}
+                             "msg": "ok!",
+                             }
             return jsonify(response_data)
     except Exception as e:
         log.error(e)
@@ -442,6 +475,7 @@ def logistics_predict():
                      "code": "200",
                      "msg": "ok!"}
     return jsonify(response_data)
+
 
 # ================================ K-means 训练 ==============================
 @app.route('/algorithm/kMeans', methods=['POST', 'GET'])
@@ -507,6 +541,7 @@ def kmeans():
         log.error(e)
         raise e
         # return jsonify({"data": "", "code": "500", "msg": e.args})
+
 
 # ================================ 随机森林-训练 ==============================
 @app.route('/algorithm/randomForest/train', methods=['POST', 'GET'])
@@ -619,6 +654,7 @@ def random_forest_train():
         log.error(e)
         raise e
         # return jsonify({"data": "", "code": "500", "msg": e.args})
+
 
 # ================================ 随机森林-预测 ==============================
 @app.route('/algorithm/randomForest/predict', methods=['POST', 'GET'])

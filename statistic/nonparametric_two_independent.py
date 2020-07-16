@@ -45,6 +45,19 @@ def mannwhitneyu_test(x1, x2):
             {"data": res}]
 
 
+def nonparam_two_independent_describe_info(data, X, Y):
+    data_groupby = data.groupby(X)
+    new_data = pd.concat([data_groupby[Y[0]].count(), data_groupby[Y[0]].mean(),
+                          data_groupby[Y[0]].std(),
+                          data_groupby[Y[0]].std() / data_groupby[Y[0]].count()], axis=1)
+    new_data.columns = ["count", "mean", "std", "std_err"]
+    return {
+        "row": new_data.index.values.tolist(),
+        "col": new_data.columns.values.tolist(),
+        "data": new_data.values.tolist(),
+    }
+
+
 if __name__ == '__main__':
     data = pd.read_csv('./data/nonparametric_two_independent.csv')
 

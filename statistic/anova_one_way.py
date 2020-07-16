@@ -30,11 +30,11 @@ def check_normality(testData, alpha=0.05):
         if normaltest_p < alpha:
             log.info('use normaltest')
             log.info('data are not normal distributed')
-            return normaltest_statistic, normaltest_p, "normaltest", False
+            return normaltest_statistic, normaltest_p, False
         else:
             log.info('use normaltest')
             log.info('data are normal distributed')
-            return normaltest_statistic, normaltest_p, "normaltest", True
+            return normaltest_statistic, normaltest_p, True
     # 样本数小于50用Shapiro-Wilk算法检验正态分布性
     if len(testData) < 50:
         # Perform the Shapiro-Wilk test for normality. https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.stats.shapiro.html
@@ -43,11 +43,11 @@ def check_normality(testData, alpha=0.05):
         if shapiro_p < alpha:
             log.info("use shapiro:")
             log.info("data are not normal distributed")
-            return shapiro_statistic, shapiro_p, "shapiro", False
+            return shapiro_statistic, shapiro_p, False
         else:
             log.info("use shapiro:")
             log.info("data are normal distributed")
-            return shapiro_statistic, shapiro_p, "shapiro", True
+            return shapiro_statistic, shapiro_p, True
     if 300 >= len(testData) >= 50:
         # https://blog.csdn.net/qq_20207459/article/details/103000285
         lilliefors_statistic, lilliefors_p = lilliefors(testData)
@@ -55,22 +55,22 @@ def check_normality(testData, alpha=0.05):
         if lilliefors_p < alpha:
             log.info("use lillifors:")
             log.info("data are not normal distributed")
-            return lilliefors_statistic, lilliefors_p, "lillifors", False
+            return lilliefors_statistic, lilliefors_p, False
         else:
             log.info("use lillifors:")
             log.info("data are normal distributed")
-            return lilliefors_statistic, lilliefors_p, "lillifors", True
+            return lilliefors_statistic, lilliefors_p, True
     if len(testData) > 300:
         kstest_statistic, kstest_p = scipy.stats.kstest(testData, 'norm')
         log.info("统计量:{},P值:{}".format(kstest_statistic, kstest_p))
         if kstest_p < alpha:
             log.info("use kstest:")
             log.info("data are not normal distributed")
-            return kstest_statistic, kstest_p, "kstest", False
+            return kstest_statistic, kstest_p, False
         else:
             log.info("use kstest:")
             log.info("data are normal distributed")
-            return kstest_statistic, kstest_p, "kstest", True
+            return kstest_statistic, kstest_p, True
 
 
 #  对所有样本组进行正态性检验
@@ -81,10 +81,11 @@ def normal_test(index_list, list_groups, alpha=0.05):
         # 正态性检验
         res_one_level = check_normality(group, alpha)
         res.append(res_one_level)
-    return [{"title": "正态性检验"},
-            {"row": index_list},
-            {"col": ["统计量", "P值", "正太检验方法", "reject"]},
-            {"data": res}]
+    return {"title": "正态性检验",
+            "remarks": "注: 拒绝原假设, False表示不拒绝原假设, True表示拒绝原假设",
+            "row": index_list,
+            "col": ["因子水平", "正态性检验统计", "显著性",  "拒绝原假设"],
+            "data": res}
 
 
 '''
@@ -93,15 +94,26 @@ def normal_test(index_list, list_groups, alpha=0.05):
 
 
 def levene_test(*args, alpha=0.05):
-    leveneTest_statistic, leveneTest_p = scipy.stats.levene(*args)
-    log.info(leveneTest_statistic, leveneTest_p)
-    if leveneTest_p < alpha:
-        log.info("variances of groups are not equal")
-        return leveneTest_statistic, leveneTest_p, False
-    else:
-        log.info("variances of groups are equal")
-        return leveneTest_statistic, leveneTest_p, True
+    res = []
+    row = []
+    center_dict = {"mean": "基于平均值", "median": "基于中位数", "trimmed": "基于剪除后平均值"}
+    for c in ["mean", "median", "trimmed"]:
+        row.append(center_dict[c])
+        leveneTest_statistic, leveneTest_p = scipy.stats.levene(*args, center=c)
+        if leveneTest_p < alpha:
+            log.info("variances of groups are not equal")
+            res.append([leveneTest_statistic, leveneTest_p, False])
+        else:
+            log.info("variances of groups are equal")
+            res.append([leveneTest_statistic, leveneTest_p, True])
+    return {
+        "row": row,
+        "col": ["莱文统计", "显著性", "拒绝原假设"],
+        "data": res,
+        "title": "方差齐性检验",
+        "remarks": "注: 拒绝原假设, False表示不拒绝原假设, True表示拒绝原假设"
 
+    }
 
 '''
 三、F检验/ANOVA 表
@@ -109,10 +121,29 @@ def levene_test(*args, alpha=0.05):
 
 
 # 单因素方差分析
-def anova_analysis(data, level, value):
+def anova_analysis(data, level, value, alpha=0.05):
     model = ols('{} ~ C({})'.format(value, level), data).fit()
     anova_result = anova_lm(model)
-    return anova_result.to_dict()
+    anova_result.fillna("", inplace=True)
+    anova_result.index = ["组间", "组内"]
+    anova_result.columns = ["自由度", "平方和", "均方", "F", "显著性"]
+    anova_result = anova_result.append(pd.DataFrame([[anova_result["自由度"].sum(), anova_result["平方和"].sum(), "", "", ""]],
+                                                 index=["总计"], columns=anova_result.columns))
+    anova_result["拒绝原假设"] = pd.Series([bool(anova_result["显著性"][0] - alpha), "", ""], index=["组间", "组内", "总计"])
+    anova_result = anova_result.round({
+        "自由度": 0,
+        "平方和": 4,
+        "均方": 4,
+        "F": 8,
+        "显著性": 8,
+    })
+    return {
+        "row": anova_result.index.tolist(),
+        "col": anova_result.columns.tolist(),
+        "data": anova_result.values.tolist(),
+        "title": "ANOVA",
+        "remarks": "注: 拒绝原假设, False表示不拒绝原假设, True表示拒绝原假设"
+    }
 
 
 # 多因素方差分析
@@ -197,7 +228,81 @@ def multiple_test(data, alpha=0.05):
     res_summary = res.summary().data
     for r in range(1, len(res_summary)):
         res_summary[r][-1] = str(res_summary[r][-1])
-    return res_summary
+    return {
+        "col": res_summary[0],
+        "data": res_summary[1:],
+        "title": "多重比较",
+        "remarks": "注：多重比较方法基于Tukey HSD。拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
+    }
+
+
+# 描述性统计分析数据
+def anova_one_way_describe_info(data: pd.DataFrame, X, Y, alpha=0.05):
+    # 个案数
+    data_count_by_level = data.groupby(X)[Y[0]].count()
+    data_count_total = data[Y[0]].count()
+    # 均值
+    data_mean_by_level = data.groupby(X)[Y[0]].mean()
+    data_mean_total = data[Y[0]].mean()
+    # 标准偏差
+    data_std_by_level = data.groupby(X)[Y[0]].std()
+    data_std_total = data[Y[0]].std()
+    # 标准错误 = 标准偏差 / sqrt(个案数)
+    data_std_err_by_level = data_std_by_level / np.sqrt(data_count_by_level)
+    data_std_err_total = data_std_total / np.sqrt(data_count_total)
+    # 置信区间下限
+    data_df_by_level = data_count_by_level - 1
+    data_df_by_level = data_df_by_level.apply(lambda x: stats.t.ppf(alpha / 2, x))
+    data_df_by_level_sub = data_mean_by_level - data_df_by_level * data_std_err_by_level
+    data_df_by_level_plus = data_mean_by_level + data_df_by_level * data_std_err_by_level
+    data_df_by_level = pd.concat([data_df_by_level_sub, data_df_by_level_plus], axis=1)
+    data_lower_by_level = data_df_by_level.apply(lambda x: min(x), axis=1)
+    data_t = stats.t.ppf(alpha / 2, data_count_total - 1)
+    data_lower_total = min(data_mean_total - data_t * data_std_err_total, data_mean_total + data_t * data_std_err_total)
+    # 置信区间上限
+    data_upper_by_level = data_df_by_level.apply(lambda x: max(x), axis=1)
+    data_upper_total = max(data_mean_total - data_t * data_std_err_total, data_mean_total + data_t * data_std_err_total)
+    # 最小值
+    data_min_by_level = data.groupby(X)[Y[0]].min()
+    data_min_total = data[Y[0]].min()
+    # 最大值
+    data_max_by_level = data.groupby(X)[Y[0]].max()
+    data_max_total = data[Y[0]].max()
+    new_data_by_level = pd.concat([data_count_by_level, data_mean_by_level,
+                                   data_std_by_level, data_std_err_by_level,
+                                   data_lower_by_level, data_upper_by_level,
+                                   data_min_by_level, data_max_by_level], axis=1)
+    alpha_range = (1 - alpha) * 100
+    # new_data_by_level.columns = ["个案数", "平均值", "标准偏差", "标准错误", "下限", "上限", "最小值", "最大值"]
+    new_data_by_level.columns = ["个案数", "平均值", "标准偏差", "标准错误",
+                                 "均值的百分之{:.0f}置信区间-下限".format(alpha_range),
+                                 "均值的百分之{:.0f}置信区间-上限".format(alpha_range),
+                                 "最小值", "最大值"]
+    new_data_total = pd.DataFrame([[data_count_total, data_mean_total,
+                                    data_std_total, data_std_err_total,
+                                    data_lower_total, data_upper_total,
+                                    data_min_total, data_max_total]],
+                                  columns=["个案数", "平均值", "标准偏差", "标准错误",
+                                             "均值的百分之{:.0f}置信区间-下限".format(alpha_range),
+                                             "均值的百分之{:.0f}置信区间-上限".format(alpha_range),
+                                             "最小值", "最大值"], index=["总计"])
+    new_data = pd.concat([new_data_by_level, new_data_total], axis=0)
+    new_data = new_data.round({
+        "个案数": 0,
+        "平均值": 4,
+        "标准偏差": 4,
+        "标准错误": 4,
+        "均值的百分之{:.0f}置信区间-下限".format(alpha_range): 4,
+        "均值的百分之{:.0f}置信区间-上限".format(alpha_range): 4,
+        "最小值": 4,
+        "最大值": 4
+    })
+    return {
+        "row": new_data.index.values[:-1].tolist(),
+        "col": new_data.columns.values.tolist(),
+        "data": new_data.values.tolist(),
+        "title": "描述性统计分析"
+    }
 
 
 '''
@@ -208,6 +313,7 @@ if __name__ == '__main__':
     准备数据
     '''
     data = pd.read_excel('./data/one_v.xlsx', index=False)
+    data = data.astype(int)
     level1 = data[data['method'] == 1]['score']
     level2 = data[data['method'] == 2]['score']
     level3 = data[data['method'] == 3]['score']
@@ -217,16 +323,19 @@ if __name__ == '__main__':
 
     alpha = 0.05
 
-    # 一、正态性检验
-    normal_test(level_index, list_levels, alpha=0.05)
+    # # 一、正态性检验
+    # print(normal_test(level_index, list_levels, alpha=0.05))
+    #
+    # # 二、方差齐性检验
+    # print(levene_test(level1, level2, level3, alpha=0.05))
+    #
+    # # 三、F检验
+    print(anova_analysis(data, "method", "score"))
+    #
+    # # 四、两两比较
+    # # Multiple_test(list_levels)
+    # print(multiple_test(data))
 
-    # 二、方差齐性检验
-    levene_test(level1, level2, level3, alpha=0.05)
-
-    # 三、F检验
-    anova_analysis(data, "score", "method")
-
-    # 四、两两比较
-    # Multiple_test(list_levels)
-    res = multiple_test(data)
-    print(res)
+    # 描述性统计分析
+    # res = anova_one_way_describe_info(data, ["method"])
+    # print(res)

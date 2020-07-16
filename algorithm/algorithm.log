@@ -452,3 +452,351 @@ Reshape your data either using array.reshape(-1, 1) if your data has a single fe
 2020-07-13 21:14:58,551 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
 2020-07-13 21:14:58,551 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
 2020-07-13 21:14:58,555 [ INFO   ] 127.0.0.1 - - [13/Jul/2020 21:14:58] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 09:16:26,742 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 09:16:26,754 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 09:16:31,232 [ INFO   ] 输入数据大小:14
+2020-07-16 09:22:56,915 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 09:22:56,915 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 09:22:57,395 [ INFO   ] 输入数据大小:14
+2020-07-16 09:36:39,386 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/algorithm/main.py', reloading
+2020-07-16 10:06:48,417 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:06:48,418 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:06:48,833 [ INFO   ] 输入数据大小:14
+2020-07-16 10:07:03,008 [ INFO   ] logistics_train_init...
+2020-07-16 10:07:03,010 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:07:03,010 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:07:03,108 [ INFO   ] 输入数据大小:14
+2020-07-16 10:08:32,567 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:08:32,568 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:08:32,851 [ INFO   ] 输入数据大小:14
+2020-07-16 10:08:32,863 [ ERROR  ] '<' not supported between instances of 'str' and 'float'
+2020-07-16 10:08:33,286 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:08:33] "[1m[35mPOST /algorithm/logistics/train HTTP/1.1[0m" 500 -
+2020-07-16 10:08:33,290 [ INFO   ] decision_tree_predict_init...
+2020-07-16 10:08:33,291 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 10:08:33,291 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 10:08:33,295 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:08:33] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 10:08:50,426 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:08:50,427 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:08:50,701 [ INFO   ] 输入数据大小:14
+2020-07-16 10:08:50,712 [ ERROR  ] '<' not supported between instances of 'str' and 'float'
+2020-07-16 10:08:51,181 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:08:51] "[1m[35mPOST /algorithm/logistics/train HTTP/1.1[0m" 500 -
+2020-07-16 10:08:51,186 [ INFO   ] decision_tree_predict_init...
+2020-07-16 10:08:51,187 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 10:08:51,187 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 10:08:51,192 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:08:51] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 10:08:56,657 [ INFO   ] logistics_train_init...
+2020-07-16 10:08:56,658 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:08:56,658 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:08:56,725 [ INFO   ] 输入数据大小:14
+2020-07-16 10:34:48,007 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:34:48,007 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:34:48,373 [ INFO   ] 输入数据大小:14
+2020-07-16 10:35:22,069 [ ERROR  ] '<' not supported between instances of 'str' and 'float'
+2020-07-16 10:35:35,303 [ INFO   ] logistics_train_init...
+2020-07-16 10:35:35,304 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:35:35,304 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:35:35,378 [ INFO   ] 输入数据大小:14
+2020-07-16 10:36:15,561 [ INFO   ] logistics_train_init...
+2020-07-16 10:36:15,561 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:36:15,561 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:36:15,724 [ INFO   ] 输入数据大小:14
+2020-07-16 10:36:22,054 [ ERROR  ] '<' not supported between instances of 'str' and 'float'
+2020-07-16 10:36:23,322 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:36:23] "[1m[35mPOST /algorithm/logistics/train HTTP/1.1[0m" 500 -
+2020-07-16 10:36:23,327 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:36:23] "[1m[35mPOST /algorithm/logistics/train HTTP/1.1[0m" 500 -
+2020-07-16 10:37:02,724 [ INFO   ] logistics_train_init...
+2020-07-16 10:37:02,725 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:37:02,725 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:37:02,881 [ INFO   ] 输入数据大小:14
+2020-07-16 10:37:04,333 [ ERROR  ] '<' not supported between instances of 'str' and 'float'
+2020-07-16 10:37:04,418 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:37:04] "[1m[35mPOST /algorithm/logistics/train HTTP/1.1[0m" 500 -
+2020-07-16 10:38:42,188 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:38:42,188 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:38:42,679 [ INFO   ] 输入数据大小:14
+2020-07-16 10:38:57,570 [ ERROR  ] show_results() takes 3 positional arguments but 4 were given
+2020-07-16 10:39:57,840 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:39:57,840 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:39:58,123 [ INFO   ] 输入数据大小:14
+2020-07-16 10:39:58,152 [ ERROR  ] object of type 'numpy.float16' has no len()
+2020-07-16 10:39:58,176 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:39:58] "[1m[35mPOST /algorithm/logistics/train HTTP/1.1[0m" 500 -
+2020-07-16 10:39:58,179 [ INFO   ] decision_tree_predict_init...
+2020-07-16 10:39:58,180 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 10:39:58,180 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 10:39:58,187 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:39:58] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 10:40:31,347 [ INFO   ] logistics_train_init...
+2020-07-16 10:40:31,347 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:40:31,347 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:40:31,425 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/algorithm/main.py', reloading
+2020-07-16 10:40:43,135 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:40:43,135 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:40:43,376 [ INFO   ] 输入数据大小:14
+2020-07-16 10:40:54,264 [ ERROR  ] object of type 'numpy.float16' has no len()
+2020-07-16 10:41:37,573 [ INFO   ] logistics_train_init...
+2020-07-16 10:41:37,574 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:41:37,574 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:41:37,687 [ INFO   ] 输入数据大小:14
+2020-07-16 10:41:40,835 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:41:40] "[1m[35mPOST /algorithm/logistics/train HTTP/1.1[0m" 500 -
+2020-07-16 10:46:38,277 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:46:38,277 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:46:38,613 [ INFO   ] 输入数据大小:14
+2020-07-16 10:46:38,642 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:46:38] "[1m[35mPOST /algorithm/logistics/train HTTP/1.1[0m" 500 -
+2020-07-16 10:46:38,646 [ INFO   ] decision_tree_predict_init...
+2020-07-16 10:46:38,647 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 10:46:38,647 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 10:46:38,652 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:46:38] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 10:51:31,128 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:51:31,128 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:51:31,441 [ INFO   ] 输入数据大小:14
+2020-07-16 10:52:33,514 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:52:33,514 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:52:33,762 [ INFO   ] 输入数据大小:14
+2020-07-16 10:54:48,949 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:54:48,949 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:54:49,286 [ INFO   ] 输入数据大小:14
+2020-07-16 10:55:22,713 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:55:22] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 10:55:42,973 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:55:42,974 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:55:43,255 [ INFO   ] 输入数据大小:14
+2020-07-16 10:55:43,301 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:55:43] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 10:55:43,305 [ INFO   ] decision_tree_predict_init...
+2020-07-16 10:55:43,305 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 10:55:43,305 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 10:55:43,310 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:55:43] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 10:55:59,034 [ INFO   ] logistics_train_init...
+2020-07-16 10:55:59,035 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:55:59,035 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:55:59,122 [ INFO   ] 输入数据大小:14
+2020-07-16 10:56:24,227 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:56:24] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 10:56:24,237 [ INFO   ] decision_tree_predict_init...
+2020-07-16 10:56:24,240 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 10:56:24,241 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 10:56:24,251 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 10:56:24] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 10:59:29,474 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:59:29,474 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 10:59:29,834 [ INFO   ] 输入数据大小:14
+2020-07-16 11:00:02,610 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:00:02] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:00:15,118 [ INFO   ] logistics_train_init...
+2020-07-16 11:00:15,119 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:00:15,119 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:00:15,211 [ INFO   ] 输入数据大小:14
+2020-07-16 11:00:15,259 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:00:15] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:00:15,263 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:00:15,263 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:00:15,263 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:00:15,269 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:00:15] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:00:36,884 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:00:36,885 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:00:37,223 [ INFO   ] 输入数据大小:14
+2020-07-16 11:00:37,271 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:00:37] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:00:37,275 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:00:37,275 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:00:37,275 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:00:37,280 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:00:37] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:04:04,888 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:04:04,889 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:04:05,398 [ INFO   ] 输入数据大小:14
+2020-07-16 11:04:53,532 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:04:53] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:04:59,450 [ INFO   ] logistics_train_init...
+2020-07-16 11:04:59,451 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:04:59,451 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:04:59,517 [ INFO   ] 输入数据大小:14
+2020-07-16 11:04:59,579 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:04:59] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:04:59,587 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:04:59,587 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:04:59,588 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:04:59,595 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:04:59] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:05:45,300 [ INFO   ] logistics_train_init...
+2020-07-16 11:05:45,301 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:05:45,301 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:05:45,370 [ INFO   ] 输入数据大小:14
+2020-07-16 11:07:21,594 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:07:21,595 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:07:21,922 [ INFO   ] 输入数据大小:14
+2020-07-16 11:07:57,783 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:07:57,783 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:07:58,013 [ INFO   ] 输入数据大小:14
+2020-07-16 11:08:28,411 [ INFO   ] logistics_train_init...
+2020-07-16 11:08:28,413 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:08:28,413 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:08:28,503 [ INFO   ] 输入数据大小:14
+2020-07-16 11:08:28,552 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:08:28] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:08:28,555 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:08:28,556 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:08:28,556 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:08:28,561 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:08:28] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:09:10,014 [ INFO   ] logistics_train_init...
+2020-07-16 11:09:10,014 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:09:10,015 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:09:10,113 [ INFO   ] 输入数据大小:14
+2020-07-16 11:09:10,175 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:09:10] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:09:10,179 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:09:10,180 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:09:10,180 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:09:10,183 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:09:10] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:09:17,451 [ INFO   ] logistics_train_init...
+2020-07-16 11:09:17,452 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:09:17,452 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:09:17,522 [ INFO   ] 输入数据大小:14
+2020-07-16 11:09:17,563 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:09:17] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:09:17,567 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:09:17,568 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:09:17,568 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:09:17,571 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:09:17] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:14:19,088 [ INFO   ] logistics_train_init...
+2020-07-16 11:14:19,089 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:14:19,089 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:14:19,154 [ INFO   ] 输入数据大小:14
+2020-07-16 11:14:19,190 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:14:19] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:14:19,194 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:14:19,194 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:14:19,195 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:14:19,198 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:14:19] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:14:29,323 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:14:29,323 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:14:29,554 [ INFO   ] 输入数据大小:14
+2020-07-16 11:14:29,600 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:14:29] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:14:29,604 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:14:29,604 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:14:29,604 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:14:29,609 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:14:29] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:22:48,792 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:22:48,792 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:22:49,055 [ INFO   ] 输入数据大小:14
+2020-07-16 11:23:03,473 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:23:03] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:23:03,495 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:23:03,496 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:23:03,496 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:23:03,508 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:23:03] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:24:30,866 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:24:30,866 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:24:31,113 [ INFO   ] 输入数据大小:14
+2020-07-16 11:24:33,410 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:24:33] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:24:33,422 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:24:33,424 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:24:33,425 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:24:33,437 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:24:33] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:25:30,651 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:25:30,651 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:25:30,906 [ INFO   ] 输入数据大小:14
+2020-07-16 11:25:32,857 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:25:32] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:25:32,865 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:25:32,865 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:25:32,865 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:25:32,872 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:25:32] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:25:39,107 [ INFO   ] logistics_train_init...
+2020-07-16 11:25:39,108 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:25:39,108 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:25:39,167 [ INFO   ] 输入数据大小:14
+2020-07-16 11:25:49,515 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:25:49] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:25:49,524 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:25:49,526 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:25:49,527 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:25:49,535 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:25:49] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:26:01,679 [ INFO   ] logistics_train_init...
+2020-07-16 11:26:01,679 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:26:01,679 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:26:01,777 [ INFO   ] 输入数据大小:14
+2020-07-16 11:26:17,456 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:26:17] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:26:17,474 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:26:17,476 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:26:17,476 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:26:17,485 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:26:17] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:27:06,478 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:27:06,478 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:27:06,728 [ INFO   ] 输入数据大小:14
+2020-07-16 11:27:08,871 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:27:08] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:27:08,889 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:27:08,892 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:27:08,893 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:27:08,907 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:27:08] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:27:19,933 [ INFO   ] logistics_train_init...
+2020-07-16 11:27:19,933 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:27:19,933 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:27:20,010 [ INFO   ] 输入数据大小:14
+2020-07-16 11:27:20,054 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:27:20] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:27:20,058 [ INFO   ] decision_tree_predict_init...
+2020-07-16 11:27:20,059 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:27:20,059 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [0, 0, 0, 0]}
+2020-07-16 11:27:20,062 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:27:20] "[37mPOST /algorithm/decisionTree/predict HTTP/1.1[0m" 200 -
+2020-07-16 11:28:35,568 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:28:35,568 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:28:35,837 [ INFO   ] 输入数据大小:14
+2020-07-16 11:28:36,244 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:28:36] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:30:10,375 [ INFO   ] logistics_train_init...
+2020-07-16 11:30:10,375 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:30:10,375 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:30:10,448 [ INFO   ] 输入数据大小:14
+2020-07-16 11:30:10,474 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:30:10] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 11:31:09,225 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:31:09,225 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:31:09,570 [ INFO   ] 输入数据大小:14
+2020-07-16 11:31:14,604 [ ERROR  ] statsmodels analysis error
+2020-07-16 11:32:12,934 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:32:12,934 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:32:13,205 [ INFO   ] 输入数据大小:14
+2020-07-16 11:32:47,793 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:32:47,793 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:32:48,043 [ INFO   ] 输入数据大小:14
+2020-07-16 11:32:49,871 [ ERROR  ] object of type 'numpy.int16' has no len()
+2020-07-16 11:32:49,917 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:32:49] "[1m[35mPOST /algorithm/logistics/train HTTP/1.1[0m" 500 -
+2020-07-16 11:33:45,042 [ INFO   ] logistics_train_init...
+2020-07-16 11:33:45,042 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:33:45,042 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:33:45,124 [ INFO   ] 输入数据大小:14
+2020-07-16 11:34:40,892 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:34:40,892 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:34:41,135 [ INFO   ] 输入数据大小:14
+2020-07-16 11:34:41,170 [ ERROR  ] object of type 'int' has no len()
+2020-07-16 11:34:41,189 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:34:41] "[1m[35mPOST /algorithm/logistics/train HTTP/1.1[0m" 500 -
+2020-07-16 11:34:59,204 [ INFO   ] logistics_train_init...
+2020-07-16 11:34:59,205 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:34:59,205 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:34:59,273 [ INFO   ] 输入数据大小:14
+2020-07-16 11:35:15,941 [ ERROR  ] object of type 'int' has no len()
+2020-07-16 11:35:15,966 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 11:35:15] "[1m[35mPOST /algorithm/logistics/train HTTP/1.1[0m" 500 -
+2020-07-16 11:41:08,143 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:41:08,143 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:41:08,399 [ INFO   ] 输入数据大小:14
+2020-07-16 11:50:32,871 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:50:32,872 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:50:33,210 [ INFO   ] 输入数据大小:14
+2020-07-16 11:52:11,647 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:52:11,647 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 11:52:11,881 [ INFO   ] 输入数据大小:14
+2020-07-16 11:52:39,061 [ ERROR  ] statsmodels analysis error
+2020-07-16 13:56:14,909 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 13:56:14,910 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 13:56:15,248 [ INFO   ] 输入数据大小:14
+2020-07-16 14:10:21,513 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 14:10:21,514 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 14:10:21,890 [ INFO   ] 输入数据大小:14
+2020-07-16 14:20:21,155 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 14:20:21,155 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 14:20:21,545 [ INFO   ] 输入数据大小:14
+2020-07-16 14:20:30,808 [ ERROR  ] statsmodels analysis error
+2020-07-16 14:22:24,362 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/algorithm/main.py', reloading
+2020-07-16 14:24:21,410 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 14:24:21,411 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 14:24:21,691 [ INFO   ] 输入数据大小:14
+2020-07-16 14:34:27,683 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 14:34:27,683 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 14:34:27,928 [ INFO   ] 输入数据大小:14
+2020-07-16 14:34:30,100 [ ERROR  ] statsmodels analysis error
+2020-07-16 14:34:30,100 [ ERROR  ] Perfect separation detected, results not available
+2020-07-16 14:34:30,137 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 14:34:30] "[1m[35mPOST /algorithm/logistics/train HTTP/1.1[0m" 500 -
+2020-07-16 14:35:17,156 [ INFO   ] logistics_train_init...
+2020-07-16 14:35:17,157 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 14:35:17,157 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 14:35:17,240 [ INFO   ] 输入数据大小:14
+2020-07-16 14:35:50,240 [ ERROR  ] statsmodels analysis error
+2020-07-16 14:36:55,687 [ INFO   ] {'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 14:36:55,687 [ INFO   ] receive request :{'isTrain': True, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 14:36:55,988 [ INFO   ] 输入数据大小:14
+2020-07-16 16:00:12,032 [ INFO   ] {'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 16:00:12,033 [ INFO   ] receive request :{'isTrain': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级'], 'Y': ['是否购买电脑'], 'rate': '0.3', 'randomState': '2020', 'cv': '3', 'param': {'penalty': 'l2', 'C': '2', 'solver': 'saga', 'max_iter': '1000'}}
+2020-07-16 16:00:12,291 [ INFO   ] 输入数据大小:14
+2020-07-16 16:00:12,830 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 16:00:12] "[37mPOST /algorithm/logistics/train HTTP/1.1[0m" 200 -
+2020-07-16 16:31:47,312 [ INFO   ] {'oneSample': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级']}
+2020-07-16 16:31:47,312 [ INFO   ] receive request :{'oneSample': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级']}
+2020-07-16 16:31:47,644 [ INFO   ] 输入数据大小:14
+2020-07-16 16:31:47,648 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 16:31:47] "[37mPOST /algorithm/logistics/predict HTTP/1.1[0m" 200 -
+2020-07-16 16:51:15,969 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/algorithm/main.py', reloading

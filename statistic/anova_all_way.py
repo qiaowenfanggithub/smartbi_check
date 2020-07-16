@@ -182,6 +182,45 @@ def multiple_test_multivariate(data, X, Y, alpha = 0.05):
     return {"single_x_res": res_with_single_x, "multi_x_res": res_with_multi_x}
 
 
+# 描述性统计分析
+def anova_all_way_describe_info(data: pd.DataFrame, X, Y):
+    row_level1 = []
+    row_level2 = []
+    data_total = pd.DataFrame([[data[Y[0]].count(), data[Y[0]].mean(),
+                                       data[Y[0]].std()]], columns=["count", "mean", "std"], index=["sum"])
+    new_data = pd.DataFrame()
+    for l1_name, l1_data in data.groupby([X[0]]):
+        l1_data_total = pd.DataFrame([[l1_data[Y[0]].count(), l1_data[Y[0]].mean(),
+                                       l1_data[Y[0]].std()]], columns=["count", "mean", "std"], index=["sum"])
+        l2_data_groupby = l1_data.groupby([X[1]])
+        l2_data = pd.concat([l2_data_groupby[Y[0]].count(),
+                                  l2_data_groupby[Y[0]].mean(),
+                                  l2_data_groupby[Y[0]].std()], axis=1)
+        l2_data.columns = ["count", "mean", "std"]
+        new_l1_data = pd.concat([l2_data, l1_data_total], axis=0)
+        new_data = new_data.append(new_l1_data)
+        row_level2_tmp = l2_data.index.values.tolist()
+        row_level2_tmp.append("sum")
+        row_level2.append(row_level2_tmp)
+        row_level1.append(l1_name)
+
+    l2_data_groupby_total = data.groupby(X[1])
+    l2_data_total = pd.concat([l2_data_groupby_total[Y[0]].count(),
+                              l2_data_groupby_total[Y[0]].mean(),
+                              l2_data_groupby_total[Y[0]].std()], axis=1)
+    l2_data_total.columns = ["count", "mean", "std"]
+    new_data = pd.concat([new_data, l2_data_total, data_total], axis=0)
+    row_level1.append("sum")
+    row_level2.append(l2_data_total.index.values.tolist() + ["sum"])
+    return {
+        "row_level1": row_level1,
+        "row_level2": row_level2,
+        "col": new_data.columns.values.tolist(),
+        "data": new_data.values.tolist(),
+        "title": "描述性统计分析"
+    }
+
+
 if __name__ == '__main__':
     '''
     准备数据
@@ -220,4 +259,7 @@ if __name__ == '__main__':
     # anova_results = anova_analysis_multivariate(data, X, Y)
 
     # 多重比较
-    multiple_test_multivariate(data, X, Y)
+    # multiple_test_multivariate(data, X, Y)
+
+    # 描述性统计分析
+    print(anova_all_way_describe_info(data, ["培训前成绩等级", "培训方法"], ["成绩"]))

@@ -5,7 +5,7 @@
 
 File Name : single_samples_t
 
-Description : 
+Description : 统计分析平台
 
 Author : leiliang
 
@@ -22,15 +22,16 @@ import json
 import numpy as np
 import pandas as pd
 from flask_cors import *
-from utils import get_dataframe_from_mysql
+from utils import get_dataframe_from_mysql, transform_h_table_data_to_v
 from flask.json import JSONEncoder as _JSONEncoder
-from anova_one_way import normal_test, levene_test, anova_analysis, multiple_test
-from anova_all_way import anova_analysis_multivariate, multiple_test_multivariate
-from t_single import t_single_analysis
-from t_two_independent import t_two_independent_analysis
-from nonparametric_two_independent import wilcoxon_ranksums_test, mannwhitneyu_test
-from nonparametric_two_pair import mannwhitneyu_test_with_diff
-from nonparametric_multi_independent import kruskal_test, median_test
+from anova_one_way import normal_test, levene_test, anova_analysis, multiple_test, anova_one_way_describe_info
+from anova_all_way import anova_analysis_multivariate, multiple_test_multivariate, anova_all_way_describe_info
+from t_single import t_single_analysis, t_single_describe_info
+from t_two_independent import t_two_independent_analysis, t_two_independent_describe_info
+from t_two_paried import pearsonr_test, t_two_paired_describe_info, t_two_pair_analysis
+from nonparametric_two_independent import wilcoxon_ranksums_test, mannwhitneyu_test, nonparam_two_independent_describe_info
+from nonparametric_two_pair import mannwhitneyu_test_with_diff, nonparam_two_paired_describe_info
+from nonparametric_multi_independent import kruskal_test, median_test, nonparam_multi_independent_describe_info
 
 log = logging.getLogger(__name__)
 
@@ -72,7 +73,8 @@ def init_route():
 def test_anova_one_way():
     """
     接口请求参数:{
-        "table_name": "" # str,数据库表名
+        "table_name_ori": "" # str,数据库表名-数据预处理之前的数据
+        "table_name": "" # str,数据库表名-数据处理之后的数据
         "X": ["x1", "x2"], # list,自变量
         "Y": ["y"], # list,因变量
         "alpha": "0.05", # str,置信区间百分比
@@ -104,24 +106,25 @@ def test_anova_one_way():
         raise e
     log.info("输入数据大小:{}".format(len(data)))
     try:
-        """
-            正太分布检验
-        """
         if table_direction == "v":
+            data[Y[0]] = data[Y[0]].astype("float16")
             every_level_data_index = [d for d in data[X[0]].unique()]
             every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
         elif table_direction == "h":
             every_level_data_index = X
             every_level_data = [data[l].astype("float16") for l in X]
+            data, X, Y = transform_h_table_data_to_v(data, X)
         else:
             raise ValueError("table direction must be h or v")
+        # 描述性统计分析
+        data_info = anova_one_way_describe_info(data, X, Y)
+        # 正太分布检验
         normal_res = normal_test(every_level_data_index, every_level_data, alpha)
-        """
-            方差齐性检验
-        """
+        # 方差齐性检验
         equal_variances_res = levene_test(*every_level_data, alpha=alpha)
-        response_data = {"normalTest": normal_res,
-                         "equalVariancesTest": equal_variances_res,
+        response_data = {"data_info": data_info,
+                         "normal_res": normal_res,
+                         "equal_variances_res": equal_variances_res,
                          "code": "200",
                          "msg": "ok!"}
         return jsonify(response_data)
@@ -167,33 +170,24 @@ def results_anova_one_way():
         log.info(e.args)
         raise e
     log.info("输入数据大小:{}".format(len(data)))
-    data_info = {"row": data.describe().index.values,
-                 "col": data.describe().columns.values,
-                 "data": data.describe().values.tolist()}
     assert len(X) == 1
     if table_direction == "h":
-        level_index = []
-        value = []
-        for x in X:
-            level_index.extend([x] * len(data[x]))
-            value.extend(data[x].values.to_list())
-        data = pd.DataFrame({"level": level_index, "value": value}, dtype="float16")
-        X = ["levle"]
-        Y = ["value"]
+        data, X, Y = transform_h_table_data_to_v(data, X)
     elif table_direction == "v":
         data[Y[0]] = data[Y[0]].astype("float16")
     else:
         raise ValueError("table direction must be v or h")
+
     """
         单因素方差分析
     """
+    # todo：和方差分析表不一样，待确认
     anova_res = anova_analysis(data, X[0], Y[0])
     """
         多重比较
     """
     multiple_res = multiple_test(data, alpha=alpha)
     response_data = {"anova_res": anova_res,
-                     "data_info": data_info,
                      "multiple_res": multiple_res,
                      "code": "200",
                      "msg": "ok!"}
@@ -237,6 +231,7 @@ def test_anova_all_way():
         log.info(e.args)
         raise e
     log.info("输入数据大小:{}".format(len(data)))
+    data_info = anova_all_way_describe_info(data, X, Y)
     try:
         normal_res_list = []
         equal_variances_res_list = []
@@ -253,7 +248,8 @@ def test_anova_all_way():
             """
             equal_variances_res = levene_test(*every_level_data, alpha=alpha)
             equal_variances_res_list.append((X[i], equal_variances_res))
-        response_data = {"normalTest": normal_res_list,
+        response_data = {"data_info": data_info,
+                         "normalTest": normal_res_list,
                          "equalVariancesTest": equal_variances_res_list,
                          "code": "200",
                          "msg": "ok!"}
@@ -351,8 +347,10 @@ def test_t_single():
     log.info("输入数据大小:{}".format(len(data)))
     try:
         data_x = [np.float16(d) for d in data[X[0]]]
+        data_info = t_single_describe_info(data_x, X)
         normal_res = normal_test([X[0]], [data_x], alpha=alpha)
         response_data = {"normalTest": normal_res,
+                         "data_info": data_info,
                          "code": "200",
                          "msg": "ok!"}
         return jsonify(response_data)
@@ -453,10 +451,13 @@ def test_t_two_independent():
         elif table_direction == "h":
             every_level_data_index = X
             every_level_data = [data[l].astype("float16") for l in X]
+            data, X, Y = transform_h_table_data_to_v(data, X)
         else:
             raise ValueError("table direction must be h or v")
+        data_info = t_two_independent_describe_info(data, X, Y)
         normal_res = normal_test(every_level_data_index, every_level_data, alpha)
         response_data = {"normalTest": normal_res,
+                         "data_info": data_info,
                          "code": "200",
                          "msg": "ok!"}
         return jsonify(response_data)
@@ -572,10 +573,13 @@ def test_t_two_pair():
         elif table_direction == "h":
             every_level_data_index = X
             every_level_data = [data[l].astype("float16") for l in X]
+            data, X, Y = transform_h_table_data_to_v(data, X)
         else:
             raise ValueError("table direction must be h or v")
+        data_info = t_two_paired_describe_info(data, X, Y)
         normal_res = normal_test(every_level_data_index, every_level_data, alpha)
         response_data = {"normalTest": normal_res,
+                         "data_info": data_info,
                          "code": "200",
                          "msg": "ok!"}
         return jsonify(response_data)
@@ -621,20 +625,19 @@ def results_t_two_pair():
         raise e
     log.info("输入数据大小:{}".format(len(data)))
     try:
-        """
-            两独立样本t检验分析
-        """
         if table_direction == "v":
-            assert len(data[X[0]].unique()) == 2, "input x must only 2 level"
             assert Y[0] != "", "input Y must not be empty when table direction is v"
+            every_level_data_index = [d for d in data[X[0]].unique()]
             every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
         elif table_direction == "h":
-            assert Y[0] == "", "input Y must not be empty when table direction is h"
+            every_level_data_index = X
             every_level_data = [data[l].astype("float16") for l in X]
         else:
             raise ValueError("table direction must be h or v")
-        t_two_independent_res = t_two_independent_analysis(every_level_data[0], every_level_data[1], alpha=alpha)
-        response_data = {"res": t_two_independent_res,
+        pearsonr_value = pearsonr_test(every_level_data, index=every_level_data_index)
+        t_two_paired_res = t_two_pair_analysis(*every_level_data, index=every_level_data_index)
+        response_data = {"pearsonr_value": pearsonr_value,
+                         "t_two_paired_res": t_two_paired_res,
                          "row": X,
                          "col": ["equal_var", "F值", "Significance", "t值", "p值"],
                          "code": "200",
@@ -684,16 +687,17 @@ def results_nonparametric_two_independent():
     log.info("输入数据大小:{}".format(len(data)))
     try:
         if table_direction == "v":
-            every_level_data_index = [d for d in data[X[0]].unique()]
             every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
         elif table_direction == "h":
-            every_level_data_index = X
             every_level_data = [data[l].astype("float16") for l in X]
+            data, X, Y = transform_h_table_data_to_v(data, X)
         else:
             raise ValueError("table direction must be h or v")
+        data_info = nonparam_two_independent_describe_info(data, X, Y)
         res = [{"mannwhitneyu_test": mannwhitneyu_test(every_level_data[0], every_level_data[1])},
                {"wilcoxon_ranksums": wilcoxon_ranksums_test(every_level_data[0], every_level_data[1])}]
         response_data = {"res": res,
+                         "data_info": data_info,
                          "code": "200",
                          "msg": "ok!"}
         return jsonify(response_data)
@@ -744,6 +748,7 @@ def results_nonparametric_two_pair():
             every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
         elif table_direction == "h":
             every_level_data = [data[l].astype("float16") for l in X]
+            data, X, Y = transform_h_table_data_to_v(data, X)
         else:
             raise ValueError("table direction must be h or v")
         if len(X) == 2:
@@ -753,8 +758,12 @@ def results_nonparametric_two_pair():
         else:
             raise ValueError("input X must be 1 or 2")
         # todo:这里应该是要加入秩和检验
+
+        # 描述性统计分析
+        data_info = nonparam_two_paired_describe_info(data, X, Y)
         res = [{"mannwhitneyu_test": mannwhitneyu_test_res}]
         response_data = {"res": res,
+                         "data_info": data_info,
                          "code": "200",
                          "msg": "ok!"}
         return jsonify(response_data)
@@ -807,11 +816,14 @@ def results_nonparametric_multi_independent():
         elif table_direction == "h":
             every_level_data_index = X
             every_level_data = [data[l].astype("float16") for l in X]
+            data, X, Y = transform_h_table_data_to_v(data, X)
         else:
             raise ValueError("table direction must be h or v")
+        data_info = nonparam_multi_independent_describe_info(data, X, Y)
         kw_res = kruskal_test(*every_level_data)
         median_res = median_test(*every_level_data, col_list=every_level_data_index)
         response_data = {"kw_res": kw_res,
+                         "data_info": data_info,
                          "median_res": median_res,
                          "code": "200",
                          "msg": "ok!"}
