@@ -69,7 +69,7 @@ def init_route():
     return request_data
 
 
-def show_results(x, y, model):
+def show_classifier_results(x, y, model):
     """
     预测结果输出
     :param x: 测试集特征
@@ -97,7 +97,6 @@ def show_results(x, y, model):
             "threshold": threshold.tolist(),
             "auc_score": auc_score,
         }})
-
 
     return {
         "confusion_matrix": confusion_matrix.tolist(),
@@ -191,9 +190,8 @@ def decision_tree_train():
             x_test = data.loc[:, X].values
             y_test = data[Y[0]].values
 
-            label_list = np.unique(y_test)
             # 输出测试集结果
-            test_results = show_results(x_test, y_test, test_model, label_list)
+            test_results = show_classifier_results(x_test, y_test, test_model)
 
             # 可视化决策树图
             # generate_tree_graph(test_model, x_test.columns, label_list)
@@ -223,9 +221,8 @@ def decision_tree_train():
             joblib.dump(model, "./model/DecisionTreeClassifier/{}.pkl".format(
                 time.strftime("%y-%m-%d-%H-%M-%S", time.localtime())))
 
-            label_list = np.unique(y_train)
             # 输出测试集结果
-            test_results = show_results(x_test, y_test, model, label_list)
+            test_results = show_classifier_results(x_test, y_test, model)
 
             # 可视化决策树图
             # generate_tree_graph(model, X, label_list)
@@ -351,7 +348,7 @@ def logistics_train():
             x_test = data.loc[:, X].values
             y_test = data[Y[0]].values
             # 输出测试集分类结果
-            classifier_res = show_results(x_test, y_test, test_model)
+            classifier_res = show_classifier_results(x_test, y_test, test_model)
 
             # 拟合优度结果
             try:
@@ -398,7 +395,7 @@ def logistics_train():
                 time.strftime("%y-%m-%d-%H-%M-%S", time.localtime())))
 
             # 输出测试集结果
-            classifier_res = show_results(x_test, y_test, model)
+            classifier_res = show_classifier_results(x_test, y_test, model)
 
             # 拟合优度结果
             try:

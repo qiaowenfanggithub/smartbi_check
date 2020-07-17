@@ -933,3 +933,62 @@
 2020-07-16 15:32:29,648 [ INFO   ] 输入数据大小:90
 2020-07-16 15:32:29,729 [ INFO   ] ---------------------multiple test------------------
 2020-07-16 15:32:29,774 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 15:32:29] "[37mPOST /anovaOneWay/results HTTP/1.1[0m" 200 -
+2020-07-17 09:49:57,112 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-17 09:49:57,113 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-17 09:49:57,343 [ INFO   ] 输入数据大小:90
+2020-07-17 09:49:57,402 [ INFO   ] 统计量:2.7722199654115256,P值:0.25004609885321805
+2020-07-17 09:49:57,403 [ INFO   ] use normaltest
+2020-07-17 09:49:57,403 [ INFO   ] data are normal distributed
+2020-07-17 09:49:57,408 [ INFO   ] 统计量:1.7629668380223937,P值:0.414168070970821
+2020-07-17 09:49:57,408 [ INFO   ] use normaltest
+2020-07-17 09:49:57,408 [ INFO   ] data are normal distributed
+2020-07-17 09:49:57,412 [ INFO   ] 统计量:0.461496339476071,P值:0.7939393788238944
+2020-07-17 09:49:57,413 [ INFO   ] use normaltest
+2020-07-17 09:49:57,413 [ INFO   ] data are normal distributed
+2020-07-17 09:49:57,416 [ INFO   ] variances of groups are equal
+2020-07-17 09:49:57,419 [ INFO   ] variances of groups are equal
+2020-07-17 09:49:57,421 [ INFO   ] variances of groups are equal
+2020-07-17 09:49:57,426 [ INFO   ] 127.0.0.1 - - [17/Jul/2020 09:49:57] "[37mPOST /anovaOneWay/test HTTP/1.1[0m" 200 -
+2020-07-17 09:50:09,761 [ INFO   ] anova_one_way_get_results_init...
+2020-07-17 09:50:09,761 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-17 09:50:09,761 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-17 09:50:09,880 [ INFO   ] 输入数据大小:90
+2020-07-17 09:50:09,946 [ INFO   ] ---------------------multiple test------------------
+2020-07-17 09:50:09,986 [ INFO   ] 127.0.0.1 - - [17/Jul/2020 09:50:09] "[37mPOST /anovaOneWay/results HTTP/1.1[0m" 200 -
+2020-07-17 10:17:49,044 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-17 10:17:49,046 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-17 10:17:49,404 [ INFO   ] 输入数据大小:90
+2020-07-17 10:17:49,460 [ INFO   ] ---------------------multiple test------------------
+2020-07-17 10:17:49,500 [ INFO   ] 127.0.0.1 - - [17/Jul/2020 10:17:49] "[37mPOST /anovaOneWay/results HTTP/1.1[0m" 200 -
+2020-07-17 11:07:51,580 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-17 11:07:51,581 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v'}
+2020-07-17 11:07:51,952 [ INFO   ] 输入数据大小:90
+2020-07-17 11:07:52,048 [ INFO   ] ---------------------multiple test------------------
+2020-07-17 11:07:52,092 [ INFO   ] 127.0.0.1 - - [17/Jul/2020 11:07:52] "[37mPOST /anovaOneWay/results HTTP/1.1[0m" 200 -
+2020-07-17 15:39:36,402 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal']}
+2020-07-17 15:39:36,403 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal']}
+2020-07-17 15:39:36,836 [ INFO   ] 输入数据大小:90
+2020-07-17 15:39:36,902 [ INFO   ] 统计量:2.7722199654115256,P值:0.25004609885321805
+2020-07-17 15:39:36,902 [ INFO   ] use normaltest
+2020-07-17 15:39:36,903 [ INFO   ] data are normal distributed
+2020-07-17 15:39:36,904 [ INFO   ] 统计量:1.7629668380223937,P值:0.414168070970821
+2020-07-17 15:39:36,905 [ INFO   ] use normaltest
+2020-07-17 15:39:36,905 [ INFO   ] data are normal distributed
+2020-07-17 15:39:36,907 [ INFO   ] 统计量:0.461496339476071,P值:0.7939393788238944
+2020-07-17 15:39:36,907 [ INFO   ] use normaltest
+2020-07-17 15:39:36,907 [ INFO   ] data are normal distributed
+2020-07-17 15:39:36,966 [ INFO   ] 127.0.0.1 - - [17/Jul/2020 15:39:36] "[37mPOST /anovaOneWay HTTP/1.1[0m" 200 -
+2020-07-17 15:42:14,306 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/statistic/main.py', reloading
+2020-07-17 15:46:56,501 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal']}
+2020-07-17 15:46:56,501 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal']}
+2020-07-17 15:46:56,894 [ INFO   ] 输入数据大小:90
+2020-07-17 15:46:56,951 [ INFO   ] 统计量:2.7722199654115256,P值:0.25004609885321805
+2020-07-17 15:46:56,951 [ INFO   ] use normaltest
+2020-07-17 15:46:56,951 [ INFO   ] data are normal distributed
+2020-07-17 15:46:56,953 [ INFO   ] 统计量:1.7629668380223937,P值:0.414168070970821
+2020-07-17 15:46:56,953 [ INFO   ] use normaltest
+2020-07-17 15:46:56,953 [ INFO   ] data are normal distributed
+2020-07-17 15:46:56,955 [ INFO   ] 统计量:0.461496339476071,P值:0.7939393788238944
+2020-07-17 15:46:56,955 [ INFO   ] use normaltest
+2020-07-17 15:46:56,955 [ INFO   ] data are normal distributed
+2020-07-17 15:46:57,005 [ INFO   ] 127.0.0.1 - - [17/Jul/2020 15:46:57] "[37mPOST /anovaOneWay HTTP/1.1[0m" 200 -
