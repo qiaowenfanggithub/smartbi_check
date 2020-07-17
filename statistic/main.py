@@ -69,6 +69,84 @@ def init_route():
 
 
 # ================================ 单因素方差分析 ==============================
+@app.route('/anovaOneWay', methods=['POST', 'GET'])
+def anova_one_way():
+    """
+    接口请求参数:{
+        "table_name_ori": "" # str,数据库表名-数据预处理之前的数据
+        "table_name": "" # str,数据库表名-数据处理之后的数据
+        "X": ["x1", "x2"], # list,自变量
+        "Y": ["y"], # list,因变量
+        "alpha": "0.05", # str,置信区间百分比
+        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+        "analysis_options": ["normal", "variances", "multiple"]
+    }
+    :return:
+    """
+    log.info('anova_one_way_test_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        alpha = float(request_data['alpha'])
+        table_direction = request_data['table_direction']
+        analysis_options = request_data.get("analysis_options", [])
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+    except Exception as e:
+        log.info(e.args)
+        raise e
+    log.info("输入数据大小:{}".format(len(data)))
+    try:
+        if table_direction == "v":
+            data[Y[0]] = data[Y[0]].astype("float16")
+            every_level_data_index = [d for d in data[X[0]].unique()]
+            every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
+        elif table_direction == "h":
+            every_level_data_index = X
+            every_level_data = [data[l].astype("float16") for l in X]
+            data, X, Y = transform_h_table_data_to_v(data, X)
+        else:
+            raise ValueError("table direction must be h or v")
+        res = []
+        # 描述性统计分析
+        data_info = anova_one_way_describe_info(data, X, Y)
+        res.append({"描述统计分析": data_info})
+        # 正太分布检验
+        if "normal" in analysis_options:
+            normal_res = normal_test(every_level_data_index, every_level_data, alpha)
+            res.append({"正态性检验": normal_res})
+        # 方差齐性检验
+        if "variances" in analysis_options:
+            equal_variances_res = levene_test(*every_level_data, alpha=alpha)
+            res.append({"方差齐性检验": equal_variances_res})
+        # 方差分析
+        anova_res = anova_analysis(data, X[0], Y[0])
+        res.append({"单因素方差分析": anova_res})
+        # 多重比较
+        if "multiple" in analysis_options:
+            multiple_res = multiple_test(data, alpha=alpha)
+            res.append({"事后比较": multiple_res})
+        response_data = {"res": res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
+
+
 @app.route('/anovaOneWay/test', methods=['POST', 'GET'])
 def test_anova_one_way():
     """
