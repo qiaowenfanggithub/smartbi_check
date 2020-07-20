@@ -29,7 +29,8 @@ from anova_all_way import anova_analysis_multivariate, multiple_test_multivariat
 from t_single import t_single_analysis, t_single_describe_info
 from t_two_independent import t_two_independent_analysis, t_two_independent_describe_info
 from t_two_paried import pearsonr_test, t_two_paired_describe_info, t_two_pair_analysis
-from nonparametric_two_independent import wilcoxon_ranksums_test, mannwhitneyu_test, nonparam_two_independent_describe_info
+from nonparametric_two_independent import wilcoxon_ranksums_test, mannwhitneyu_test, \
+    nonparam_two_independent_describe_info
 from nonparametric_two_pair import mannwhitneyu_test_with_diff, nonparam_two_paired_describe_info
 from nonparametric_multi_independent import kruskal_test, median_test, nonparam_multi_independent_describe_info
 
@@ -49,6 +50,10 @@ class JSONEncoder(_JSONEncoder):
             return obj.tolist()
         else:
             return super(JSONEncoder, self).default(obj)
+
+
+app.json_encoder = JSONEncoder
+app.config['JSON_AS_ASCII'] = False
 
 
 def init_route():
@@ -83,7 +88,7 @@ def anova_one_way():
     }
     :return:
     """
-    log.info('anova_one_way_test_init...')
+    log.info('anova_one_way_init...')
     request_data = init_route()
     try:
         table_name = request_data['table_name']
@@ -118,25 +123,25 @@ def anova_one_way():
             data, X, Y = transform_h_table_data_to_v(data, X)
         else:
             raise ValueError("table direction must be h or v")
-        res = []
+        res = {}
         # 描述性统计分析
         data_info = anova_one_way_describe_info(data, X, Y)
-        res.append({"描述统计分析": data_info})
+        res.update({"descriptive_statistics": data_info})
         # 正太分布检验
         if "normal" in analysis_options:
             normal_res = normal_test(every_level_data_index, every_level_data, alpha)
-            res.append({"正态性检验": normal_res})
+            res.update({"normality_test": normal_res})
         # 方差齐性检验
         if "variances" in analysis_options:
             equal_variances_res = levene_test(*every_level_data, alpha=alpha)
-            res.append({"方差齐性检验": equal_variances_res})
+            res.update({"homogeneity_of_variance_test": equal_variances_res})
         # 方差分析
         anova_res = anova_analysis(data, X[0], Y[0])
-        res.append({"单因素方差分析": anova_res})
+        res.update({"anova_one_way_analysis": anova_res})
         # 多重比较
         if "multiple" in analysis_options:
             multiple_res = multiple_test(data, alpha=alpha)
-            res.append({"事后比较": multiple_res})
+            res.update({"multiple_comparison ": multiple_res})
         response_data = {"res": res,
                          "code": "200",
                          "msg": "ok!"}
@@ -145,131 +150,6 @@ def anova_one_way():
         log.error(e)
         raise e
         # return jsonify({"data": "", "code": "500", "msg": e.args})
-
-
-@app.route('/anovaOneWay/test', methods=['POST', 'GET'])
-def test_anova_one_way():
-    """
-    接口请求参数:{
-        "table_name_ori": "" # str,数据库表名-数据预处理之前的数据
-        "table_name": "" # str,数据库表名-数据处理之后的数据
-        "X": ["x1", "x2"], # list,自变量
-        "Y": ["y"], # list,因变量
-        "alpha": "0.05", # str,置信区间百分比
-        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
-    }
-    :return:
-    """
-    log.info('anova_one_way_test_init...')
-    request_data = init_route()
-    try:
-        table_name = request_data['table_name']
-        X = request_data['X']
-        Y = request_data['Y']
-        alpha = float(request_data['alpha'])
-        table_direction = request_data['table_direction']
-    except Exception as e:
-        log.info(e)
-        raise e
-    assert isinstance([X, Y], list)
-    # 从数据库拿数据
-    try:
-        if len(Y) == 1 and Y[0] == "":
-            sql_sentence = "select {} from {};".format(",".join(X), table_name)
-        else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
-        data = get_dataframe_from_mysql(sql_sentence)
-    except Exception as e:
-        log.info(e.args)
-        raise e
-    log.info("输入数据大小:{}".format(len(data)))
-    try:
-        if table_direction == "v":
-            data[Y[0]] = data[Y[0]].astype("float16")
-            every_level_data_index = [d for d in data[X[0]].unique()]
-            every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
-        elif table_direction == "h":
-            every_level_data_index = X
-            every_level_data = [data[l].astype("float16") for l in X]
-            data, X, Y = transform_h_table_data_to_v(data, X)
-        else:
-            raise ValueError("table direction must be h or v")
-        # 描述性统计分析
-        data_info = anova_one_way_describe_info(data, X, Y)
-        # 正太分布检验
-        normal_res = normal_test(every_level_data_index, every_level_data, alpha)
-        # 方差齐性检验
-        equal_variances_res = levene_test(*every_level_data, alpha=alpha)
-        response_data = {"data_info": data_info,
-                         "normal_res": normal_res,
-                         "equal_variances_res": equal_variances_res,
-                         "code": "200",
-                         "msg": "ok!"}
-        return jsonify(response_data)
-    except Exception as e:
-        log.error(e)
-        raise e
-        # return jsonify({"data": "", "code": "500", "msg": e.args})
-
-
-@app.route('/anovaOneWay/results', methods=['POST', 'GET'])
-def results_anova_one_way():
-    """
-    单因素方差分析结果展示
-    接口请求参数:{
-        "table_name": "" # str,数据库表名
-        "X": ["x1", "x2"], # list,自变量
-        "Y": ["y"], # list,因变量
-        "alpha": "0.05", # str,置信区间百分比
-        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
-    }
-    :return:
-    """
-    log.info('anova_one_way_get_results_init...')
-    request_data = init_route()
-    try:
-        table_name = request_data['table_name']
-        X = request_data['X']
-        Y = request_data['Y']
-        alpha = float(request_data['alpha'])
-        table_direction = request_data['table_direction']
-    except Exception as e:
-        log.info(e)
-        raise e
-    assert isinstance([X, Y], list)
-    # 从数据库拿数据
-    try:
-        if len(Y) == 1 and Y[0] == "":
-            sql_sentence = "select {} from {};".format(",".join(X), table_name)
-        else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
-        data = get_dataframe_from_mysql(sql_sentence)
-    except Exception as e:
-        log.info(e.args)
-        raise e
-    log.info("输入数据大小:{}".format(len(data)))
-    assert len(X) == 1
-    if table_direction == "h":
-        data, X, Y = transform_h_table_data_to_v(data, X)
-    elif table_direction == "v":
-        data[Y[0]] = data[Y[0]].astype("float16")
-    else:
-        raise ValueError("table direction must be v or h")
-
-    """
-        单因素方差分析
-    """
-    # todo：和方差分析表不一样，待确认
-    anova_res = anova_analysis(data, X[0], Y[0])
-    """
-        多重比较
-    """
-    multiple_res = multiple_test(data, alpha=alpha)
-    response_data = {"anova_res": anova_res,
-                     "multiple_res": multiple_res,
-                     "code": "200",
-                     "msg": "ok!"}
-    return jsonify(response_data)
 
 
 # ================================ 多因素方差分析 ==============================
@@ -915,4 +795,4 @@ def results_nonparametric_multi_independent():
 if __name__ == '__main__':
     app.json_encoder = JSONEncoder
     app.config['JSON_AS_ASCII'] = False
-    app.run(debug=True, port=5000)
+    app.run(host="0.0.0.0", debug=True, port=5000)

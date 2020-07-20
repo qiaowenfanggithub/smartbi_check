@@ -39,10 +39,10 @@ if __name__ == '__main__':
         "Y": ["value"],  # list,因变量
         "alpha": "0.05",  # str,置信区间百分比
         "table_direction": "v",  # 表格方向，一般为竖向，即有一列是分类变量
-        "analysis_options": ["normal"],
+        "analysis_options": ["normal", "variances", "multiple"],
     }
     res = my_session.post(url='http://127.0.0.1:5000/anovaOneWay', json=kwargs, timeout=30)
-    # res = my_session.post(url='http://121.42.242.214:8099/anovaOneWay/results', json=kwargs, timeout=30)
+    # res = my_session.post(url='http://121.42.242.214:8099/anovaOneWay', json=kwargs, timeout=30)
 
     # ======================= 多因素方差分析-检验 =============================
     # kwargs = {
