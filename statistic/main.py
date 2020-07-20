@@ -22,7 +22,7 @@ import json
 import numpy as np
 import pandas as pd
 from flask_cors import *
-from utils import get_dataframe_from_mysql, transform_h_table_data_to_v
+from utils import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html
 from flask.json import JSONEncoder as _JSONEncoder
 from anova_one_way import normal_test, levene_test, anova_analysis, multiple_test, anova_one_way_describe_info
 from anova_all_way import anova_analysis_multivariate, multiple_test_multivariate, anova_all_way_describe_info
@@ -71,6 +71,48 @@ def init_route():
         raise e
     log.info("receive request :{}".format(request_data))
     return request_data
+
+# ================================ 单因素方差分析-查看数据 ==============================
+@app.route('/anovaOneWay/checkData', methods=['POST', 'GET'])
+def anova_one_way_check_data():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名-数据处理之后的数据
+        "X": ["x1", "x2"], # list,自变量
+        "Y": ["y"], # list,因变量
+    }
+    :return:
+    """
+    log.info('anova_one_way_check_data_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    try:
+        if len(Y) == 1 and Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        data = get_dataframe_from_mysql(sql_sentence)
+        res_data = {
+            "title": "单因素方差分析-查看数据",
+            "row": data.index.values.tolist(),
+            "col": data.columns.values.tolist(),
+            "data": data.values.tolist()
+        }
+        response_data = {"res": res_data,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.info(e.args)
+        raise e
 
 
 # ================================ 单因素方差分析 ==============================
@@ -125,18 +167,18 @@ def anova_one_way():
             raise ValueError("table direction must be h or v")
         res = {}
         # 描述性统计分析
-        data_info = anova_one_way_describe_info(data, X, Y)
+        data_info = transform_table_data_to_html(anova_one_way_describe_info(data, X, Y))
         res.update({"descriptive_statistics": data_info})
         # 正太分布检验
         if "normal" in analysis_options:
-            normal_res = normal_test(every_level_data_index, every_level_data, alpha)
+            normal_res = transform_table_data_to_html(normal_test(every_level_data_index, every_level_data, alpha), col0="因子分析")
             res.update({"normality_test": normal_res})
         # 方差齐性检验
         if "variances" in analysis_options:
-            equal_variances_res = levene_test(*every_level_data, alpha=alpha)
+            equal_variances_res = transform_table_data_to_html(levene_test(*every_level_data, alpha=alpha))
             res.update({"homogeneity_of_variance_test": equal_variances_res})
         # 方差分析
-        anova_res = anova_analysis(data, X[0], Y[0])
+        anova_res = transform_table_data_to_html(anova_analysis(data, X[0], Y[0]))
         res.update({"anova_one_way_analysis": anova_res})
         # 多重比较
         if "multiple" in analysis_options:

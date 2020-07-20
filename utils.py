@@ -159,6 +159,7 @@ def get_dataframe_from_mysql(sql_sentence, host=None, port=None, user=None, pass
         raise e
 
 
+# 将自变量在多列的表格转成自变量在一列，因变量在一列
 def transform_h_table_data_to_v(data: pd.DataFrame, X):
     level_index = []
     value = []
@@ -169,3 +170,15 @@ def transform_h_table_data_to_v(data: pd.DataFrame, X):
     X = ["levle"]
     Y = ["value"]
     return data, X, Y
+
+
+# 转换输出的表格数据让前端识别并显示
+def transform_table_data_to_html(data: dict, col0=""):
+    data["col"].insert(0, col0)
+    for idx, (index, row) in enumerate(zip(data["row"], data["data"])):
+        if not isinstance(data["data"][idx], list):
+            data["data"][idx] = list(data["data"][idx])
+        data["data"][idx].insert(0, str(index))
+    if "row" in data:
+        del data["row"]
+    return data

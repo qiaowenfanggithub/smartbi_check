@@ -13,6 +13,7 @@ from itertools import combinations
 import os
 import logging
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
+from utils import transform_table_data_to_html
 
 log = logging.getLogger(__name__)
 
@@ -30,11 +31,11 @@ def check_normality(testData, alpha=0.05):
         if normaltest_p < alpha:
             log.info('use normaltest')
             log.info('data are not normal distributed')
-            return normaltest_statistic, normaltest_p, False
+            return [round(normaltest_statistic, 4), round(normaltest_p, 4), False]
         else:
             log.info('use normaltest')
             log.info('data are normal distributed')
-            return normaltest_statistic, normaltest_p, True
+            return [round(normaltest_statistic, 4), round(normaltest_p, 4), True]
     # 样本数小于50用Shapiro-Wilk算法检验正态分布性
     if len(testData) < 50:
         # Perform the Shapiro-Wilk test for normality. https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.stats.shapiro.html
@@ -43,11 +44,11 @@ def check_normality(testData, alpha=0.05):
         if shapiro_p < alpha:
             log.info("use shapiro:")
             log.info("data are not normal distributed")
-            return shapiro_statistic, shapiro_p, False
+            return [round(shapiro_statistic, 4), round(shapiro_p, 4), False]
         else:
             log.info("use shapiro:")
             log.info("data are normal distributed")
-            return shapiro_statistic, shapiro_p, True
+            return [round(shapiro_statistic, 4), round(shapiro_p, 4), True]
     if 300 >= len(testData) >= 50:
         # https://blog.csdn.net/qq_20207459/article/details/103000285
         lilliefors_statistic, lilliefors_p = lilliefors(testData)
@@ -55,22 +56,22 @@ def check_normality(testData, alpha=0.05):
         if lilliefors_p < alpha:
             log.info("use lillifors:")
             log.info("data are not normal distributed")
-            return lilliefors_statistic, lilliefors_p, False
+            return [round(lilliefors_statistic, 4), round(lilliefors_p, 4), False]
         else:
             log.info("use lillifors:")
             log.info("data are normal distributed")
-            return lilliefors_statistic, lilliefors_p, True
+            return [round(lilliefors_statistic, 4), round(lilliefors_p, 4), True]
     if len(testData) > 300:
         kstest_statistic, kstest_p = scipy.stats.kstest(testData, 'norm')
         log.info("统计量:{},P值:{}".format(kstest_statistic, kstest_p))
         if kstest_p < alpha:
             log.info("use kstest:")
             log.info("data are not normal distributed")
-            return kstest_statistic, kstest_p, False
+            return [round(kstest_statistic, 4), round(kstest_p, 4), False]
         else:
             log.info("use kstest:")
             log.info("data are normal distributed")
-            return kstest_statistic, kstest_p, True
+            return [round(kstest_statistic, 4), round(kstest_p, 4), True]
 
 
 #  对所有样本组进行正态性检验
@@ -84,7 +85,7 @@ def normal_test(index_list, list_groups, alpha=0.05):
     return {"title": "正态性检验",
             "remarks": "注: 拒绝原假设, False表示不拒绝原假设, True表示拒绝原假设",
             "row": index_list,
-            "col": ["因子水平", "正态性检验统计", "显著性",  "拒绝原假设"],
+            "col": ["正态性检验统计", "显著性", "拒绝原假设"],
             "data": res}
 
 
@@ -112,8 +113,8 @@ def levene_test(*args, alpha=0.05):
         "data": res,
         "title": "方差齐性检验",
         "remarks": "注: 拒绝原假设, False表示不拒绝原假设, True表示拒绝原假设"
-
     }
+
 
 '''
 三、F检验/ANOVA 表
@@ -127,8 +128,9 @@ def anova_analysis(data, level, value, alpha=0.05):
     anova_result.fillna("", inplace=True)
     anova_result.index = ["组间", "组内"]
     anova_result.columns = ["自由度", "平方和", "均方", "F", "显著性"]
-    anova_result = anova_result.append(pd.DataFrame([[anova_result["自由度"].sum(), anova_result["平方和"].sum(), "", "", ""]],
-                                                 index=["总计"], columns=anova_result.columns))
+    anova_result = anova_result.append(
+        pd.DataFrame([[anova_result["自由度"].sum(), anova_result["平方和"].sum(), "", "", ""]],
+                     index=["总计"], columns=anova_result.columns))
     anova_result["拒绝原假设"] = pd.Series([bool(anova_result["显著性"][0] - alpha), "", ""], index=["组间", "组内", "总计"])
     anova_result = anova_result.round({
         "自由度": 0,
@@ -283,9 +285,9 @@ def anova_one_way_describe_info(data: pd.DataFrame, X, Y, alpha=0.05):
                                     data_lower_total, data_upper_total,
                                     data_min_total, data_max_total]],
                                   columns=["个案数", "平均值", "标准偏差", "标准错误",
-                                             "均值的百分之{:.0f}置信区间-下限".format(alpha_range),
-                                             "均值的百分之{:.0f}置信区间-上限".format(alpha_range),
-                                             "最小值", "最大值"], index=["总计"])
+                                           "均值的百分之{:.0f}置信区间-下限".format(alpha_range),
+                                           "均值的百分之{:.0f}置信区间-上限".format(alpha_range),
+                                           "最小值", "最大值"], index=["总计"])
     new_data = pd.concat([new_data_by_level, new_data_total], axis=0)
     new_data = new_data.round({
         "个案数": 0,
@@ -330,12 +332,12 @@ if __name__ == '__main__':
     # print(levene_test(level1, level2, level3, alpha=0.05))
     #
     # # 三、F检验
-    print(anova_analysis(data, "method", "score"))
+    # print(anova_analysis(data, "method", "score"))
     #
     # # 四、两两比较
     # # Multiple_test(list_levels)
     # print(multiple_test(data))
 
     # 描述性统计分析
-    # res = anova_one_way_describe_info(data, ["method"])
+    print(anova_one_way_describe_info(data, ["method"], ["score"]))
     # print(res)
