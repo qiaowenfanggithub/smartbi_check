@@ -96,9 +96,9 @@ def check_data():
     # 从数据库拿数据
     try:
         if len(Y) == 1 and Y[0] == "":
-            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+            sql_sentence = "select {} from {};".format(",".join(X), "`" + table_name + "`")
         else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+            sql_sentence = "select {} from {};".format(",".join(X + Y), "`" + table_name + "`")
         data = get_dataframe_from_mysql(sql_sentence)
         res_data = {
             "title": "单因素方差分析-查看数据",
