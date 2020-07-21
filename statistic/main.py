@@ -167,7 +167,7 @@ def anova_one_way():
             raise ValueError("table direction must be h or v")
         res = {}
         # 描述性统计分析
-        data_info = transform_table_data_to_html(anova_one_way_describe_info(data, X, Y))
+        data_info = transform_table_data_to_html(anova_one_way_describe_info(data, X, Y, alpha=alpha))
         res.update({"descriptive_statistics": data_info})
         # 正太分布检验
         if "normal" in analysis_options:
@@ -178,7 +178,7 @@ def anova_one_way():
             equal_variances_res = transform_table_data_to_html(levene_test(*every_level_data, alpha=alpha))
             res.update({"homogeneity_of_variance_test": equal_variances_res})
         # 方差分析
-        anova_res = transform_table_data_to_html(anova_analysis(data, X[0], Y[0]))
+        anova_res = transform_table_data_to_html(anova_analysis(data, X[0], Y[0], alpha=alpha))
         res.update({"anova_one_way_analysis": anova_res})
         # 多重比较
         if "multiple" in analysis_options:

@@ -101,15 +101,15 @@ def levene_test(*args, alpha=0.05):
     for c in ["mean", "median", "trimmed"]:
         row.append(center_dict[c])
         leveneTest_statistic, leveneTest_p = scipy.stats.levene(*args, center=c)
-        if leveneTest_p < alpha:
+        if leveneTest_p <= alpha:
             log.info("variances of groups are not equal")
-            res.append([leveneTest_statistic, leveneTest_p, False])
+            res.append([round(leveneTest_statistic, 4), round(leveneTest_p, 4), True])
         else:
             log.info("variances of groups are equal")
-            res.append([leveneTest_statistic, leveneTest_p, True])
+            res.append([round(leveneTest_statistic, 4), round(leveneTest_p, 4), False])
     return {
         "row": row,
-        "col": ["莱文统计", "显著性", "拒绝原假设"],
+        "col": ["Levene统计", "显著性", "拒绝原假设"],
         "data": res,
         "title": "方差齐性检验",
         "remarks": "注: 拒绝原假设, False表示不拒绝原假设, True表示拒绝原假设"
@@ -125,20 +125,16 @@ def levene_test(*args, alpha=0.05):
 def anova_analysis(data, level, value, alpha=0.05):
     model = ols('{} ~ C({})'.format(value, level), data).fit()
     anova_result = anova_lm(model)
-    anova_result.fillna("", inplace=True)
+    # anova_result.fillna("", inplace=True)
     anova_result.index = ["组间", "组内"]
     anova_result.columns = ["自由度", "平方和", "均方", "F", "显著性"]
     anova_result = anova_result.append(
-        pd.DataFrame([[anova_result["自由度"].sum(), anova_result["平方和"].sum(), "", "", ""]],
+        pd.DataFrame([[anova_result["自由度"].sum(), anova_result["平方和"].sum(), None, None, None]],
                      index=["总计"], columns=anova_result.columns))
+    anova_result["自由度"] = anova_result["自由度"].astype("object")
     anova_result["拒绝原假设"] = pd.Series([bool(anova_result["显著性"][0] - alpha), "", ""], index=["组间", "组内", "总计"])
-    anova_result = anova_result.round({
-        "自由度": 0,
-        "平方和": 4,
-        "均方": 4,
-        "F": 8,
-        "显著性": 8,
-    })
+    anova_result = anova_result.round({"平方和": 4, "均方": 4, "F": 4, "显著性": 4})
+    anova_result.fillna("", inplace=True)
     return {
         "row": anova_result.index.tolist(),
         "col": anova_result.columns.tolist(),
@@ -226,12 +222,22 @@ def multiple_test(data, alpha=0.05):
     # combination = Combination(list_levels)
     # for pair in combination:
     #     LSD(list_levels, list_total, pair[0], pair[1])
+    alpha_range = (1 - alpha) * 100
     res = pairwise_tukeyhsd(data.iloc[:, -1], data.iloc[:, 1], alpha=alpha)
     res_summary = res.summary().data
     for r in range(1, len(res_summary)):
         res_summary[r][-1] = str(res_summary[r][-1])
+    col_map = {
+        "group1": "组1",
+        "group2": "组2",
+        "meandiff": "平均值差值2-1",
+        "p-adj": "显著性",
+        "lower": "{}%置信区间下限".format(alpha_range),
+        "upper": "{}%置信区间上限".format(alpha_range),
+        "reject": "拒绝原假设",
+    }
     return {
-        "col": res_summary[0],
+        "col": [col_map[c] for c in res_summary[0]],
         "data": res_summary[1:],
         "title": "多重比较",
         "remarks": "注：多重比较方法基于Tukey HSD。拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
@@ -241,8 +247,8 @@ def multiple_test(data, alpha=0.05):
 # 描述性统计分析数据
 def anova_one_way_describe_info(data: pd.DataFrame, X, Y, alpha=0.05):
     # 个案数
-    data_count_by_level = data.groupby(X)[Y[0]].count()
-    data_count_total = data[Y[0]].count()
+    data_count_by_level = data.groupby(X)[Y[0]].count().astype("int16")
+    data_count_total = data[Y[0]].count().astype("int16")
     # 均值
     data_mean_by_level = data.groupby(X)[Y[0]].mean()
     data_mean_total = data[Y[0]].mean()
@@ -265,43 +271,45 @@ def anova_one_way_describe_info(data: pd.DataFrame, X, Y, alpha=0.05):
     data_upper_by_level = data_df_by_level.apply(lambda x: max(x), axis=1)
     data_upper_total = max(data_mean_total - data_t * data_std_err_total, data_mean_total + data_t * data_std_err_total)
     # 最小值
-    data_min_by_level = data.groupby(X)[Y[0]].min()
-    data_min_total = data[Y[0]].min()
+    data_min_by_level = data.groupby(X)[Y[0]].min().astype("int16")
+    data_min_total = data[Y[0]].min().astype("int16")
     # 最大值
-    data_max_by_level = data.groupby(X)[Y[0]].max()
-    data_max_total = data[Y[0]].max()
+    data_max_by_level = data.groupby(X)[Y[0]].max().astype("int16")
+    data_max_total = data[Y[0]].max().astype("int16")
     new_data_by_level = pd.concat([data_count_by_level, data_mean_by_level,
                                    data_std_by_level, data_std_err_by_level,
                                    data_lower_by_level, data_upper_by_level,
                                    data_min_by_level, data_max_by_level], axis=1)
-    alpha_range = (1 - alpha) * 100
+    alpha_range = str(round((1 - alpha) * 100, 2))
     # new_data_by_level.columns = ["个案数", "平均值", "标准偏差", "标准错误", "下限", "上限", "最小值", "最大值"]
     new_data_by_level.columns = ["个案数", "平均值", "标准偏差", "标准错误",
-                                 "均值的百分之{:.0f}置信区间-下限".format(alpha_range),
-                                 "均值的百分之{:.0f}置信区间-上限".format(alpha_range),
+                                 "下限",
+                                 "上限",
                                  "最小值", "最大值"]
     new_data_total = pd.DataFrame([[data_count_total, data_mean_total,
                                     data_std_total, data_std_err_total,
                                     data_lower_total, data_upper_total,
                                     data_min_total, data_max_total]],
                                   columns=["个案数", "平均值", "标准偏差", "标准错误",
-                                           "均值的百分之{:.0f}置信区间-下限".format(alpha_range),
-                                           "均值的百分之{:.0f}置信区间-上限".format(alpha_range),
+                                           "下限".format(alpha_range),
+                                           "上限".format(alpha_range),
                                            "最小值", "最大值"], index=["总计"])
     new_data = pd.concat([new_data_by_level, new_data_total], axis=0)
-    new_data = new_data.round({
-        "个案数": 0,
-        "平均值": 4,
-        "标准偏差": 4,
-        "标准错误": 4,
-        "均值的百分之{:.0f}置信区间-下限".format(alpha_range): 4,
-        "均值的百分之{:.0f}置信区间-上限".format(alpha_range): 4,
-        "最小值": 4,
-        "最大值": 4
-    })
+    new_data = new_data.round({"平均值": 4, "标准偏差": 4, "标准错误": 4, "下限": 4, "上限": 4})
+    col_map = {
+        "个案数": "个案数",
+        "平均值": "平均值",
+        "标准偏差": "标准偏差",
+        "标准错误": "标准错误",
+        "下限": "均值的{:}%置信区间-下限".format(alpha_range),
+        "上限": "均值的{:}%置信区间-上限".format(alpha_range),
+        "最小值": "最小值",
+        "最大值": "最大值"
+    }
+    new_data[["个案数", "最大值", "最小值"]] = new_data[["个案数", "最大值", "最小值"]].astype("object")
     return {
         "row": new_data.index.values[:-1].tolist(),
-        "col": new_data.columns.values.tolist(),
+        "col": [col_map[c] for c in new_data.columns.values.tolist()],
         "data": new_data.values.tolist(),
         "title": "描述性统计分析"
     }
@@ -326,18 +334,18 @@ if __name__ == '__main__':
     alpha = 0.05
 
     # # 一、正态性检验
-    # print(normal_test(level_index, list_levels, alpha=0.05))
+    print(normal_test(level_index, list_levels, alpha=0.05))
     #
     # # 二、方差齐性检验
-    # print(levene_test(level1, level2, level3, alpha=0.05))
+    print(levene_test(level1, level2, level3, alpha=0.05))
     #
     # # 三、F检验
-    # print(anova_analysis(data, "method", "score"))
+    print(anova_analysis(data, "method", "score"))
     #
     # # 四、两两比较
     # # Multiple_test(list_levels)
-    # print(multiple_test(data))
+    print(multiple_test(data, alpha=0.06))
 
     # 描述性统计分析
-    print(anova_one_way_describe_info(data, ["method"], ["score"]))
+    print(anova_one_way_describe_info(data, ["method"], ["score"], alpha=0.06))
     # print(res)

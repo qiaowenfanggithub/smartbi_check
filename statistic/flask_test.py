@@ -35,7 +35,7 @@ if __name__ == '__main__':
         "table_name": "anova_one_way",  # str,数据库表名
         "X": ["level"],  # list,自变量
         "Y": ["value"],  # list,因变量
-        "alpha": "0.05",  # str,置信区间百分比
+        "alpha": "0.06",  # str,置信区间百分比
         "table_direction": "v",  # 表格方向，一般为竖向，即有一列是分类变量
         "analysis_options": ["normal", "variances", "multiple"],
     }

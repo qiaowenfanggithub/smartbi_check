@@ -1093,3 +1093,54 @@
 2020-07-20 19:26:43,595 [ INFO   ] variances of groups are equal
 2020-07-20 19:26:43,644 [ INFO   ] ---------------------multiple test------------------
 2020-07-20 19:26:43,702 [ INFO   ] 127.0.0.1 - - [20/Jul/2020 19:26:43] "[37mPOST /anovaOneWay HTTP/1.1[0m" 200 -
+2020-07-21 14:21:16,330 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.06', 'table_direction': 'v', 'analysis_options': ['normal', 'variances', 'multiple']}
+2020-07-21 14:21:16,330 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.06', 'table_direction': 'v', 'analysis_options': ['normal', 'variances', 'multiple']}
+2020-07-21 14:21:16,724 [ INFO   ] 输入数据大小:90
+2020-07-21 14:21:16,781 [ INFO   ] 统计量:2.7722199654115256,P值:0.25004609885321805
+2020-07-21 14:21:16,782 [ INFO   ] use normaltest
+2020-07-21 14:21:16,782 [ INFO   ] data are normal distributed
+2020-07-21 14:21:16,784 [ INFO   ] 统计量:1.7629668380223937,P值:0.414168070970821
+2020-07-21 14:21:16,784 [ INFO   ] use normaltest
+2020-07-21 14:21:16,784 [ INFO   ] data are normal distributed
+2020-07-21 14:21:16,786 [ INFO   ] 统计量:0.461496339476071,P值:0.7939393788238944
+2020-07-21 14:21:16,786 [ INFO   ] use normaltest
+2020-07-21 14:21:16,786 [ INFO   ] data are normal distributed
+2020-07-21 14:21:16,788 [ INFO   ] variances of groups are equal
+2020-07-21 14:21:16,790 [ INFO   ] variances of groups are equal
+2020-07-21 14:21:16,791 [ INFO   ] variances of groups are equal
+2020-07-21 14:21:20,362 [ INFO   ] ---------------------multiple test------------------
+2020-07-21 14:21:20,406 [ INFO   ] 127.0.0.1 - - [21/Jul/2020 14:21:20] "[37mPOST /anovaOneWay HTTP/1.1[0m" 200 -
+2020-07-21 14:26:26,336 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.06', 'table_direction': 'v', 'analysis_options': ['normal', 'variances', 'multiple']}
+2020-07-21 14:26:26,337 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.06', 'table_direction': 'v', 'analysis_options': ['normal', 'variances', 'multiple']}
+2020-07-21 14:26:26,642 [ INFO   ] 输入数据大小:90
+2020-07-21 14:26:26,702 [ INFO   ] 统计量:2.7722199654115256,P值:0.25004609885321805
+2020-07-21 14:26:26,702 [ INFO   ] use normaltest
+2020-07-21 14:26:26,702 [ INFO   ] data are normal distributed
+2020-07-21 14:26:26,704 [ INFO   ] 统计量:1.7629668380223937,P值:0.414168070970821
+2020-07-21 14:26:26,704 [ INFO   ] use normaltest
+2020-07-21 14:26:26,704 [ INFO   ] data are normal distributed
+2020-07-21 14:26:26,706 [ INFO   ] 统计量:0.461496339476071,P值:0.7939393788238944
+2020-07-21 14:26:26,706 [ INFO   ] use normaltest
+2020-07-21 14:26:26,707 [ INFO   ] data are normal distributed
+2020-07-21 14:26:26,709 [ INFO   ] variances of groups are equal
+2020-07-21 14:26:26,711 [ INFO   ] variances of groups are equal
+2020-07-21 14:26:26,712 [ INFO   ] variances of groups are equal
+2020-07-21 14:26:26,761 [ INFO   ] ---------------------multiple test------------------
+2020-07-21 14:26:26,806 [ INFO   ] 127.0.0.1 - - [21/Jul/2020 14:26:26] "[37mPOST /anovaOneWay HTTP/1.1[0m" 200 -
+2020-07-21 14:27:40,189 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.06', 'table_direction': 'v', 'analysis_options': ['normal', 'variances', 'multiple']}
+2020-07-21 14:27:40,190 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.06', 'table_direction': 'v', 'analysis_options': ['normal', 'variances', 'multiple']}
+2020-07-21 14:27:40,524 [ INFO   ] 输入数据大小:90
+2020-07-21 14:27:40,582 [ INFO   ] 统计量:2.7722199654115256,P值:0.25004609885321805
+2020-07-21 14:27:40,582 [ INFO   ] use normaltest
+2020-07-21 14:27:40,582 [ INFO   ] data are normal distributed
+2020-07-21 14:27:40,584 [ INFO   ] 统计量:1.7629668380223937,P值:0.414168070970821
+2020-07-21 14:27:40,584 [ INFO   ] use normaltest
+2020-07-21 14:27:40,584 [ INFO   ] data are normal distributed
+2020-07-21 14:27:40,586 [ INFO   ] 统计量:0.461496339476071,P值:0.7939393788238944
+2020-07-21 14:27:40,586 [ INFO   ] use normaltest
+2020-07-21 14:27:40,586 [ INFO   ] data are normal distributed
+2020-07-21 14:27:40,588 [ INFO   ] variances of groups are equal
+2020-07-21 14:27:40,590 [ INFO   ] variances of groups are equal
+2020-07-21 14:27:40,591 [ INFO   ] variances of groups are equal
+2020-07-21 14:27:40,636 [ INFO   ] ---------------------multiple test------------------
+2020-07-21 14:27:40,678 [ INFO   ] 127.0.0.1 - - [21/Jul/2020 14:27:40] "[37mPOST /anovaOneWay HTTP/1.1[0m" 200 -
