@@ -146,9 +146,9 @@ def anova_one_way():
     # 从数据库拿数据
     try:
         if len(Y) == 1 and Y[0] == "":
-            sql_sentence = "select {} from {};".format(",".join(X), table_name)
+            sql_sentence = "select {} from {};".format(",".join(X), "`" + table_name + "`")
         else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+            sql_sentence = "select {} from {};".format(",".join(X + Y), "`" + table_name + "`")
         data = get_dataframe_from_mysql(sql_sentence)
     except Exception as e:
         log.info(e.args)
