@@ -168,22 +168,22 @@ def anova_one_way():
         res = []
         # 描述性统计分析
         data_info = transform_table_data_to_html(anova_one_way_describe_info(data, X, Y, alpha=alpha))
-        res.append({"descriptive_statistics": data_info})
+        res.append(data_info)
         # 正太分布检验
         if "normal" in analysis_options:
             normal_res = transform_table_data_to_html(normal_test(every_level_data_index, every_level_data, alpha), col0="因子水平")
-            res.append({"normality_test": normal_res})
+            res.append(normal_res)
         # 方差齐性检验
         if "variances" in analysis_options:
             equal_variances_res = transform_table_data_to_html(levene_test(*every_level_data, alpha=alpha))
-            res.append({"homogeneity_of_variance_test": equal_variances_res})
+            res.append(equal_variances_res)
         # 方差分析
         anova_res = transform_table_data_to_html(anova_analysis(data, X[0], Y[0], alpha=alpha))
-        res.append({"anova_one_way_analysis": anova_res})
+        res.append(anova_res)
         # 多重比较
         if "multiple" in analysis_options:
             multiple_res = multiple_test(data, alpha=alpha)
-            res.append({"multiple_comparison ": multiple_res})
+            res.append(multiple_res)
         response_data = {"res": res,
                          "code": "200",
                          "msg": "ok!"}
