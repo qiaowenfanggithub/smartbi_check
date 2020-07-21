@@ -73,8 +73,8 @@ def init_route():
     return request_data
 
 # ================================ 单因素方差分析-查看数据 ==============================
-@app.route('/anovaOneWay/checkData', methods=['POST', 'GET'])
-def anova_one_way_check_data():
+@app.route('/checkData', methods=['POST', 'GET'])
+def check_data():
     """
     接口请求参数:{
         "table_name": "" # str,数据库表名-数据处理之后的数据
@@ -171,7 +171,7 @@ def anova_one_way():
         res.update({"descriptive_statistics": data_info})
         # 正太分布检验
         if "normal" in analysis_options:
-            normal_res = transform_table_data_to_html(normal_test(every_level_data_index, every_level_data, alpha), col0="因子分析")
+            normal_res = transform_table_data_to_html(normal_test(every_level_data_index, every_level_data, alpha), col0="因子水平")
             res.update({"normality_test": normal_res})
         # 方差齐性检验
         if "variances" in analysis_options:
@@ -314,13 +314,15 @@ def results_anova_all_way():
 
 
 # ================================ 单样本t检验 ==============================
-@app.route('/tSingle/test', methods=['POST', 'GET'])
+@app.route('/tSingle', methods=['POST', 'GET'])
 def test_t_single():
     """
     接口请求参数:{
         "table_name": "" # str,数据库表名
         "X": ["value"], # list,自变量
         "alpha": "0.05", # str,置信区间百分比
+        "mean": "0", # str,样本均值
+        "analysis_options": ["normal"]
     }
     :return:
     """
@@ -331,6 +333,8 @@ def test_t_single():
         alpha = float(request_data['alpha'])
         X = request_data['X']
         Y = request_data['Y']
+        data_mean = float(request_data['mean'])
+        analysis_options = request_data.get("analysis_options", [])
     except Exception as e:
         log.info(e)
         raise e
@@ -346,11 +350,18 @@ def test_t_single():
         raise e
     log.info("输入数据大小:{}".format(len(data)))
     try:
+        res = {}
         data_x = [np.float16(d) for d in data[X[0]]]
-        data_info = t_single_describe_info(data_x, X)
-        normal_res = normal_test([X[0]], [data_x], alpha=alpha)
-        response_data = {"normalTest": normal_res,
-                         "data_info": data_info,
+        data_info = transform_table_data_to_html(t_single_describe_info(data_x, X))
+        res.update({"descriptive_statistics": data_info})
+        # 正态性检验
+        if "normal" in analysis_options:
+            normal_res = normal_test([X[0]], [data_x], alpha=alpha)
+            res.update({"normality_test": normal_res})
+        # 单样本t检验分析结果
+        t_single_res = transform_table_data_to_html(t_single_analysis(data[X[0]].astype("float16"), data_mean))
+        res.update({"t_single_analysis": t_single_res})
+        response_data = {"res": res,
                          "code": "200",
                          "msg": "ok!"}
         return jsonify(response_data)
@@ -358,51 +369,6 @@ def test_t_single():
         log.error(e)
         raise e
         # return jsonify({"data": "", "code": "500", "msg": e.args})
-
-
-@app.route('/tSingle/results', methods=['POST', 'GET'])
-def results_t_single():
-    """
-    单因素方差分析结果展示
-    接口请求参数:{
-        "table_name": "" # str,数据库表名
-        "X": ["value"], # list,自变量
-        "mean": "0", # str,样本均值
-        "alpha": "0.05", # str,置信区间百分比
-    }
-    :return:
-    """
-    log.info('t_single_get_results_init...')
-    request_data = init_route()
-    try:
-        table_name = request_data['table_name']
-        data_mean = float(request_data['mean'])
-        # todo:alpha在这里怎么用
-        alpha = float(request_data['alpha'])
-        X = request_data['X']
-        Y = request_data['Y']
-    except Exception as e:
-        log.info(e)
-        raise e
-    # 从数据库拿数据
-    try:
-        if len(Y) == 1 and Y[0] == "":
-            sql_sentence = "select {} from {};".format(",".join(X), table_name)
-        else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
-        data = get_dataframe_from_mysql(sql_sentence)
-    except Exception as e:
-        log.info(e.args)
-        raise e
-    log.info("输入数据大小:{}".format(len(data)))
-    """
-        单样本t检验
-    """
-    t_single_res = t_single_analysis(data[X[0]].astype("float16"), data_mean)
-    response_data = {"res": t_single_res,
-                     "code": "200",
-                     "msg": "ok!"}
-    return jsonify(response_data)
 
 
 # ================================ 独立样本t检验 ==============================

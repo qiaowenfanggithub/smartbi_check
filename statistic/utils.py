@@ -151,7 +151,7 @@ def data_scatter_plot(data, col_name_X, col_name_Y):
 
 def get_dataframe_from_mysql(sql_sentence, host=None, port=None, user=None, password=None, database=None):
     conn = pymysql.connect(host='rm-2ze5vz4174qj2epm7so.mysql.rds.aliyuncs.com', port=3306, user='yzkj',
-                           password='yzkj2020@', database='sophia_manager', charset='utf8')
+                           password='yzkj2020@', database='sophia_data', charset='utf8')
     try:
         df = pd.read_sql(sql_sentence, conn)
         return df

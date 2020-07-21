@@ -18,9 +18,14 @@ def t_single_analysis(data, u):
     cha = float("{:0.4f}".format(sample_mean - u))
     lower = float("{:0.4f}".format(cha - se / np.sqrt(len(data) - 1)))  # 差值的95%置信区间下限
     upper = float("{:0.4f}".format(cha + se / np.sqrt(len(data) - 1)))  # 差值的95%置信区间上限
-    return [("样本个数", sample_num), ("t值", ttest), ("p值", pval),
-            ("样本均值", sample_mean), ("样本标准差", sample_std), ("样本标准误差平均值", se),
-            ("差值的95%置信区间上限", upper), ("差值的95%置信区间下限", lower)]
+    return {
+        "col": ["样本个数", "t值", "p值", "样本均值", "样本标准差", "样本标准误差平均值",
+                "差值的95%置信区间上限", "差值的95%置信区间下限"],
+        "data": [],
+    }
+    # return [("样本个数", sample_num), ("t值", ttest), ("p值", pval),
+    #         ("样本均值", sample_mean), ("样本标准差", sample_std), ("样本标准误差平均值", se),
+    #         ("差值的95%置信区间上限", upper), ("差值的95%置信区间下限", lower)]
 
 
 """
