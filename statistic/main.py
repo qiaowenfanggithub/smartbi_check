@@ -88,14 +88,13 @@ def check_data():
     try:
         table_name = request_data['table_name']
         X = request_data['X']
-        Y = request_data['Y']
+        Y = request_data.get('Y', [])
     except Exception as e:
         log.info(e)
         raise e
-    assert isinstance([X, Y], list)
     # 从数据库拿数据：
     try:
-        if len(Y) == 1 and Y[0] == "":
+        if not Y or (len(Y) == 1 and Y[0] == ""):
             sql_sentence = "select {} from {};".format(",".join(X), "`" + table_name + "`")
         else:
             sql_sentence = "select {} from {};".format(",".join(X + Y), "`" + table_name + "`")
