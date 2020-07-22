@@ -31,11 +31,11 @@ def check_normality(testData, alpha=0.05):
         if normaltest_p < alpha:
             log.info('use normaltest')
             log.info('data are not normal distributed')
-            return [round(normaltest_statistic, 4), round(normaltest_p, 4), "False"]
+            return ["{:.4f}".format(normaltest_statistic), "{:.4f}".format(normaltest_p), "False"]
         else:
             log.info('use normaltest')
             log.info('data are normal distributed')
-            return [round(normaltest_statistic, 4), round(normaltest_p, 4), "True"]
+            return ["{:.4f}".format(normaltest_statistic), "{:.4f}".format(normaltest_p), "True"]
     # 样本数小于50用Shapiro-Wilk算法检验正态分布性
     if len(testData) < 50:
         # Perform the Shapiro-Wilk test for normality. https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.stats.shapiro.html
@@ -44,11 +44,11 @@ def check_normality(testData, alpha=0.05):
         if shapiro_p < alpha:
             log.info("use shapiro:")
             log.info("data are not normal distributed")
-            return [round(shapiro_statistic, 4), round(shapiro_p, 4), "False"]
+            return ["{:.4f}".format(shapiro_statistic), "{:.4f}".format(shapiro_p), "False"]
         else:
             log.info("use shapiro:")
             log.info("data are normal distributed")
-            return [round(shapiro_statistic, 4), round(shapiro_p, 4), "True"]
+            return ["{:.4f}".format(shapiro_statistic), "{:.4f}".format(shapiro_p), "True"]
     if 300 >= len(testData) >= 50:
         # https://blog.csdn.net/qq_20207459/article/details/103000285
         lilliefors_statistic, lilliefors_p = lilliefors(testData)
@@ -56,22 +56,22 @@ def check_normality(testData, alpha=0.05):
         if lilliefors_p < alpha:
             log.info("use lillifors:")
             log.info("data are not normal distributed")
-            return [round(lilliefors_statistic, 4), round(lilliefors_p, 4), "False"]
+            return ["{:.4f}".format(lilliefors_statistic), "{:.4f}".format(lilliefors_p), "False"]
         else:
             log.info("use lillifors:")
             log.info("data are normal distributed")
-            return [round(lilliefors_statistic, 4), round(lilliefors_p, 4), "True"]
+            return ["{:.4f}".format(lilliefors_statistic), "{:.4f}".format(lilliefors_p), "True"]
     if len(testData) > 300:
         kstest_statistic, kstest_p = scipy.stats.kstest(testData, 'norm')
         log.info("统计量:{},P值:{}".format(kstest_statistic, kstest_p))
         if kstest_p < alpha:
             log.info("use kstest:")
             log.info("data are not normal distributed")
-            return [round(kstest_statistic, 4), round(kstest_p, 4), "False"]
+            return ["{:.4f}".format(kstest_statistic), "{:.4f}".format(kstest_p), "False"]
         else:
             log.info("use kstest:")
             log.info("data are normal distributed")
-            return [round(kstest_statistic, 4), round(kstest_p, 4), "True"]
+            return ["{:.4f}".format(kstest_statistic), "{:.4f}".format(kstest_p), "True"]
 
 
 #  对所有样本组进行正态性检验
@@ -103,10 +103,10 @@ def levene_test(*args, alpha=0.05):
         leveneTest_statistic, leveneTest_p = scipy.stats.levene(*args, center=c)
         if leveneTest_p <= alpha:
             log.info("variances of groups are not equal")
-            res.append([round(leveneTest_statistic, 4), round(leveneTest_p, 4), "True"])
+            res.append(["{:.4f}".format(leveneTest_statistic), "{:.4f}".format(leveneTest_p), "True"])
         else:
             log.info("variances of groups are equal")
-            res.append([round(leveneTest_statistic, 4), round(leveneTest_p, 4), "False"])
+            res.append(["{:.4f}".format(leveneTest_statistic), "{:.4f}".format(leveneTest_p), "False"])
     return {
         "row": row,
         "col": ["Levene统计", "显著性", "拒绝原假设"],
