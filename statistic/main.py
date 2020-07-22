@@ -354,7 +354,7 @@ def t_single():
             normal_res = transform_table_data_to_html(normal_test([X[0]], [data[X[0]]], alpha=alpha))
             res.append(normal_res)
         # 单样本t检验分析结果
-        t_single_res = transform_table_data_to_html(t_single_analysis(data[X[0]].astype("float16"), data_mean, X, alpha=alpha), col0="检验值={}".format(X[0]))
+        t_single_res = transform_table_data_to_html(t_single_analysis(data[X[0]].astype("float16"), data_mean, X, alpha=alpha), col0="检验值={}".format(data_mean))
         res.append(t_single_res)
         response_data = {"res": res,
                          "code": "200",
