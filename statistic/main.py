@@ -73,7 +73,7 @@ def init_route():
     return request_data
 
 # ================================ 单因素方差分析-查看数据 ==============================
-@app.route('/checkData', methods=['POST', 'GET'])
+@app.route('/statistic/checkData', methods=['POST', 'GET'])
 def check_data():
     """
     接口请求参数:{
@@ -116,7 +116,7 @@ def check_data():
 
 
 # ================================ 单因素方差分析 ==============================
-@app.route('/anovaOneWay', methods=['POST', 'GET'])
+@app.route('/statistic/anovaOneWay', methods=['POST', 'GET'])
 def anova_one_way():
     """
     接口请求参数:{
