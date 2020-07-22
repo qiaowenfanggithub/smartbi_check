@@ -314,8 +314,8 @@ def results_anova_all_way():
 
 
 # ================================ 单样本t检验 ==============================
-@app.route('/tSingle', methods=['POST', 'GET'])
-def test_t_single():
+@app.route('/statistic/tSingle', methods=['POST', 'GET'])
+def t_single():
     """
     接口请求参数:{
         "table_name": "" # str,数据库表名
@@ -332,7 +332,6 @@ def test_t_single():
         table_name = request_data['table_name']
         alpha = float(request_data['alpha'])
         X = request_data['X']
-        Y = request_data['Y']
         data_mean = float(request_data['mean'])
         analysis_options = request_data.get("analysis_options", [])
     except Exception as e:
@@ -340,27 +339,24 @@ def test_t_single():
         raise e
     # 从数据库拿数据
     try:
-        if len(Y) == 1 and Y[0] == "":
-            sql_sentence = "select {} from {};".format(",".join(X), table_name)
-        else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
+        sql_sentence = "select {} from {};".format(",".join(X), table_name)
         data = get_dataframe_from_mysql(sql_sentence)
     except Exception as e:
         log.info(e.args)
         raise e
     log.info("输入数据大小:{}".format(len(data)))
     try:
-        res = {}
-        data_x = [np.float16(d) for d in data[X[0]]]
-        data_info = transform_table_data_to_html(t_single_describe_info(data_x, X))
-        res.update({"descriptive_statistics": data_info})
+        res = []
+        data[X[0]] = data[X[0]].astype("float16")
+        data_info = transform_table_data_to_html(t_single_describe_info(data, X))
+        res.append(data_info)
         # 正态性检验
         if "normal" in analysis_options:
-            normal_res = normal_test([X[0]], [data_x], alpha=alpha)
-            res.update({"normality_test": normal_res})
+            normal_res = transform_table_data_to_html(normal_test([X[0]], [data[X[0]]], alpha=alpha))
+            res.append(normal_res)
         # 单样本t检验分析结果
-        t_single_res = transform_table_data_to_html(t_single_analysis(data[X[0]].astype("float16"), data_mean))
-        res.update({"t_single_analysis": t_single_res})
+        t_single_res = transform_table_data_to_html(t_single_analysis(data[X[0]].astype("float16"), data_mean, X, alpha=alpha), col0="检验值={}".format(X[0]))
+        res.append(t_single_res)
         response_data = {"res": res,
                          "code": "200",
                          "msg": "ok!"}
@@ -368,7 +364,7 @@ def test_t_single():
     except Exception as e:
         log.error(e)
         raise e
-        # return jsonify({"data": "", "code": "500", "msg": e.args})
+        # return jsonify({"data": "error", "code": "500", "msg": e.args})
 
 
 # ================================ 独立样本t检验 ==============================

@@ -1144,3 +1144,107 @@
 2020-07-21 14:27:40,591 [ INFO   ] variances of groups are equal
 2020-07-21 14:27:40,636 [ INFO   ] ---------------------multiple test------------------
 2020-07-21 14:27:40,678 [ INFO   ] 127.0.0.1 - - [21/Jul/2020 14:27:40] "[37mPOST /anovaOneWay HTTP/1.1[0m" 200 -
+2020-07-22 09:30:46,111 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:30:46,112 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:30:46,112 [ INFO   ] 'Y'
+2020-07-22 09:30:46,132 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 09:30:46] "[1m[35mPOST /statistic/tSingle HTTP/1.1[0m" 500 -
+2020-07-22 09:33:32,697 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:33:32,698 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:33:33,159 [ INFO   ] 输入数据大小:32
+2020-07-22 09:33:33,160 [ ERROR  ] list indices must be integers or slices, not str
+2020-07-22 09:33:33,163 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 09:33:33] "[37mPOST /statistic/tSingle HTTP/1.1[0m" 200 -
+2020-07-22 09:33:52,366 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:33:52,366 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:33:52,641 [ INFO   ] 输入数据大小:32
+2020-07-22 09:33:52,642 [ ERROR  ] list indices must be integers or slices, not str
+2020-07-22 09:33:52,661 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 09:33:52] "[1m[35mPOST /statistic/tSingle HTTP/1.1[0m" 500 -
+2020-07-22 09:34:49,960 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:34:49,960 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:34:50,238 [ INFO   ] 输入数据大小:32
+2020-07-22 09:34:50,239 [ ERROR  ] list indices must be integers or slices, not str
+2020-07-22 09:34:50,257 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 09:34:50] "[1m[35mPOST /statistic/tSingle HTTP/1.1[0m" 500 -
+2020-07-22 09:35:07,688 [ INFO   ] t_single_test_init...
+2020-07-22 09:35:07,688 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:35:07,688 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:35:07,801 [ INFO   ] 输入数据大小:32
+2020-07-22 09:35:53,640 [ INFO   ] t_single_test_init...
+2020-07-22 09:35:53,641 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:35:53,641 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:35:53,696 [ INFO   ] 输入数据大小:32
+2020-07-22 09:39:41,366 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:39:41,366 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:39:41,656 [ INFO   ] 输入数据大小:32
+2020-07-22 09:39:44,861 [ ERROR  ] 'value'
+2020-07-22 09:39:45,388 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 09:39:45] "[1m[35mPOST /statistic/tSingle HTTP/1.1[0m" 500 -
+2020-07-22 09:40:05,416 [ INFO   ] t_single_test_init...
+2020-07-22 09:40:05,416 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:40:05,416 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:40:05,489 [ INFO   ] 输入数据大小:32
+2020-07-22 09:40:59,156 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:40:59,157 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:40:59,374 [ INFO   ] 输入数据大小:32
+2020-07-22 09:41:00,916 [ ERROR  ] 'int' object is not iterable
+2020-07-22 09:41:00,966 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 09:41:00] "[1m[35mPOST /statistic/tSingle HTTP/1.1[0m" 500 -
+2020-07-22 09:41:35,675 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:41:35,675 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:41:35,930 [ INFO   ] 输入数据大小:32
+2020-07-22 09:41:35,938 [ ERROR  ] 'int' object is not iterable
+2020-07-22 09:41:35,958 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 09:41:35] "[1m[35mPOST /statistic/tSingle HTTP/1.1[0m" 500 -
+2020-07-22 09:42:00,615 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:42:00,615 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:42:00,871 [ INFO   ] 输入数据大小:32
+2020-07-22 09:42:00,879 [ ERROR  ] 'int' object is not iterable
+2020-07-22 09:42:00,899 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 09:42:00] "[1m[35mPOST /statistic/tSingle HTTP/1.1[0m" 500 -
+2020-07-22 09:42:08,275 [ INFO   ] t_single_test_init...
+2020-07-22 09:42:08,276 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:42:08,276 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:42:08,340 [ INFO   ] 输入数据大小:32
+2020-07-22 09:43:05,992 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:43:05,992 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:43:06,242 [ INFO   ] 输入数据大小:32
+2020-07-22 09:46:34,260 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:46:34,260 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:46:34,587 [ INFO   ] 输入数据大小:32
+2020-07-22 09:53:57,053 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:53:57,053 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:53:57,322 [ INFO   ] 输入数据大小:32
+2020-07-22 09:54:14,052 [ INFO   ] 统计量:83.01337083443809,P值:9.416197547020136e-19
+2020-07-22 09:54:14,053 [ INFO   ] use normaltest
+2020-07-22 09:54:14,054 [ INFO   ] data are not normal distributed
+2020-07-22 09:54:14,059 [ ERROR  ] 'float' object is not iterable
+2020-07-22 09:54:14,085 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 09:54:14] "[1m[35mPOST /statistic/tSingle HTTP/1.1[0m" 500 -
+2020-07-22 09:54:44,099 [ INFO   ] t_single_test_init...
+2020-07-22 09:54:44,100 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:54:44,100 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:54:44,169 [ INFO   ] 输入数据大小:32
+2020-07-22 09:54:44,179 [ INFO   ] 统计量:83.01337083443809,P值:9.416197547020136e-19
+2020-07-22 09:54:44,179 [ INFO   ] use normaltest
+2020-07-22 09:54:44,179 [ INFO   ] data are not normal distributed
+2020-07-22 09:55:04,443 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:55:04,443 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:55:04,698 [ INFO   ] 输入数据大小:32
+2020-07-22 09:55:04,712 [ INFO   ] 统计量:83.01337083443809,P值:9.416197547020136e-19
+2020-07-22 09:55:04,712 [ INFO   ] use normaltest
+2020-07-22 09:55:04,712 [ INFO   ] data are not normal distributed
+2020-07-22 09:58:03,819 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:58:03,820 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:58:04,088 [ INFO   ] 输入数据大小:32
+2020-07-22 09:58:04,102 [ INFO   ] 统计量:83.01337083443809,P值:9.416197547020136e-19
+2020-07-22 09:58:04,102 [ INFO   ] use normaltest
+2020-07-22 09:58:04,102 [ INFO   ] data are not normal distributed
+2020-07-22 09:58:04,108 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 09:58:04] "[37mPOST /statistic/tSingle HTTP/1.1[0m" 200 -
+2020-07-22 09:58:04,282 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/statistic/t_single.py', reloading
+2020-07-22 09:59:47,813 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:59:47,814 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 09:59:48,218 [ INFO   ] 输入数据大小:32
+2020-07-22 09:59:48,232 [ INFO   ] 统计量:83.01337083443809,P值:9.416197547020136e-19
+2020-07-22 09:59:48,232 [ INFO   ] use normaltest
+2020-07-22 09:59:48,232 [ INFO   ] data are not normal distributed
+2020-07-22 10:01:23,129 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/statistic/t_single.py', reloading
+2020-07-22 10:01:59,358 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 10:01:59,358 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-22 10:01:59,665 [ INFO   ] 输入数据大小:32
+2020-07-22 10:01:59,683 [ INFO   ] 统计量:83.01337083443809,P值:9.416197547020136e-19
+2020-07-22 10:01:59,683 [ INFO   ] use normaltest
+2020-07-22 10:01:59,683 [ INFO   ] data are not normal distributed
+2020-07-22 10:02:07,080 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 10:02:07] "[37mPOST /statistic/tSingle HTTP/1.1[0m" 200 -
