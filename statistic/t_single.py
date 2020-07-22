@@ -25,7 +25,7 @@ def t_single_analysis(data, u, X, alpha=0.05):
         "data": [["{:.4f}".format(ttest),
                   "{}".format(df),
                   "{:.4f}".format(pval),
-                  bool(pval-alpha < 0),
+                  str(bool(pval-alpha < 0)),
                   "{:.4f}".format(sample_mean-u),
                   "{:.4f}".format(lower),
                   "{:.4f}".format(upper)]],

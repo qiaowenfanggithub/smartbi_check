@@ -181,7 +181,7 @@ def anova_one_way():
         res.append(anova_res)
         # 多重比较
         if "multiple" in analysis_options:
-            multiple_res = multiple_test(data, alpha=alpha)
+            multiple_res = multiple_test(data, X, Y, alpha=alpha)
             res.append(multiple_res)
         response_data = {"res": res,
                          "code": "200",

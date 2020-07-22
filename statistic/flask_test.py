@@ -24,11 +24,10 @@ if __name__ == '__main__':
     my_session = requests.session()
     # ======================= 单因素方差分析-查看数据 =============================
     # kwargs = {
-    #     "table_name": "anova_one_way",  # str,数据库表名
-    #     "X": ["level"],  # list,自变量
-    #     "Y": ["value"],  # list,因变量
+    #     "table_name": "t_single",  # str,数据库表名
+    #     "X": ["value"],  # list,自变量
     # }
-    # # res = my_session.post(url='http://127.0.0.1:5000/anovaOneWay/checkData', json=kwargs, timeout=30)
+    # res = my_session.post(url='http://127.0.0.1:5000/statistic/checkData', json=kwargs, timeout=30)
     # res = my_session.post(url='https://www.yzsmart.top/statistic/checkData', json=kwargs, timeout=30)
 
     # ======================= 单因素方差分析-结果 =============================
@@ -40,7 +39,7 @@ if __name__ == '__main__':
     #     "table_direction": "v",  # 表格方向，一般为竖向，即有一列是分类变量
     #     "analysis_options": ["normal", "variances", "multiple"],
     # }
-    # res = my_session.post(url='http://127.0.0.1:5000/anovaOneWay', json=kwargs, timeout=30)
+    # res = my_session.post(url='http://127.0.0.1:5000/statistic/anovaOneWay', json=kwargs, timeout=30)
     # res = my_session.post(url='http://121.42.242.214:8099/anovaOneWay', json=kwargs, timeout=30)
     # res = my_session.post(url='https://www.yzsmart.top/statistic/anovaOneWay', json=kwargs, timeout=30)
 
