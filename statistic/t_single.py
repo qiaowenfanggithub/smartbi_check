@@ -29,7 +29,7 @@ def t_single_analysis(data, u, X, alpha=0.05):
                   "{:.4f}".format(sample_mean-u),
                   "{:.4f}".format(lower),
                   "{:.4f}".format(upper)]],
-        "remark": "注：拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
+        "remarks": "注：拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
     }
 
 

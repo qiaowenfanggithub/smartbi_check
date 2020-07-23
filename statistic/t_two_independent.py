@@ -48,7 +48,7 @@ def t_two_independent_analysis(*args, alpha=0.05):
                 "差值{:.0%}置信区间下限".format(1 - alpha), "差值{:.0%}置信区间下限".format(1 - alpha)],
         "data": data,
         "title": "独立样本T检验",
-        "remark": "注：拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
+        "remarks": "注：拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
     }
 
 

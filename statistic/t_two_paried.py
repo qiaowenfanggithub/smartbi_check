@@ -49,7 +49,7 @@ def pearsonr_test(*args, index=None, alpha=0.05):
                  "{:.4f}".format(p_value),
                  str(bool(p_value <= alpha))],
         "title": "配对样本相关性",
-        "remark": "注：拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
+        "remarks": "注：拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
     }
 
 
@@ -75,7 +75,7 @@ def t_two_pair_analysis(*args, index=None, alpha=0.05):
                  "{:.0f}".format(cha_df), "{:.0f}".format(pval), str(bool(pval <= alpha))]],
         "row": [" & ".join(index)],
         "title": "配对样本检验",
-        "remark": "注：拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
+        "remarks": "注：拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
     }
 
 
