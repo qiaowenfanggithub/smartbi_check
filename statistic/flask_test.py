@@ -31,26 +31,28 @@ if __name__ == '__main__':
     # res = my_session.post(url='https://www.yzsmart.top/statistic/checkData', json=kwargs, timeout=30)
 
     # ======================= 单因素方差分析-结果 =============================
-    kwargs = {
-        "table_name": "anova_one_way",  # str,数据库表名
-        "X": ["level"],  # list,自变量
-        "Y": ["value"],  # list,因变量
-        "alpha": "0.06",  # str,置信区间百分比
-        "table_direction": "v",  # 表格方向，一般为竖向，即有一列是分类变量
-        "analysis_options": ["normal", "variances", "multiple"],
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/statistic/anovaOneWay', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "table_name": "anova_one_way",  # str,数据库表名
+    #     "X": ["level"],  # list,自变量
+    #     "Y": ["value"],  # list,因变量
+    #     "alpha": "0.06",  # str,置信区间百分比
+    #     "table_direction": "v",  # 表格方向，一般为竖向，即有一列是分类变量
+    #     "analysis_options": ["normal", "variances", "multiple"],
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/statistic/anovaOneWay', json=kwargs, timeout=30)
     # res = my_session.post(url='http://121.42.242.214:8099/anovaOneWay', json=kwargs, timeout=30)
     # res = my_session.post(url='https://www.yzsmart.top/statistic/anovaOneWay', json=kwargs, timeout=30)
 
     # ======================= 多因素方差分析-检验 =============================
-    # kwargs = {
-    #     "table_name": "anova_all_way",  # str,数据库表名
-    #     "X": ["培训前成绩等级", "培训方法"],  # list,自变量
-    #     "Y": ["成绩"],  # list,因变量
-    #     "alpha": "0.05",  # str,置信区间百分比
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/statistic/anovaAllWay', json=kwargs, timeout=30)
+    kwargs = {
+        "table_name": "anova_all_way",  # str,数据库表名
+        "X": ["培训前成绩等级", "培训方法"],  # list,自变量
+        "Y": ["成绩"],  # list,因变量
+        "alpha": "0.05",  # str,置信区间百分比
+        "table_direction": "v",  # str, 表格方向, 水平方向为h, 竖直方向为v
+        "analysis_options": ["normal", "variances"]
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/statistic/anovaAllWay', json=kwargs, timeout=30)
 
     # ======================= 单样本t检验 =============================
     # kwargs = {

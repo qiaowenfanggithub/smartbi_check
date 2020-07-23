@@ -25,7 +25,7 @@ from flask_cors import *
 from utils import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, exec_sql
 from flask.json import JSONEncoder as _JSONEncoder
 from anova_one_way import normal_test, levene_test, anova_analysis, multiple_test, anova_one_way_describe_info
-from anova_all_way import anova_analysis_multivariate, multiple_test_multivariate, anova_all_way_describe_info
+from anova_all_way import anova_all_way_describe_info, normal_test_all, levene_test_all, anova_analysis_multivariate, level_info
 from t_single import t_single_analysis, t_single_describe_info
 from t_two_independent import t_two_independent_analysis, t_two_independent_describe_info
 from t_two_paried import pearsonr_test, t_two_paired_describe_info, t_two_pair_analysis
@@ -226,37 +226,26 @@ def anova_all_way():
         else:
             raise ValueError("table direction must be h or v")
         res = []
+        # 主体间因子
+        res.append(level_info(data, X))
         # 描述性统计分析
         res.append(anova_all_way_describe_info(data, X, Y))
-        normal_res_list = []
-        equal_variances_res_list = []
-        for i in range(len(X)):
-            every_level_data_index = [d for d in data[X[i]].unique()]
-            every_level_data = [data[data[X[i]] == d][Y[0]].astype("float16") for d in data[X[i]].unique()]
-            # 正太分布检验
-            normal_res = normal_test(every_level_data_index, every_level_data, alpha)
-            normal_res_list.append((X[i], normal_res))
-            # 方差齐性检验
-            equal_variances_res = levene_test(*every_level_data, alpha=alpha)
-            equal_variances_res_list.append((X[i], equal_variances_res))
         if "normal" in analysis_options:
-            res.append(normal_res_list)
+            res.append(normal_test_all(data, X, alpha=alpha))
         if "variances" in analysis_options:
-            res.append(equal_variances_res_list)
+            res.append(transform_table_data_to_html(levene_test_all(data, X, alpha=alpha)))
         # 多因素方差分析
-        res.append(anova_analysis_multivariate(data, X, Y))
+        res.append(transform_table_data_to_html(anova_analysis_multivariate(data, X, Y)))
+        # todo:稍后加
         # 多重比较
-        if "multiple" in analysis_options:
-            res.append(multiple_test_multivariate(data, X, Y, alpha=alpha))
-
         response_data = {"res": res,
                          "code": "200",
                          "msg": "ok!"}
         return jsonify(response_data)
     except Exception as e:
         log.error(e)
-        # raise e
-        return jsonify({"data": "", "code": "500", "msg": e.args})
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
 
 
 # ================================ 单样本t检验 ==============================

@@ -22,6 +22,7 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 from statsmodels.stats.diagnostic import lilliefors
 import scipy.stats as stats
 import scipy
+import numpy as np
 import pandas as pd
 from itertools import combinations
 import copy
@@ -32,7 +33,7 @@ import os
 
 
 # 多因素方差分析因子排列组合
-def levels_conbination(data):
+def levels_conbination(data, X):
     try:
         from functools import reduce
     except ImportError as e:
@@ -46,7 +47,7 @@ def levels_conbination(data):
 # 主体间因子
 def level_info(data, X):
     res = []
-    level_list = levels_conbination(data)
+    level_list = levels_conbination(data, X)
     data_group = data.groupby(X).indices
     for idx, level in enumerate(level_list):
         row = [str(l) for l in level] + [str(len(data_group[level]))]
@@ -113,10 +114,19 @@ def check_normality(testData, alpha=0.05):
 
 # 对所有样本组进行正态性检验
 # 先将各个样本分好，对所有样本检验正态性，也是对样本组里的每个样本检验
-def normal_test_all(data, X, Y, alpha=0.05):
-    level_list = levels_conbination(data)
-    level_data_list = [data[l] for l in level_list]
-    return normal_test(level_list, level_data_list, alpha=alpha)
+def normal_test_all(data, X, alpha=0.05):
+    level_list = levels_conbination(data, X)
+    data_group = data.groupby(X).indices
+    level_data_list = [data_group[d] for d in level_list]
+    normal_data = normal_test(level_list, level_data_list, alpha=alpha)
+    for idx, l in enumerate(normal_data["data"]):
+        normal_data["data"][idx] = [str(d) for d in level_list[idx]] + l
+    return {
+        "col": ["因子1", "因子2", "正态性检验统计", "显著性", "拒绝原假设"],
+        "data": normal_data["data"],
+        "title": "正态性检验",
+        "remarks": "注：拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
+    }
 
 
 '''
@@ -124,9 +134,10 @@ def normal_test_all(data, X, Y, alpha=0.05):
 '''
 
 
-def levene_test_all(*args, alpha=0.05):
-    level_list = levels_conbination(data)
-    level_data_list = [data[l] for l in level_list]
+def levene_test_all(data, X, alpha=0.05):
+    level_list = levels_conbination(data, X)
+    data_group = data.groupby(X).indices
+    level_data_list = [data_group[d] for d in level_list]
     return levene_test(*level_data_list, alpha=alpha)
 
 
@@ -169,65 +180,26 @@ def anova_analysis_multivariate(data, X, Y, alpha=0.05):
 '''
 
 
-def multiple_test_multivariate(data, X, Y, alpha=0.05):
-    """
-    多因素方差分析-多重比较
-    :param data: dataframe原始数据
-    :param X: 自变量字段list
-    :param Y: 因变量字段list
-    :return: 所有因素组合的多重比较结果
-    """
-
-    def convert_bool_to_str(res_tmp):
-        """pairwise_tukeyhsd返回里面的bool_不能序列化，转成str"""
-        res_summary = res_tmp.summary().data
-        for r in range(1, len(res_summary)):
-            res_summary[r][-1] = str(res_summary[r][-1])
-        return res_summary
-
-    y_all = data[Y[0]]
-    res_with_single_x = []
-    for x in X:
-        hsd_res = convert_bool_to_str(pairwise_tukeyhsd(y_all, data[x], alpha=alpha))
-        res_with_single_x.append((x, hsd_res))
-
-    try:
-        from functools import reduce
-    except ImportError as e:
-        raise e
-
-    multi_x_fn = lambda x, code=',': reduce(lambda x, y: [str(i) + code + str(j) for i in x for j in y], x)
-    level_list = [data[x].unique() for x in X]
-    level_combination = multi_x_fn(level_list, code=">>")
-    res_with_multi_x = []
-    for m in level_combination:
-        data_x = copy.deepcopy(data)
-        count = 0
-        for x in m.split(">>")[:-1]:
-            data_x = data_x[data_x[X[count]] == x]
-            count += 1
-        data_y = data_x[Y[0]]
-        data_x = data_x[X[count]]
-        hsd_multi = convert_bool_to_str(pairwise_tukeyhsd(data_y, data_x, alpha=alpha))
-        res_with_multi_x.append((m, hsd_multi))
-    return {"single_x_res": res_with_single_x, "multi_x_res": res_with_multi_x}
-
-
 # 描述性统计分析
 def anova_all_way_describe_info(data: pd.DataFrame, X, Y):
     res = []
-    level_list = levels_conbination(data)
+    level_list = levels_conbination(data, X)
     data_group = data.groupby(X).indices
     for idx, level in enumerate(level_list):
-        if level_list[idx + 1][0] != level:
+        row = [str(l) for l in level]
+        res.append(row + ["{:.4f}".format(data_group[level].mean()),
+                          "{:.4f}".format(data_group[level].std()),
+                          "{:.0f}".format(len(data_group[level]))])
+        if idx == (len(level_list) - 1):
+            break
+        if level_list[idx + 1][0] != level[0]:
             row_tmp = ["总计"] + [""] * (len(X) - 1)
-            res.append(row_tmp.extend([sum([x[0] for x in res]),
-                                       sum([x[1] for x in res]),
-                                       sum([x[2] for x in res])]))
-        row = [l for l in level]
-        res.append(row.extend([data[level].mean(), data[level].std(), data[level].count()]))
+            sum_data = data[data[X[0]] == level[0]][Y[0]]
+            res.append(row_tmp + ["{:.4f}".format(sum_data.mean()),
+                                  "{:.4f}".format(sum_data.std() / np.sqrt(sum_data.count())),
+                                  "{:.0f}".format(sum_data.count())])
     return {
-        "col": X.extend(["平均值", "标注偏差", "个案数"]),
+        "col": X + ["平均值", "标注偏差", "个案数"],
         "data": res,
         "title": "描述统计"
     }
@@ -260,18 +232,16 @@ if __name__ == '__main__':
     alpha = 0.05
 
     # 因子水平排列组合结果
-    # print(levels_conbination(data))
+    # print(levels_conbination(data, X))
 
     # 主体间因子
     # print(level_info(data, X))
 
     # 正态性检验
-    # NormalTest(x1_levels, 0.05)
-    # NormalTest(x2_levels, 0.05)
+    # print(normal_test_all(data, X, 0.05))
 
     # 方差齐性检验
-    # Levene_test(x1_level1, x1_level2, alpha=0.05)
-    # Levene_test(x2_level1, x2_level2, x2_level3, alpha=0.05)
+    print(levene_test_all(data, X, alpha=0.05))
 
     # F检验
     # print(anova_analysis_multivariate(data, X, Y))
@@ -280,4 +250,4 @@ if __name__ == '__main__':
     # multiple_test_multivariate(data, X, Y)
 
     # 描述性统计分析
-    print(anova_all_way_describe_info(data, ["培训前成绩等级", "培训方法"], ["成绩"]))
+    # print(anova_all_way_describe_info(data, ["培训前成绩等级", "培训方法"], ["成绩"]))
