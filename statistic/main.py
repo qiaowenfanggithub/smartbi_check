@@ -107,8 +107,9 @@ def check_data():
                          "msg": "ok!"}
         return jsonify(response_data)
     except Exception as e:
-        log.info(e.args)
-        raise e
+        log.error(e.args)
+        # raise e
+        return jsonify({"data": "", "code": "500", "msg": e.args})
 
 
 # ================================ 单因素方差分析 ==============================
@@ -179,8 +180,8 @@ def anova_one_way():
         return jsonify(response_data)
     except Exception as e:
         log.error(e)
-        raise e
-        # return jsonify({"data": "", "code": "500", "msg": e.args})
+        # raise e
+        return jsonify({"data": "", "code": "500", "msg": e.args})
 
 
 # ================================ 多因素方差分析 ==============================
@@ -254,8 +255,8 @@ def anova_all_way():
         return jsonify(response_data)
     except Exception as e:
         log.error(e)
-        raise e
-        # return jsonify({"data": "", "code": "500", "msg": e.args})
+        # raise e
+        return jsonify({"data": "", "code": "500", "msg": e.args})
 
 
 # ================================ 单样本t检验 ==============================
@@ -304,8 +305,8 @@ def t_single():
         return jsonify(response_data)
     except Exception as e:
         log.error(e)
-        raise e
-        # return jsonify({"data": "error", "code": "500", "msg": e.args})
+        # raise e
+        return jsonify({"data": "error", "code": "500", "msg": e.args})
 
 
 # ================================ 独立样本t检验 ==============================
@@ -367,8 +368,8 @@ def t_two_independent():
         return jsonify(response_data)
     except Exception as e:
         log.error(e)
-        raise e
-        # return jsonify({"data": "", "code": "500", "msg": e.args})
+        # raise e
+        return jsonify({"data": "", "code": "500", "msg": e.args})
 
 
 # ================================ 配对样本t检验 ==============================
@@ -411,6 +412,8 @@ def t_two_pair():
             data, X, Y = transform_h_table_data_to_v(data, X)
         else:
             raise ValueError("table direction must be h or v")
+        if len(every_level_data_index) > 2:
+            raise ValueError("自变量的水平必须是2个")
         res = []
         # 描述性统计分析
         res.append(transform_table_data_to_html(t_two_paired_describe_info(data, X, Y)))
@@ -427,8 +430,8 @@ def t_two_pair():
         return jsonify(response_data)
     except Exception as e:
         log.error(e)
-        raise e
-        # return jsonify({"data": "", "code": "500", "msg": e.args})
+        # raise e
+        return jsonify({"data": "", "code": "500", "msg": e.args})
 
 
 # ================================ 两独立样本非参数检验 ==============================
