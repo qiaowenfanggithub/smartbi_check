@@ -336,7 +336,7 @@ def t_single():
 
 
 # ================================ 独立样本t检验 ==============================
-@app.route('/tTwoIndependent', methods=['POST', 'GET'])
+@app.route('/statistic/tTwoIndependent', methods=['POST', 'GET'])
 def t_two_independent():
     """
     接口请求参数:{
