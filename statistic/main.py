@@ -109,7 +109,7 @@ def check_data():
     except Exception as e:
         log.error(e.args)
         # raise e
-        return jsonify({"data": "", "code": "500", "msg": e.args})
+        return jsonify({"data": "", "code": "500", "msg": e.args[0]})
 
 
 # ================================ 单因素方差分析 ==============================
@@ -181,7 +181,7 @@ def anova_one_way():
     except Exception as e:
         log.error(e)
         # raise e
-        return jsonify({"data": "", "code": "500", "msg": e.args})
+        return jsonify({"data": "", "code": "500", "msg": e.args[0]})
 
 
 # ================================ 多因素方差分析 ==============================
@@ -244,8 +244,8 @@ def anova_all_way():
         return jsonify(response_data)
     except Exception as e:
         log.error(e)
-        raise e
-        # return jsonify({"data": "", "code": "500", "msg": e.args})
+        # raise e
+        return jsonify({"data": "", "code": "500", "msg": e.args[0]})
 
 
 # ================================ 单样本t检验 ==============================
@@ -295,7 +295,7 @@ def t_single():
     except Exception as e:
         log.error(e)
         # raise e
-        return jsonify({"data": "error", "code": "500", "msg": e.args})
+        return jsonify({"data": "error", "code": "500", "msg": e.args[0]})
 
 
 # ================================ 独立样本t检验 ==============================
@@ -358,7 +358,7 @@ def t_two_independent():
     except Exception as e:
         log.error(e)
         # raise e
-        return jsonify({"data": "", "code": "500", "msg": e.args})
+        return jsonify({"data": "", "code": "500", "msg": e.args[0]})
 
 
 # ================================ 配对样本t检验 ==============================
@@ -420,7 +420,7 @@ def t_two_pair():
     except Exception as e:
         log.error(e)
         # raise e
-        return jsonify({"data": "", "code": "500", "msg": e.args})
+        return jsonify({"data": "", "code": "500", "msg": e.args[0]})
 
 
 # ================================ 两独立样本非参数检验 ==============================
