@@ -25,14 +25,39 @@ import scipy
 import pandas as pd
 from itertools import combinations
 import copy
+from anova_one_way import normal_test, levene_test
+from utils import format_dataframe
 
 import os
 
-'''
-一、正态性检验
-'''
+
+# 多因素方差分析因子排列组合
+def levels_conbination(data):
+    try:
+        from functools import reduce
+    except ImportError as e:
+        raise e
+    combination_fn = lambda x: reduce(lambda x, y: [[str(i), str(j)] for i in x for j in y], x)
+    level_list = [data[x].unique() for x in X]
+    level_combination_res = combination_fn(level_list)
+    return level_combination_res
 
 
+# 主体间因子
+def level_info(data, X, Y):
+    res = []
+    level_list = levels_conbination(data)
+    for idx, level in enumerate(level_list):
+        row = [l for l in level].append(data[level].count())
+        res.append(row)
+    return {
+        "col": ["因子", "因子水平" * (len(X) - 1), "个案数"],
+        "data": res,
+        "title": "主体间因子"
+    }
+
+
+# 正态性检验
 def check_normality(testData, alpha=0.05):
     # 20<样本数<50用normal test算法检验正态分布性
     if 20 < len(testData) < 50:
@@ -85,14 +110,12 @@ def check_normality(testData, alpha=0.05):
             return True
 
 
-#  对所有样本组进行正态性检验
+# 对所有样本组进行正态性检验
 # 先将各个样本分好，对所有样本检验正态性，也是对样本组里的每个样本检验
-def NormalTest(list_groups, alpha):
-    for group in list_groups:
-        # 正态性检验
-        status = check_normality(group, alpha)
-        if status == False:
-            return False
+def normal_test_all(data, X, Y, alpha=0.05):
+    level_list = levels_conbination(data)
+    level_data_list = [data[l] for l in level_list]
+    return normal_test(level_list, level_data_list, alpha=alpha)
 
 
 '''
@@ -100,15 +123,10 @@ def NormalTest(list_groups, alpha):
 '''
 
 
-def Levene_test(*args, alpha=0.05):
-    leveneTest_statistic, leveneTest_p = scipy.stats.levene(*args)
-    print(leveneTest_statistic, leveneTest_p)
-    if leveneTest_p < alpha:
-        print("variances of groups are not equal")
-        return False
-    else:
-        print("variances of groups are equal")
-        return True
+def levene_test_all(*args, alpha=0.05):
+    level_list = levels_conbination(data)
+    level_data_list = [data[l] for l in level_list]
+    return levene_test(*level_data_list, alpha=alpha)
 
 
 '''
@@ -124,13 +142,25 @@ x1 x2 x1:x2 对应的p值都小于0.05，所以都对y有显著性影响
 '''
 
 
-def anova_analysis_multivariate(data, X, Y):
+def anova_analysis_multivariate(data, X, Y, alpha=0.05):
     # 公式 因变量~ 自变量1+自变量2+ 自变量1和2的交互效应，这里是全模型
     x_formula = X + [":".join([c[0], c[1]]) for c in combinations(X, 2)]
     formula = '{}~{}'.format(Y[0], "+".join(x_formula))
     model = ols(formula, data).fit()
     anova_results = anova_lm(model)
-    return anova_results.to_dict()
+    anova_results["拒绝原假设"] = anova_results["PR(>F)"].map(lambda x: str(bool(x <= alpha)))
+    anova_results = format_dataframe(anova_results, {"df": ".0f",
+                                                     "sum_sq": ".4f",
+                                                     "mean_sq": ".4f",
+                                                     "F": ".4f",
+                                                     "PR(>F)": ".4f"})
+    anova_results[anova_results == "nan"] = ""
+    return {
+        "row": anova_results.index.tolist()[:-1] + ["总计"],
+        "col": ["自由度", "平方和", "均方", "F", "显著性", "拒绝原假设"],
+        "data": anova_results.values.tolist(),
+        "title": "主体间效应检验"
+    }
 
 
 '''
@@ -138,7 +168,7 @@ def anova_analysis_multivariate(data, X, Y):
 '''
 
 
-def multiple_test_multivariate(data, X, Y, alpha = 0.05):
+def multiple_test_multivariate(data, X, Y, alpha=0.05):
     """
     多因素方差分析-多重比较
     :param data: dataframe原始数据
@@ -184,40 +214,20 @@ def multiple_test_multivariate(data, X, Y, alpha = 0.05):
 
 # 描述性统计分析
 def anova_all_way_describe_info(data: pd.DataFrame, X, Y):
-    row_level1 = []
-    row_level2 = []
-    data_total = pd.DataFrame([[data[Y[0]].count(), data[Y[0]].mean(),
-                                       data[Y[0]].std()]], columns=["count", "mean", "std"], index=["sum"])
-    new_data = pd.DataFrame()
-    for l1_name, l1_data in data.groupby([X[0]]):
-        l1_data_total = pd.DataFrame([[l1_data[Y[0]].count(), l1_data[Y[0]].mean(),
-                                       l1_data[Y[0]].std()]], columns=["count", "mean", "std"], index=["sum"])
-        l2_data_groupby = l1_data.groupby([X[1]])
-        l2_data = pd.concat([l2_data_groupby[Y[0]].count(),
-                                  l2_data_groupby[Y[0]].mean(),
-                                  l2_data_groupby[Y[0]].std()], axis=1)
-        l2_data.columns = ["count", "mean", "std"]
-        new_l1_data = pd.concat([l2_data, l1_data_total], axis=0)
-        new_data = new_data.append(new_l1_data)
-        row_level2_tmp = l2_data.index.values.tolist()
-        row_level2_tmp.append("sum")
-        row_level2.append(row_level2_tmp)
-        row_level1.append(l1_name)
-
-    l2_data_groupby_total = data.groupby(X[1])
-    l2_data_total = pd.concat([l2_data_groupby_total[Y[0]].count(),
-                              l2_data_groupby_total[Y[0]].mean(),
-                              l2_data_groupby_total[Y[0]].std()], axis=1)
-    l2_data_total.columns = ["count", "mean", "std"]
-    new_data = pd.concat([new_data, l2_data_total, data_total], axis=0)
-    row_level1.append("sum")
-    row_level2.append(l2_data_total.index.values.tolist() + ["sum"])
+    res = []
+    level_list = levels_conbination(data)
+    for idx, level in enumerate(level_list):
+        if level_list[idx + 1][0] != level:
+            row_tmp = ["总计"] + [""] * (len(X) - 1)
+            res.append(row_tmp.extend([sum([x[0] for x in res]),
+                                       sum([x[1] for x in res]),
+                                       sum([x[2] for x in res])]))
+        row = [l for l in level]
+        res.append(row.extend([data[level].mean(), data[level].std(), data[level].count()]))
     return {
-        "row_level1": row_level1,
-        "row_level2": row_level2,
-        "col": new_data.columns.values.tolist(),
-        "data": new_data.values.tolist(),
-        "title": "描述性统计分析"
+        "col": X.extend(["平均值", "标注偏差", "个案数"]),
+        "data": res,
+        "title": "描述统计"
     }
 
 
@@ -247,6 +257,9 @@ if __name__ == '__main__':
     '''
     alpha = 0.05
 
+    # 因子水平排列组合结果
+    # print(levels_conbination(data))
+
     # 正态性检验
     # NormalTest(x1_levels, 0.05)
     # NormalTest(x2_levels, 0.05)
@@ -256,10 +269,10 @@ if __name__ == '__main__':
     # Levene_test(x2_level1, x2_level2, x2_level3, alpha=0.05)
 
     # F检验
-    # anova_results = anova_analysis_multivariate(data, X, Y)
+    print(anova_analysis_multivariate(data, X, Y))
 
     # 多重比较
     # multiple_test_multivariate(data, X, Y)
 
     # 描述性统计分析
-    print(anova_all_way_describe_info(data, ["培训前成绩等级", "培训方法"], ["成绩"]))
+    # print(anova_all_way_describe_info(data, ["培训前成绩等级", "培训方法"], ["成绩"]))

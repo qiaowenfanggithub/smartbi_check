@@ -28,50 +28,50 @@ def check_normality(testData, alpha=0.05):
         # https://docs.scipy.org/doc/scipy-0.19.0/reference/generated/scipy.stats.normaltest.html
         normaltest_statistic, normaltest_p = stats.normaltest(testData)
         log.info("统计量:{},P值:{}".format(normaltest_statistic, normaltest_p))
-        if normaltest_p < alpha:
+        if normaltest_p <= alpha:
             log.info('use normaltest')
             log.info('data are not normal distributed')
-            return ["{:.4f}".format(normaltest_statistic), "{:.4f}".format(normaltest_p), "False"]
+            return ["{:.4f}".format(normaltest_statistic), "{:.4f}".format(normaltest_p), "True"]
         else:
             log.info('use normaltest')
             log.info('data are normal distributed')
-            return ["{:.4f}".format(normaltest_statistic), "{:.4f}".format(normaltest_p), "True"]
+            return ["{:.4f}".format(normaltest_statistic), "{:.4f}".format(normaltest_p), "False"]
     # 样本数小于50用Shapiro-Wilk算法检验正态分布性
     if len(testData) < 50:
         # Perform the Shapiro-Wilk test for normality. https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.stats.shapiro.html
         shapiro_statistic, shapiro_p = stats.shapiro(testData)
         log.info("统计量:{},P值:{}".format(shapiro_statistic, shapiro_p))
-        if shapiro_p < alpha:
+        if shapiro_p <= alpha:
             log.info("use shapiro:")
             log.info("data are not normal distributed")
-            return ["{:.4f}".format(shapiro_statistic), "{:.4f}".format(shapiro_p), "False"]
+            return ["{:.4f}".format(shapiro_statistic), "{:.4f}".format(shapiro_p), "True"]
         else:
             log.info("use shapiro:")
             log.info("data are normal distributed")
-            return ["{:.4f}".format(shapiro_statistic), "{:.4f}".format(shapiro_p), "True"]
+            return ["{:.4f}".format(shapiro_statistic), "{:.4f}".format(shapiro_p), "False"]
     if 300 >= len(testData) >= 50:
         # https://blog.csdn.net/qq_20207459/article/details/103000285
         lilliefors_statistic, lilliefors_p = lilliefors(testData)
         log.info("统计量:{},P值:{}".format(lilliefors_statistic, lilliefors_p))
-        if lilliefors_p < alpha:
+        if lilliefors_p <= alpha:
             log.info("use lillifors:")
             log.info("data are not normal distributed")
-            return ["{:.4f}".format(lilliefors_statistic), "{:.4f}".format(lilliefors_p), "False"]
+            return ["{:.4f}".format(lilliefors_statistic), "{:.4f}".format(lilliefors_p), "True"]
         else:
             log.info("use lillifors:")
             log.info("data are normal distributed")
-            return ["{:.4f}".format(lilliefors_statistic), "{:.4f}".format(lilliefors_p), "True"]
+            return ["{:.4f}".format(lilliefors_statistic), "{:.4f}".format(lilliefors_p), "False"]
     if len(testData) > 300:
         kstest_statistic, kstest_p = scipy.stats.kstest(testData, 'norm')
         log.info("统计量:{},P值:{}".format(kstest_statistic, kstest_p))
-        if kstest_p < alpha:
+        if kstest_p <= alpha:
             log.info("use kstest:")
             log.info("data are not normal distributed")
-            return ["{:.4f}".format(kstest_statistic), "{:.4f}".format(kstest_p), "False"]
+            return ["{:.4f}".format(kstest_statistic), "{:.4f}".format(kstest_p), "True"]
         else:
             log.info("use kstest:")
             log.info("data are normal distributed")
-            return ["{:.4f}".format(kstest_statistic), "{:.4f}".format(kstest_p), "True"]
+            return ["{:.4f}".format(kstest_statistic), "{:.4f}".format(kstest_p), "False"]
 
 
 #  对所有样本组进行正态性检验

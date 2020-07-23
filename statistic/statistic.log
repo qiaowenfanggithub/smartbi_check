@@ -1279,3 +1279,258 @@
 2020-07-22 10:57:43,651 [ INFO   ] data are not normal distributed
 2020-07-22 10:57:43,658 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 10:57:43] "[37mPOST /statistic/tSingle HTTP/1.1[0m" 200 -
 2020-07-22 10:58:14,459 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/statistic/t_single.py', reloading
+2020-07-22 21:24:22,504 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:24:22,504 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:24:22,865 [ INFO   ] 输入数据大小:34
+2020-07-22 21:24:22,908 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-22 21:24:22,909 [ INFO   ] use normaltest
+2020-07-22 21:24:22,909 [ INFO   ] data are not normal distributed
+2020-07-22 21:24:22,914 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-22 21:24:22,914 [ INFO   ] use normaltest
+2020-07-22 21:24:22,914 [ INFO   ] data are not normal distributed
+2020-07-22 21:24:22,915 [ ERROR  ] name 'data' is not defined
+2020-07-22 21:24:22,934 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 21:24:22] "[1m[35mPOST /statistic/tTwoPair HTTP/1.1[0m" 500 -
+2020-07-22 21:25:36,435 [ INFO   ] t_two_pair_init...
+2020-07-22 21:25:36,437 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:25:36,437 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:25:36,511 [ INFO   ] 输入数据大小:34
+2020-07-22 21:25:36,545 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-22 21:25:36,545 [ INFO   ] use normaltest
+2020-07-22 21:25:36,545 [ INFO   ] data are not normal distributed
+2020-07-22 21:25:36,548 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-22 21:25:36,548 [ INFO   ] use normaltest
+2020-07-22 21:25:36,548 [ INFO   ] data are not normal distributed
+2020-07-22 21:26:34,788 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:26:34,788 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:26:35,103 [ INFO   ] 输入数据大小:34
+2020-07-22 21:26:35,127 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-22 21:26:35,127 [ INFO   ] use normaltest
+2020-07-22 21:26:35,128 [ INFO   ] data are not normal distributed
+2020-07-22 21:26:35,129 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-22 21:26:35,130 [ INFO   ] use normaltest
+2020-07-22 21:26:35,130 [ INFO   ] data are not normal distributed
+2020-07-22 21:26:37,498 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 21:26:37] "[37mPOST /statistic/tTwoPair HTTP/1.1[0m" 200 -
+2020-07-22 21:27:48,914 [ INFO   ] t_two_pair_init...
+2020-07-22 21:27:48,917 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:27:48,917 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:27:48,992 [ INFO   ] 输入数据大小:34
+2020-07-22 21:27:49,018 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-22 21:27:49,018 [ INFO   ] use normaltest
+2020-07-22 21:27:49,018 [ INFO   ] data are not normal distributed
+2020-07-22 21:27:49,020 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-22 21:27:49,020 [ INFO   ] use normaltest
+2020-07-22 21:27:49,020 [ INFO   ] data are not normal distributed
+2020-07-22 21:27:57,874 [ INFO   ] t_two_pair_init...
+2020-07-22 21:27:57,874 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:27:57,874 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:27:57,941 [ INFO   ] 输入数据大小:34
+2020-07-22 21:27:57,964 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-22 21:27:57,964 [ INFO   ] use normaltest
+2020-07-22 21:27:57,965 [ INFO   ] data are not normal distributed
+2020-07-22 21:27:57,967 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-22 21:27:57,967 [ INFO   ] use normaltest
+2020-07-22 21:27:57,967 [ INFO   ] data are not normal distributed
+2020-07-22 21:27:57,976 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 21:27:57] "[37mPOST /statistic/tTwoPair HTTP/1.1[0m" 200 -
+2020-07-22 21:28:05,650 [ INFO   ] t_two_pair_init...
+2020-07-22 21:28:05,651 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:28:05,651 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:28:05,717 [ INFO   ] 输入数据大小:34
+2020-07-22 21:28:05,740 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-22 21:28:05,740 [ INFO   ] use normaltest
+2020-07-22 21:28:05,740 [ INFO   ] data are not normal distributed
+2020-07-22 21:28:05,742 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-22 21:28:05,743 [ INFO   ] use normaltest
+2020-07-22 21:28:05,743 [ INFO   ] data are not normal distributed
+2020-07-22 21:29:17,356 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:29:17,356 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:29:17,677 [ INFO   ] 输入数据大小:34
+2020-07-22 21:29:17,712 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-22 21:29:17,712 [ INFO   ] use normaltest
+2020-07-22 21:29:17,712 [ INFO   ] data are not normal distributed
+2020-07-22 21:29:17,715 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-22 21:29:17,715 [ INFO   ] use normaltest
+2020-07-22 21:29:17,715 [ INFO   ] data are not normal distributed
+2020-07-22 21:29:17,723 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 21:29:17] "[37mPOST /statistic/tTwoPair HTTP/1.1[0m" 200 -
+2020-07-22 21:29:44,806 [ INFO   ] t_two_pair_init...
+2020-07-22 21:29:44,806 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:29:44,806 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:29:44,872 [ INFO   ] 输入数据大小:34
+2020-07-22 21:29:44,904 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-22 21:29:44,904 [ INFO   ] use normaltest
+2020-07-22 21:29:44,905 [ INFO   ] data are not normal distributed
+2020-07-22 21:29:44,907 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-22 21:29:44,907 [ INFO   ] use normaltest
+2020-07-22 21:29:44,907 [ INFO   ] data are not normal distributed
+2020-07-22 21:29:44,915 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 21:29:44] "[37mPOST /statistic/tTwoPair HTTP/1.1[0m" 200 -
+2020-07-22 21:30:39,533 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/statistic/t_two_paried.py', reloading
+2020-07-22 21:30:42,712 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:30:42,712 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:30:42,962 [ INFO   ] 输入数据大小:34
+2020-07-22 21:30:42,987 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-22 21:30:42,988 [ INFO   ] use normaltest
+2020-07-22 21:30:42,988 [ INFO   ] data are not normal distributed
+2020-07-22 21:30:42,990 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-22 21:30:42,990 [ INFO   ] use normaltest
+2020-07-22 21:30:42,990 [ INFO   ] data are not normal distributed
+2020-07-22 21:30:42,997 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 21:30:42] "[37mPOST /statistic/tTwoPair HTTP/1.1[0m" 200 -
+2020-07-22 21:31:43,756 [ INFO   ] t_two_pair_init...
+2020-07-22 21:31:43,760 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:31:43,760 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:31:43,816 [ INFO   ] 输入数据大小:34
+2020-07-22 21:31:43,852 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-22 21:31:43,852 [ INFO   ] use normaltest
+2020-07-22 21:31:43,852 [ INFO   ] data are not normal distributed
+2020-07-22 21:31:43,854 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-22 21:31:43,854 [ INFO   ] use normaltest
+2020-07-22 21:31:43,854 [ INFO   ] data are not normal distributed
+2020-07-22 21:32:34,256 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:32:34,256 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:32:34,524 [ INFO   ] 输入数据大小:34
+2020-07-22 21:32:34,549 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-22 21:32:34,549 [ INFO   ] use normaltest
+2020-07-22 21:32:34,550 [ INFO   ] data are not normal distributed
+2020-07-22 21:32:34,552 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-22 21:32:34,552 [ INFO   ] use normaltest
+2020-07-22 21:32:34,552 [ INFO   ] data are not normal distributed
+2020-07-22 21:33:23,340 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:33:23,340 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:33:23,584 [ INFO   ] 输入数据大小:34
+2020-07-22 21:33:23,610 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-22 21:33:23,610 [ INFO   ] use normaltest
+2020-07-22 21:33:23,610 [ INFO   ] data are not normal distributed
+2020-07-22 21:33:23,612 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-22 21:33:23,612 [ INFO   ] use normaltest
+2020-07-22 21:33:23,612 [ INFO   ] data are not normal distributed
+2020-07-22 21:33:26,452 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 21:33:26] "[37mPOST /statistic/tTwoPair HTTP/1.1[0m" 200 -
+2020-07-22 21:34:03,076 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/statistic/main.py', reloading
+2020-07-22 21:34:44,858 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:34:44,858 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-22 21:34:45,189 [ INFO   ] 输入数据大小:34
+2020-07-22 21:34:45,225 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-22 21:34:45,225 [ INFO   ] use normaltest
+2020-07-22 21:34:45,225 [ INFO   ] data are not normal distributed
+2020-07-22 21:34:45,227 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-22 21:34:45,228 [ INFO   ] use normaltest
+2020-07-22 21:34:45,228 [ INFO   ] data are not normal distributed
+2020-07-22 21:34:45,236 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 21:34:45] "[37mPOST /statistic/tTwoPair HTTP/1.1[0m" 200 -
+2020-07-22 21:37:41,851 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/statistic/main.py', reloading
+2020-07-22 22:39:13,296 [ INFO   ] {'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:39:13,297 [ INFO   ] receive request :{'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:39:13,673 [ INFO   ] ('Execution failed on sql \'select level,value from t_two_independent;\': (1146, "Table \'sophia_data.t_two_independent\' doesn\'t exist")',)
+2020-07-22 22:39:13,733 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 22:39:13] "[1m[35mPOST /tTwoIndependent HTTP/1.1[0m" 500 -
+2020-07-22 22:43:32,417 [ INFO   ] {'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:43:32,417 [ INFO   ] receive request :{'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:43:32,689 [ INFO   ] 输入数据大小:40
+2020-07-22 22:43:32,699 [ ERROR  ] No numeric types to aggregate
+2020-07-22 22:43:32,725 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 22:43:32] "[1m[35mPOST /tTwoIndependent HTTP/1.1[0m" 500 -
+2020-07-22 22:43:56,435 [ INFO   ] t_two_independent_init...
+2020-07-22 22:43:56,435 [ INFO   ] {'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:43:56,435 [ INFO   ] receive request :{'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:43:56,500 [ INFO   ] 输入数据大小:40
+2020-07-22 22:44:22,760 [ INFO   ] t_two_independent_init...
+2020-07-22 22:44:22,761 [ INFO   ] {'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:44:22,761 [ INFO   ] receive request :{'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:44:22,823 [ INFO   ] 输入数据大小:40
+2020-07-22 22:46:11,929 [ INFO   ] t_two_independent_init...
+2020-07-22 22:46:11,936 [ INFO   ] {'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:46:11,936 [ INFO   ] receive request :{'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:46:12,005 [ INFO   ] 输入数据大小:40
+2020-07-22 22:46:53,596 [ INFO   ] t_two_independent_init...
+2020-07-22 22:46:53,597 [ INFO   ] {'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:46:53,597 [ INFO   ] receive request :{'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:46:53,688 [ INFO   ] 输入数据大小:40
+2020-07-22 22:48:33,600 [ INFO   ] {'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:48:33,600 [ INFO   ] receive request :{'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:48:33,908 [ INFO   ] 输入数据大小:40
+2020-07-22 22:49:33,784 [ INFO   ] 统计量:0.9646358489990234,P值:0.6399719715118408
+2020-07-22 22:49:33,785 [ INFO   ] use shapiro:
+2020-07-22 22:49:33,785 [ INFO   ] data are normal distributed
+2020-07-22 22:49:33,785 [ INFO   ] 统计量:0.9568413496017456,P值:0.4828367531299591
+2020-07-22 22:49:33,785 [ INFO   ] use shapiro:
+2020-07-22 22:49:33,785 [ INFO   ] data are normal distributed
+2020-07-22 22:49:34,941 [ INFO   ] variances of groups are equal
+2020-07-22 22:49:34,973 [ INFO   ] variances of groups are equal
+2020-07-22 22:49:34,975 [ INFO   ] variances of groups are equal
+2020-07-22 22:49:35,793 [ INFO   ] 方差齐性检验的统计量:1.0409212880143113, P值:0.3140591282761769
+2020-07-22 22:49:35,794 [ INFO   ] 方差相等
+2020-07-22 22:49:35,800 [ INFO   ] 拒绝原假设，两个总体均值有显著差异
+2020-07-22 22:49:35,801 [ INFO   ] 方差相等
+2020-07-22 22:49:35,805 [ INFO   ] 拒绝原假设，两个总体均值有显著差异
+2020-07-22 22:49:54,571 [ INFO   ] {'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:49:54,571 [ INFO   ] receive request :{'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-22 22:49:54,910 [ INFO   ] 输入数据大小:40
+2020-07-22 22:49:54,936 [ INFO   ] 统计量:0.9646358489990234,P值:0.6399719715118408
+2020-07-22 22:49:54,936 [ INFO   ] use shapiro:
+2020-07-22 22:49:54,936 [ INFO   ] data are normal distributed
+2020-07-22 22:49:54,936 [ INFO   ] 统计量:0.9568413496017456,P值:0.4828367531299591
+2020-07-22 22:49:54,936 [ INFO   ] use shapiro:
+2020-07-22 22:49:54,936 [ INFO   ] data are normal distributed
+2020-07-22 22:49:54,938 [ INFO   ] variances of groups are equal
+2020-07-22 22:49:54,940 [ INFO   ] variances of groups are equal
+2020-07-22 22:49:54,941 [ INFO   ] variances of groups are equal
+2020-07-22 22:49:54,945 [ INFO   ] 方差齐性检验的统计量:1.0409212880143113, P值:0.3140591282761769
+2020-07-22 22:49:54,945 [ INFO   ] 方差相等
+2020-07-22 22:49:54,946 [ INFO   ] 拒绝原假设，两个总体均值有显著差异
+2020-07-22 22:49:54,946 [ INFO   ] 方差相等
+2020-07-22 22:49:54,947 [ INFO   ] 拒绝原假设，两个总体均值有显著差异
+2020-07-22 22:49:54,952 [ INFO   ] 127.0.0.1 - - [22/Jul/2020 22:49:54] "[37mPOST /tTwoIndependent HTTP/1.1[0m" 200 -
+2020-07-22 22:57:43,487 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/statistic/anova_all_way.py', reloading
+2020-07-23 10:36:26,951 [ INFO   ] {'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-23 10:36:26,951 [ INFO   ] receive request :{'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.05', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-23 10:36:27,429 [ INFO   ] 输入数据大小:40
+2020-07-23 10:36:27,466 [ INFO   ] 统计量:0.9646358489990234,P值:0.6399719715118408
+2020-07-23 10:36:27,466 [ INFO   ] use shapiro:
+2020-07-23 10:36:27,466 [ INFO   ] data are normal distributed
+2020-07-23 10:36:27,467 [ INFO   ] 统计量:0.9568413496017456,P值:0.4828367531299591
+2020-07-23 10:36:27,467 [ INFO   ] use shapiro:
+2020-07-23 10:36:27,467 [ INFO   ] data are normal distributed
+2020-07-23 10:36:27,469 [ INFO   ] variances of groups are equal
+2020-07-23 10:36:27,473 [ INFO   ] variances of groups are equal
+2020-07-23 10:36:27,476 [ INFO   ] variances of groups are equal
+2020-07-23 10:36:27,481 [ INFO   ] 方差齐性检验的统计量:1.0409212880143113, P值:0.3140591282761769
+2020-07-23 10:36:27,482 [ INFO   ] 方差相等
+2020-07-23 10:36:27,483 [ INFO   ] 拒绝原假设，两个总体均值有显著差异
+2020-07-23 10:36:27,483 [ INFO   ] 方差相等
+2020-07-23 10:36:27,484 [ INFO   ] 拒绝原假设，两个总体均值有显著差异
+2020-07-23 10:36:27,489 [ INFO   ] 127.0.0.1 - - [23/Jul/2020 10:36:27] "[37mPOST /tTwoIndependent HTTP/1.1[0m" 200 -
+2020-07-23 10:36:35,583 [ INFO   ] t_two_independent_init...
+2020-07-23 10:36:35,583 [ INFO   ] {'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.06', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-23 10:36:35,583 [ INFO   ] receive request :{'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.06', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-23 10:36:35,756 [ INFO   ] 输入数据大小:40
+2020-07-23 10:36:35,779 [ INFO   ] 统计量:0.9646358489990234,P值:0.6399719715118408
+2020-07-23 10:36:35,779 [ INFO   ] use shapiro:
+2020-07-23 10:36:35,779 [ INFO   ] data are normal distributed
+2020-07-23 10:36:35,779 [ INFO   ] 统计量:0.9568413496017456,P值:0.4828367531299591
+2020-07-23 10:36:35,780 [ INFO   ] use shapiro:
+2020-07-23 10:36:35,780 [ INFO   ] data are normal distributed
+2020-07-23 10:36:35,782 [ INFO   ] variances of groups are equal
+2020-07-23 10:36:35,783 [ INFO   ] variances of groups are equal
+2020-07-23 10:36:35,784 [ INFO   ] variances of groups are equal
+2020-07-23 10:36:35,789 [ INFO   ] 方差齐性检验的统计量:1.0409212880143113, P值:0.3140591282761769
+2020-07-23 10:36:35,789 [ INFO   ] 方差相等
+2020-07-23 10:36:35,790 [ INFO   ] 拒绝原假设，两个总体均值有显著差异
+2020-07-23 10:36:35,790 [ INFO   ] 方差相等
+2020-07-23 10:36:35,791 [ INFO   ] 拒绝原假设，两个总体均值有显著差异
+2020-07-23 10:36:35,795 [ INFO   ] 127.0.0.1 - - [23/Jul/2020 10:36:35] "[37mPOST /tTwoIndependent HTTP/1.1[0m" 200 -
+2020-07-23 10:36:47,413 [ INFO   ] t_two_pair_init...
+2020-07-23 10:36:47,414 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-23 10:36:47,414 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.05', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-23 10:36:47,608 [ INFO   ] 输入数据大小:34
+2020-07-23 10:36:47,637 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-23 10:36:47,637 [ INFO   ] use normaltest
+2020-07-23 10:36:47,637 [ INFO   ] data are not normal distributed
+2020-07-23 10:36:47,640 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-23 10:36:47,640 [ INFO   ] use normaltest
+2020-07-23 10:36:47,640 [ INFO   ] data are not normal distributed
+2020-07-23 10:36:47,649 [ INFO   ] 127.0.0.1 - - [23/Jul/2020 10:36:47] "[37mPOST /statistic/tTwoPair HTTP/1.1[0m" 200 -
+2020-07-23 10:36:54,624 [ INFO   ] t_two_pair_init...
+2020-07-23 10:36:54,624 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.06', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-23 10:36:54,624 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.06', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-23 10:36:55,038 [ INFO   ] 输入数据大小:34
+2020-07-23 10:36:55,062 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-23 10:36:55,062 [ INFO   ] use normaltest
+2020-07-23 10:36:55,062 [ INFO   ] data are not normal distributed
+2020-07-23 10:36:55,064 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-23 10:36:55,065 [ INFO   ] use normaltest
+2020-07-23 10:36:55,065 [ INFO   ] data are not normal distributed
+2020-07-23 10:36:55,072 [ INFO   ] 127.0.0.1 - - [23/Jul/2020 10:36:55] "[37mPOST /statistic/tTwoPair HTTP/1.1[0m" 200 -

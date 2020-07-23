@@ -167,7 +167,7 @@ def transform_h_table_data_to_v(data: pd.DataFrame, X):
         level_index.extend([x] * len(data[x]))
         value.extend(data[x].values.tolist())
     data = pd.DataFrame({"level": level_index, "value": value}, dtype="float16")
-    X = ["levle"]
+    X = ["level"]
     Y = ["value"]
     return data, X, Y
 
@@ -181,4 +181,11 @@ def transform_table_data_to_html(data: dict, col0=""):
         data["data"][idx].insert(0, str(index))
     if "row" in data:
         del data["row"]
+    return data
+
+
+# format dataframe
+def format_dataframe(data, config):
+    for key, value in config.items():
+        data[key] = data[key].map(lambda x: format(x, value))
     return data
