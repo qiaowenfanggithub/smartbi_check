@@ -37,18 +37,19 @@ def levels_conbination(data):
         from functools import reduce
     except ImportError as e:
         raise e
-    combination_fn = lambda x: reduce(lambda x, y: [[str(i), str(j)] for i in x for j in y], x)
+    combination_fn = lambda x: reduce(lambda x, y: [(i, j) for i in x for j in y], x)
     level_list = [data[x].unique() for x in X]
     level_combination_res = combination_fn(level_list)
     return level_combination_res
 
 
 # 主体间因子
-def level_info(data, X, Y):
+def level_info(data, X):
     res = []
     level_list = levels_conbination(data)
+    data_group = data.groupby(X).indices
     for idx, level in enumerate(level_list):
-        row = [l for l in level].append(data[level].count())
+        row = [str(l) for l in level] + [str(len(data_group[level]))]
         res.append(row)
     return {
         "col": ["因子", "因子水平" * (len(X) - 1), "个案数"],
@@ -216,6 +217,7 @@ def multiple_test_multivariate(data, X, Y, alpha=0.05):
 def anova_all_way_describe_info(data: pd.DataFrame, X, Y):
     res = []
     level_list = levels_conbination(data)
+    data_group = data.groupby(X).indices
     for idx, level in enumerate(level_list):
         if level_list[idx + 1][0] != level:
             row_tmp = ["总计"] + [""] * (len(X) - 1)
@@ -260,6 +262,9 @@ if __name__ == '__main__':
     # 因子水平排列组合结果
     # print(levels_conbination(data))
 
+    # 主体间因子
+    # print(level_info(data, X))
+
     # 正态性检验
     # NormalTest(x1_levels, 0.05)
     # NormalTest(x2_levels, 0.05)
@@ -269,10 +274,10 @@ if __name__ == '__main__':
     # Levene_test(x2_level1, x2_level2, x2_level3, alpha=0.05)
 
     # F检验
-    print(anova_analysis_multivariate(data, X, Y))
+    # print(anova_analysis_multivariate(data, X, Y))
 
     # 多重比较
     # multiple_test_multivariate(data, X, Y)
 
     # 描述性统计分析
-    # print(anova_all_way_describe_info(data, ["培训前成绩等级", "培训方法"], ["成绩"]))
+    print(anova_all_way_describe_info(data, ["培训前成绩等级", "培训方法"], ["成绩"]))

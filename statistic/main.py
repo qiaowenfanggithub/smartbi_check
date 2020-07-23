@@ -22,7 +22,7 @@ import json
 import numpy as np
 import pandas as pd
 from flask_cors import *
-from utils import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html
+from utils import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, exec_sql
 from flask.json import JSONEncoder as _JSONEncoder
 from anova_one_way import normal_test, levene_test, anova_analysis, multiple_test, anova_one_way_describe_info
 from anova_all_way import anova_analysis_multivariate, multiple_test_multivariate, anova_all_way_describe_info
@@ -95,11 +95,7 @@ def check_data():
         raise e
     # 从数据库拿数据：
     try:
-        if not Y or (len(Y) == 1 and Y[0] == ""):
-            sql_sentence = "select {} from {};".format(",".join(X), "`" + table_name + "`")
-        else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), "`" + table_name + "`")
-        data = get_dataframe_from_mysql(sql_sentence)
+        data = exec_sql(table_name, X, Y)
         res_data = {
             "title": "单因素方差分析-查看数据",
             "row": data.index.values.tolist(),
@@ -144,15 +140,7 @@ def anova_one_way():
         raise e
     assert isinstance([X, Y], list)
     # 从数据库拿数据
-    try:
-        if len(Y) == 1 and Y[0] == "":
-            sql_sentence = "select {} from {};".format(",".join(X), "`" + table_name + "`")
-        else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), "`" + table_name + "`")
-        data = get_dataframe_from_mysql(sql_sentence)
-    except Exception as e:
-        log.info(e.args)
-        raise e
+    data = exec_sql(table_name, X, Y)
     log.info("输入数据大小:{}".format(len(data)))
     try:
         if table_direction == "v":
@@ -223,18 +211,8 @@ def anova_all_way():
         raise e
     assert isinstance([X, Y], list)
     # 从数据库拿数据
-    try:
-        if len(Y) == 1 and Y[0] == "":
-            sql_sentence = "select {} from {};".format(",".join(X), table_name)
-        else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
-        data = get_dataframe_from_mysql(sql_sentence)
-    except Exception as e:
-        log.info(e.args)
-        raise e
-
+    data = exec_sql(table_name, X, Y)
     log.info("输入数据大小:{}".format(len(data)))
-
     try:
         if table_direction == "v":
             data[Y[0]] = data[Y[0]].astype("float16")
@@ -305,12 +283,7 @@ def t_single():
         log.info(e)
         raise e
     # 从数据库拿数据
-    try:
-        sql_sentence = "select {} from {};".format(",".join(X), table_name)
-        data = get_dataframe_from_mysql(sql_sentence)
-    except Exception as e:
-        log.info(e.args)
-        raise e
+    data = exec_sql(table_name, X)
     log.info("输入数据大小:{}".format(len(data)))
     try:
         res = []
@@ -363,15 +336,7 @@ def t_two_independent():
         raise e
     assert isinstance([X, Y], list)
     # 从数据库拿数据
-    try:
-        if not Y or Y[0] == "":
-            sql_sentence = "select {} from {};".format(",".join(X), table_name)
-        else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
-        data = get_dataframe_from_mysql(sql_sentence)
-    except Exception as e:
-        log.info(e.args)
-        raise e
+    data = exec_sql(table_name, X, Y)
     log.info("输入数据大小:{}".format(len(data)))
     try:
         if table_direction == "v":
@@ -394,7 +359,8 @@ def t_two_independent():
         if "variances" in analysis_options:
             res.append(transform_table_data_to_html(levene_test(*every_level_data, alpha=alpha)))
         # 独立样本T检验
-        res.append(transform_table_data_to_html(t_two_independent_analysis(every_level_data[0], every_level_data[1], alpha=alpha)))
+        res.append(transform_table_data_to_html(
+            t_two_independent_analysis(every_level_data[0], every_level_data[1], alpha=alpha)))
         response_data = {"res": res,
                          "code": "200",
                          "msg": "ok!"}
@@ -433,15 +399,7 @@ def t_two_pair():
         raise e
     assert isinstance([X, Y], list)
     # 从数据库拿数据
-    try:
-        if not Y or Y[0] == "":
-            sql_sentence = "select {} from {};".format(",".join(X), table_name)
-        else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
-        data = get_dataframe_from_mysql(sql_sentence)
-    except Exception as e:
-        log.info(e.args)
-        raise e
+    data = exec_sql(table_name, X, Y)
     log.info("输入数据大小:{}".format(len(data)))
     try:
         if table_direction == "v":
@@ -457,10 +415,12 @@ def t_two_pair():
         # 描述性统计分析
         res.append(transform_table_data_to_html(t_two_paired_describe_info(data, X, Y)))
         if "pearsonr" in analysis_options:
-            res.append(transform_table_data_to_html(pearsonr_test(*every_level_data, index=every_level_data_index, alpha=alpha)))
+            res.append(transform_table_data_to_html(
+                pearsonr_test(*every_level_data, index=every_level_data_index, alpha=alpha)))
         if "normal" in analysis_options:
             res.append(transform_table_data_to_html(normal_test(every_level_data_index, every_level_data, alpha)))
-        res.append(transform_table_data_to_html(t_two_pair_analysis(*every_level_data, index=every_level_data_index, alpha=alpha), col0="配对差值"))
+        res.append(transform_table_data_to_html(
+            t_two_pair_analysis(*every_level_data, index=every_level_data_index, alpha=alpha), col0="配对差值"))
         response_data = {"res": res,
                          "code": "200",
                          "msg": "ok!"}

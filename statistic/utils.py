@@ -20,6 +20,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pymysql
+import logging
+
+log = logging.getLogger(__name__)
 
 
 # ======================= 算法预处理 =============================
@@ -156,6 +159,21 @@ def get_dataframe_from_mysql(sql_sentence, host=None, port=None, user=None, pass
         df = pd.read_sql(sql_sentence, conn)
         return df
     except Exception as e:
+        raise e
+
+
+# 根据sql获取数据
+def exec_sql(table_name, X=None, Y=None):
+    # 从数据库拿数据
+    try:
+        if not Y or Y[0] == "":
+            sql_sentence = "select {} from {};".format(",".join(X), "`" + table_name + "`")
+        else:
+            sql_sentence = "select {} from {};".format(",".join(X + Y), "`" + table_name + "`")
+        data = get_dataframe_from_mysql(sql_sentence)
+        return data
+    except Exception as e:
+        log.info(e.args)
         raise e
 
 

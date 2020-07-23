@@ -1534,3 +1534,60 @@
 2020-07-23 10:36:55,065 [ INFO   ] use normaltest
 2020-07-23 10:36:55,065 [ INFO   ] data are not normal distributed
 2020-07-23 10:36:55,072 [ INFO   ] 127.0.0.1 - - [23/Jul/2020 10:36:55] "[37mPOST /statistic/tTwoPair HTTP/1.1[0m" 200 -
+2020-07-23 11:00:48,421 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/statistic/main.py', reloading
+2020-07-23 13:52:01,206 [ INFO   ] {'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.06', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-23 13:52:01,206 [ INFO   ] receive request :{'table_name': 't_two_pair', 'X': ['value1', 'value2'], 'Y': [], 'alpha': '0.06', 'table_direction': 'h', 'analysis_options': ['normal', 'pearsonr']}
+2020-07-23 13:52:01,529 [ INFO   ] 输入数据大小:34
+2020-07-23 13:52:01,548 [ INFO   ] 统计量:83.20471487548178,P值:8.557082726994873e-19
+2020-07-23 13:52:01,548 [ INFO   ] use normaltest
+2020-07-23 13:52:01,548 [ INFO   ] data are not normal distributed
+2020-07-23 13:52:01,550 [ INFO   ] 统计量:83.00163517632788,P值:9.471612608627993e-19
+2020-07-23 13:52:01,550 [ INFO   ] use normaltest
+2020-07-23 13:52:01,550 [ INFO   ] data are not normal distributed
+2020-07-23 13:52:01,558 [ INFO   ] 127.0.0.1 - - [23/Jul/2020 13:52:01] "[37mPOST /statistic/tTwoPair HTTP/1.1[0m" 200 -
+2020-07-23 13:52:12,148 [ INFO   ] t_two_independent_init...
+2020-07-23 13:52:12,148 [ INFO   ] {'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.06', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-23 13:52:12,148 [ INFO   ] receive request :{'table_name': 't_two_independent', 'X': ['level'], 'Y': ['value'], 'alpha': '0.06', 'table_direction': 'v', 'analysis_options': ['normal', 'variances']}
+2020-07-23 13:52:12,234 [ INFO   ] 输入数据大小:40
+2020-07-23 13:52:12,244 [ INFO   ] 统计量:0.9646358489990234,P值:0.6399719715118408
+2020-07-23 13:52:12,244 [ INFO   ] use shapiro:
+2020-07-23 13:52:12,244 [ INFO   ] data are normal distributed
+2020-07-23 13:52:12,244 [ INFO   ] 统计量:0.9568413496017456,P值:0.4828367531299591
+2020-07-23 13:52:12,244 [ INFO   ] use shapiro:
+2020-07-23 13:52:12,245 [ INFO   ] data are normal distributed
+2020-07-23 13:52:12,246 [ INFO   ] variances of groups are equal
+2020-07-23 13:52:12,246 [ INFO   ] variances of groups are equal
+2020-07-23 13:52:12,247 [ INFO   ] variances of groups are equal
+2020-07-23 13:52:12,250 [ INFO   ] 方差齐性检验的统计量:1.0409212880143113, P值:0.3140591282761769
+2020-07-23 13:52:12,250 [ INFO   ] 方差相等
+2020-07-23 13:52:12,251 [ INFO   ] 拒绝原假设，两个总体均值有显著差异
+2020-07-23 13:52:12,251 [ INFO   ] 方差相等
+2020-07-23 13:52:12,251 [ INFO   ] 拒绝原假设，两个总体均值有显著差异
+2020-07-23 13:52:12,252 [ INFO   ] 127.0.0.1 - - [23/Jul/2020 13:52:12] "[37mPOST /statistic/tTwoIndependent HTTP/1.1[0m" 200 -
+2020-07-23 13:52:48,020 [ INFO   ] t_single_test_init...
+2020-07-23 13:52:48,020 [ INFO   ] {'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-23 13:52:48,020 [ INFO   ] receive request :{'table_name': 't_single', 'X': ['value'], 'mean': '80', 'alpha': '0.05', 'analysis_options': ['normal']}
+2020-07-23 13:52:48,253 [ INFO   ] 输入数据大小:32
+2020-07-23 13:52:48,259 [ INFO   ] 统计量:83.01337083443809,P值:9.416197547020136e-19
+2020-07-23 13:52:48,259 [ INFO   ] use normaltest
+2020-07-23 13:52:48,259 [ INFO   ] data are not normal distributed
+2020-07-23 13:52:48,262 [ INFO   ] 127.0.0.1 - - [23/Jul/2020 13:52:48] "[37mPOST /statistic/tSingle HTTP/1.1[0m" 200 -
+2020-07-23 13:53:09,926 [ INFO   ] 127.0.0.1 - - [23/Jul/2020 13:53:09] "[33mPOST /anovaAllWay/test HTTP/1.1[0m" 404 -
+2020-07-23 13:53:47,581 [ INFO   ] anova_one_way_init...
+2020-07-23 13:53:47,581 [ INFO   ] {'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.06', 'table_direction': 'v', 'analysis_options': ['normal', 'variances', 'multiple']}
+2020-07-23 13:53:47,581 [ INFO   ] receive request :{'table_name': 'anova_one_way', 'X': ['level'], 'Y': ['value'], 'alpha': '0.06', 'table_direction': 'v', 'analysis_options': ['normal', 'variances', 'multiple']}
+2020-07-23 13:53:47,721 [ INFO   ] 输入数据大小:90
+2020-07-23 13:53:47,756 [ INFO   ] 统计量:2.7722199654115256,P值:0.25004609885321805
+2020-07-23 13:53:47,756 [ INFO   ] use normaltest
+2020-07-23 13:53:47,756 [ INFO   ] data are normal distributed
+2020-07-23 13:53:47,757 [ INFO   ] 统计量:1.7629668380223937,P值:0.414168070970821
+2020-07-23 13:53:47,757 [ INFO   ] use normaltest
+2020-07-23 13:53:47,757 [ INFO   ] data are normal distributed
+2020-07-23 13:53:47,758 [ INFO   ] 统计量:0.461496339476071,P值:0.7939393788238944
+2020-07-23 13:53:47,759 [ INFO   ] use normaltest
+2020-07-23 13:53:47,759 [ INFO   ] data are normal distributed
+2020-07-23 13:53:47,760 [ INFO   ] variances of groups are equal
+2020-07-23 13:53:47,761 [ INFO   ] variances of groups are equal
+2020-07-23 13:53:47,762 [ INFO   ] variances of groups are equal
+2020-07-23 13:53:47,782 [ INFO   ] ---------------------multiple test------------------
+2020-07-23 13:53:47,805 [ INFO   ] 127.0.0.1 - - [23/Jul/2020 13:53:47] "[37mPOST /statistic/anovaOneWay HTTP/1.1[0m" 200 -
