@@ -22,7 +22,7 @@ import numpy as np
 import pandas as pd
 import time
 from flask_cors import *
-from utils import get_dataframe_from_mysql
+from utils import *
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 from sklearn.linear_model import LogisticRegression
@@ -67,64 +67,6 @@ def init_route():
         raise e
     log.info("receive request :{}".format(request_data))
     return request_data
-
-
-def show_classifier_results(x, y, model):
-    """
-    预测结果输出
-    :param x: 测试集特征
-    :param y: 测试集标签
-    :param model: 训练好的模型
-    :return: 结果
-    """
-    # 输出结果展示
-    y_predict = model.predict(x)
-    y_predict_proba = model.predict_proba(x)
-    # accuracy_score = metrics.accuracy_score(y, y_predict)
-    # precision_score = metrics.precision_score(y, y_predict)
-    # recall_score = metrics.recall_score(y, y_predict)
-    # f1_score = metrics.f1_score(y, y_predict)
-    confusion_matrix = metrics.confusion_matrix(y, y_predict)
-    report = metrics.classification_report(y, y_predict, target_names=model.classes_.tolist())
-    roc_auc_res = {}
-    for idx, label in enumerate(model.classes_):
-        # fpr,tpr用于绘制曲线
-        fpr, tpr, threshold = metrics.roc_curve(y, y_predict_proba[:, idx], pos_label=label)
-        auc_score = metrics.auc(fpr, tpr)
-        roc_auc_res.update({label: {
-            "fpr": fpr.tolist(),
-            "tpr": tpr.tolist(),
-            "threshold": threshold.tolist(),
-            "auc_score": auc_score,
-        }})
-
-    return {
-        "confusion_matrix": confusion_matrix.tolist(),
-        "roc_auc_res": roc_auc_res,
-        "report": report,
-    }
-
-
-def generate_tree_graph(model, feature_names, class_names):
-    """
-    可视化决策树图
-    :param model: 决策树模型
-    :param feature_names: 特征名列表
-    :param class_names: 标签名列表
-    :return: 图
-    """
-    #
-    # dot_data = StringIO()
-    dot_data = export_graphviz(model,
-                               out_file=None,
-                               feature_names=feature_names,
-                               class_names=class_names,
-                               filled=True,
-                               rounded=True,
-                               special_characters=True)
-    graph = pydotplus.graph_from_dot_data(dot_data)
-    img = graph.create_png()
-    return
 
 
 # ================================ 决策树-训练 ==============================
@@ -267,12 +209,7 @@ def decision_tree_predict():
             res = model.predict([X])
         else:
             # 从数据库拿数据
-            try:
-                sql_sentence = "select {} from {};".format(",".join(X), table_name)
-                data = get_dataframe_from_mysql(sql_sentence)
-            except Exception as e:
-                log.info(e.args)
-                raise e
+            data = exec_sql(table_name, X, Y)
             log.info("输入数据大小:{}".format(len(data)))
             res = model.predict(data.values)
     except Exception as e:
@@ -303,6 +240,7 @@ def logistics_train():
             "solver": "saga", # str，优化算法
             "max_ter": "1000", # str，最大迭代步数
         }
+        "show_options": ["matrix", "roc", "r2", "coff"]
     :return:
     """
     log.info('logistics_train_init...')
@@ -316,67 +254,42 @@ def logistics_train():
         random_state = int(request_data.get('randomState', 0))
         rate = float(request_data.get('rate', 0))
         cv = int(request_data.get('cv', 0))
+        show_options = request_data.get("show_options", [])
     except Exception as e:
         log.info(e)
         raise e
-    param["penalty"] = [param.get("penalty", "")]
-    param["C"] = [float(param.get("C", 0))]
-    # 默然saga随机梯度下降
-    param["solver"] = [param.get("solver", "saga")]
-    param["max_iter"] = [int(param.get("max_iter", 1000))]
+    param["penalty"] = param.get("penalty", "")
+    param["C"] = param.get("C", ["0"])
+    param["C"] = [float(c) for c in param["C"]]
+    # 默认saga随机梯度下降
+    param["solver"] = param.get("solver", ["saga"])
+    param["max_iter"] = param.get("max_iter", ["1000"])
+    param["max_iter"] = [int(m) for m in param["max_iter"]]
     # 从数据库拿数据
-    try:
-        if len(Y) == 1 and Y[0] == "":
-            raise ValueError("input Y must not bu empty")
-        else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
-        data = get_dataframe_from_mysql(sql_sentence)
-    except Exception as e:
-        log.info(e.args)
-        raise e
+    data = exec_sql(table_name, X, Y)
     log.info("输入数据大小:{}".format(len(data)))
-    # 数据类型统一为float
-    data[X] = data[X].astype("float16")
-    data[Y] = data[Y].astype("str")
+    # 数据类型统一为float，假设数据已经是处理后的（编码+归一化）
+    data = data.astype("float")
     try:
-        # 测试模型
+        # 利用测试数据评估模型
         if not is_train:
             model_name_list = os.listdir("./model/LogisticRegression")
             model_name_list.sort()
-            lastest_model_path = os.path.join("./model/LogisticRegression", model_name_list[-1])
-            test_model = joblib.load(lastest_model_path)
-            x_test = data.loc[:, X].values
-            y_test = data[Y[0]].values
-            # 输出测试集分类结果
-            classifier_res = show_classifier_results(x_test, y_test, test_model)
+            latest_model_path = os.path.join("./model/LogisticRegression", model_name_list[-1])
+            test_model = joblib.load(latest_model_path)
+            x_test = data.loc[:, X]
+            y_test = data[Y[0]]
 
-            # 拟合优度结果
-            try:
-                import statsmodels.api as sm
-            except:
-                raise ImportError("statsmodels.api cannot import")
-            try:
-                x = sm.add_constant(x_test)
-                logit_stats_model = sm.Logit(y_test.astype("int16"), x)
-                logit_stats_res = logit_stats_model.fit()
-                # 拟合优度
-                logit_regression_res = logit_stats_res.summary().tables[0].data
-                # 系数解读
-                coef_explain = logit_stats_res.summary().tables[1].data
-            except Exception as e:
-                log.error("statsmodels analysis error")
-                raise e
+            res = algorithm_show_result(test_model, x_test, y_test, options=show_options)
 
-            response_data = {"classifier_res": classifier_res,
-                             "logit_regression_res": logit_regression_res,
-                             "coef_explain": coef_explain,
+            response_data = {"res": res,
                              "code": "200",
                              "msg": "ok!"}
             return jsonify(response_data)
         # 训练模式
         else:
-            data_x = data.loc[:, X].values
-            data_y = data[Y[0]].values
+            data_x = data[X]
+            data_y = data[Y[0]]
             # 数据分割
             x_train, x_test, y_train, y_test = train_test_split(data_x, data_y,
                                                                 random_state=random_state,
@@ -389,34 +302,15 @@ def logistics_train():
             best_param = model.best_params_
             model = LogisticRegression(**best_param, random_state=random_state).fit(x_test, y_test)
 
+            # 保存模型
             if not os.path.exists("./model/LogisticRegression/"):
                 os.mkdir("./model/LogisticRegression/")
             joblib.dump(model, "./model/LogisticRegression/{}.pkl".format(
                 time.strftime("%y-%m-%d-%H-%M-%S", time.localtime())))
 
-            # 输出测试集结果
-            classifier_res = show_classifier_results(x_test, y_test, model)
+            res = algorithm_show_result(model, x_test, y_test, options=show_options)
 
-            # 拟合优度结果
-            try:
-                import statsmodels.api as sm
-            except:
-                raise ImportError("statsmodels.api cannot import")
-            try:
-                x = sm.add_constant(x_test)
-                logit_stats_model = sm.Logit(y_test.astype("int16"), x)
-                logit_stats_res = logit_stats_model.fit()
-                # 拟合优度
-                logit_regression_res = logit_stats_res.summary().tables[0].data
-                # 系数解读
-                coef_explain = logit_stats_res.summary().tables[1].data
-            except Exception as e:
-                log.error("statsmodels analysis error")
-                raise e
-
-            response_data = {"classifier_res": classifier_res,
-                             "logit_regression_res": logit_regression_res,
-                             "coef_explain": coef_explain,
+            response_data = {"res": res,
                              "code": "200",
                              "msg": "ok!",
                              }
@@ -452,18 +346,22 @@ def logistics_predict():
         model_name_list.sort()
         lastest_model_path = os.path.join("./model/LogisticRegression", model_name_list[-1])
         model = joblib.load(lastest_model_path)
+        res = {}
         if one_sample:
-            res = model.predict([X])
+            X = [float(x) for x in X]
+            res.update({"predict": model.predict([X]),
+                        "title": "单样本预测结果"})
         else:
             # 从数据库拿数据
-            try:
-                sql_sentence = "select {} from {};".format(",".join(X), table_name)
-                data = get_dataframe_from_mysql(sql_sentence)
-            except Exception as e:
-                log.info(e.args)
-                raise e
+            data = exec_sql(table_name, X)
             log.info("输入数据大小:{}".format(len(data)))
-            res = model.predict(data.values)
+            data = data.astype(float)
+            pre_data = model.predict(data.values)
+            res.update({
+                "predict": pre_data,
+                "title": "多样本预测结果",
+                "col": "预测结果"
+            })
     except Exception as e:
         log.error(e)
         raise e
@@ -606,7 +504,7 @@ def random_forest_train():
 
             label_list = np.unique(y_test)
             # 输出测试集结果
-            test_results = show_results(x_test, y_test, test_model, label_list)
+            test_results = show_classifier_results(x_test, y_test, test_model, label_list)
 
             # 可视化决策树图
             # generate_tree_graph(test_model, x_test.columns, label_list)
@@ -638,7 +536,7 @@ def random_forest_train():
 
             label_list = np.unique(y_train)
             # 输出测试集结果
-            test_results = show_results(x_test, y_test, model, label_list)
+            test_results = show_classifier_results(x_test, y_test, model, label_list)
 
             # 可视化决策树图
             # generate_tree_graph(model, X, label_list)

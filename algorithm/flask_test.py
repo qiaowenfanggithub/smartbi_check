@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
     # ======================= 逻辑回归-训练 =============================
     # kwargs = {
-    #     "isTrain": False,  # True,进行训练还是测试
+    #     "isTrain": True,  # True,进行训练还是测试
     #     "tableName": "buy_computer_new",  # str,数据库表名
     #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
     #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
@@ -63,11 +63,12 @@ if __name__ == '__main__':
     #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
     #     "cv": "3",  # str,几折交叉验证
     #     "param": {
-    #         "penalty": "l2",  # str,惩罚项
-    #         "C": "2",  # str,惩罚项系数
-    #         "solver": "saga",  # str，优化算法
-    #         "max_iter": "1000",  # str，最大迭代步数
-    #     }
+    #         "penalty": ["l2"],  # str,惩罚项
+    #         "C": ["2"],  # str,惩罚项系数
+    #         "solver": ["saga"],  # str，优化算法
+    #         "max_iter": ["1000"],  # str，最大迭代步数
+    #     },
+    #     "show_options": ["matrix", "roc", "r2", "coff"]
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logistics/train', json=kwargs, timeout=30)
 
@@ -75,6 +76,7 @@ if __name__ == '__main__':
     kwargs = {
         "oneSample": False,  # 是否批量上传数据进行预测
         "tableName": "buy_computer_new",  # str,数据库表名
+        # "X": [1,1,1,0],  # list,自变量
         "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
     }
     res = my_session.post(url='http://127.0.0.1:5000/algorithm/logistics/predict', json=kwargs, timeout=30)
