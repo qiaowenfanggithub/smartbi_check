@@ -34,6 +34,7 @@ from nonparametric_two_independent import wilcoxon_ranksums_test, mannwhitneyu_t
 from nonparametric_two_pair import mannwhitneyu_test_with_diff, nonparam_two_paired_describe_info
 from nonparametric_multi_independent import kruskal_test, median_test, nonparam_multi_independent_describe_info
 from two_independent_MWU import Mann_Whitney_U_describe,Mann_Whitney_U_test
+from more_independent_KWH import Kruskal_Wallis_H_describe,Kruskal_Wallis_H_test
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -482,6 +483,68 @@ def nonparametric_two_independent():
         raise e
         # return jsonify({"data": "", "code": "500", "msg": e.args[0]})
 
+# ================================ 多个独立样本非参数检验 Kruskal-Wallis H 检验==============================
+@app.route('/statistic/nonparametricMultiIndependent', methods=['POST', 'GET'])
+def results_nonparametric_multi_independent():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1", "x2"], # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["y"], # list,因变量,当表格方向为v是使用
+        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+    }
+    :return:
+    """
+    log.info('nonparametric_multi_independent_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        table_direction = request_data['table_direction']
+        # alpha = float(request_data['alpha'])
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # 从数据库拿数据
+    data = exec_sql(table_name, X, Y)
+    log.info("输入数据大小:{}".format(len(data)))
+
+    try:
+        if table_direction == "v":
+            every_level_data_index = [d for d in data[X[0]].unique()]
+            # every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
+            data, X = transform_v_table_data_to_h(data, X, Y)
+        elif table_direction == "h":
+            every_level_data_index = X
+            every_level_data = [data[l].astype("float16") for l in X]
+            # data, X, Y = transform_h_table_data_to_v(data, X)
+        else:
+            raise ValueError("table direction must be h or v")
+        if len(every_level_data_index) < 2:
+            raise ValueError("多个独立样本非参数检验，自变量的水平至少是2个")
+
+        # 描述性统计
+        res = []
+        data_info = transform_table_data_to_html(Kruskal_Wallis_H_describe(data,X))
+        res.append(data_info)
+        log.info("描述性统计分析完成")
+
+        # Kruska-Wallis H 检验
+        Kruskal_Wallis_H_res = Kruskal_Wallis_H_test(data,X)
+        res.append(Kruskal_Wallis_H_res)
+        log.info("Kruska-Wallis H 检验完成")
+
+        response_data = {"res": res,
+                         "data_info": data_info,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+
 
 
 # ================================ 两配对样本非参数检验 ==============================
@@ -550,65 +613,7 @@ def results_nonparametric_two_pair():
         # return jsonify({"data": "", "code": "500", "msg": e.args})
 
 
-# ================================ 多个独立样本非参数检验 ==============================
-@app.route('/nonparametricMultiIndependent/results', methods=['POST', 'GET'])
-def results_nonparametric_multi_independent():
-    """
-    接口请求参数:{
-        "table_name": "" # str,数据库表名
-        "X": ["x1", "x2"], # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-        "Y": ["y"], # list,因变量,当表格方向为v是使用
-        "alpha": "0.05", # str,置信区间百分比
-        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
-    }
-    :return:
-    """
-    log.info('nonparametric_multi_independent_get_results_init...')
-    request_data = init_route()
-    try:
-        table_name = request_data['table_name']
-        X = request_data['X']
-        Y = request_data['Y']
-        table_direction = request_data['table_direction']
-        alpha = float(request_data['alpha'])
-    except Exception as e:
-        log.info(e)
-        raise e
-    assert isinstance([X, Y], list)
-    # 从数据库拿数据
-    try:
-        if len(Y) == 1 and Y[0] == "":
-            sql_sentence = "select {} from {};".format(",".join(X), table_name)
-        else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
-        data = get_dataframe_from_mysql(sql_sentence)
-    except Exception as e:
-        log.info(e.args)
-        raise e
-    log.info("输入数据大小:{}".format(len(data)))
-    try:
-        if table_direction == "v":
-            every_level_data_index = [d for d in data[X[0]].unique()]
-            every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
-        elif table_direction == "h":
-            every_level_data_index = X
-            every_level_data = [data[l].astype("float16") for l in X]
-            data, X, Y = transform_h_table_data_to_v(data, X)
-        else:
-            raise ValueError("table direction must be h or v")
-        data_info = nonparam_multi_independent_describe_info(data, X, Y)
-        kw_res = kruskal_test(*every_level_data)
-        median_res = median_test(*every_level_data, col_list=every_level_data_index)
-        response_data = {"kw_res": kw_res,
-                         "data_info": data_info,
-                         "median_res": median_res,
-                         "code": "200",
-                         "msg": "ok!"}
-        return jsonify(response_data)
-    except Exception as e:
-        log.error(e)
-        raise e
-        # return jsonify({"data": "", "code": "500", "msg": e.args})
+
 
 
 if __name__ == '__main__':
