@@ -25,7 +25,7 @@ from flask_cors import *
 from utils import *
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, LinearRegression
 import pydotplus
 from sklearn.externals.six import StringIO
 from sklearn import metrics
@@ -33,6 +33,8 @@ from sklearn.cluster import KMeans
 from sklearn.ensemble import RandomForestClassifier
 import joblib
 import os
+# from statsmodels.formula.api import OLS
+
 
 log = logging.getLogger(__name__)
 
@@ -67,6 +69,144 @@ def init_route():
         raise e
     log.info("receive request :{}".format(request_data))
     return request_data
+
+
+# ================================ 线性回归-训练 ==============================
+@app.route('/algorithm/linerRegression/train', methods=['POST', 'GET'])
+def logistics_train():
+    """
+    接口请求参数:{
+        "isTrain": "", # True,进行训练还是测试
+        "tableName": "", # str,数据库表名
+        "X": ["x1", "x2"], # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["y"], # list,因变量,当表格方向为v是使用
+        "randomState": "2020", # str,测试集训练集分割比例时的随机种子数
+        "rate": "0.3", # str,测试集训练集分割比例
+        "param":{
+            "fit_intercept": True, # bool,True或者False，是否有截距项
+            "normalize": True, # bool,True或者False，是否将数据归一化
+        }
+        "show_options": ["matrix", "roc", "r2", "coff"]
+    :return:
+    """
+    log.info('logistics_train_init...')
+    request_data = init_route()
+    try:
+        is_train = request_data['isTrain']
+        table_name = request_data['tableName']
+        X = request_data['X']
+        Y = request_data['Y']
+        param = request_data['param']
+        random_state = int(request_data.get('randomState', 0))
+        rate = float(request_data.get('rate', 0))
+        show_options = request_data.get("show_options", [])
+    except Exception as e:
+        log.info(e)
+        raise e
+    is_fit_intercept = param.get("fit_intercept", True)
+    is_normalize = param.get("normalize", False)
+    # 从数据库拿数据
+    data = exec_sql(table_name, X, Y)
+    log.info("输入数据大小:{}".format(len(data)))
+    # 数据类型统一为float，假设数据已经是处理后的（编码+归一化）
+    data = data.astype("float")
+    try:
+        # 利用测试数据评估模型
+        if not is_train:
+            model_name_list = os.listdir("./model/LinearRegression")
+            model_name_list.sort()
+            latest_model_path = os.path.join("./model/LinearRegression", model_name_list[-1])
+            test_model = joblib.load(latest_model_path)
+            x_test = data.loc[:, X]
+            y_test = data[Y[0]]
+
+            res = algorithm_show_result(test_model, x_test, y_test, options=show_options)
+
+            response_data = {"res": res,
+                             "code": "200",
+                             "msg": "ok!"}
+            return jsonify(response_data)
+        # 训练模式
+        else:
+            data_x = data[X]
+            data_y = data[Y[0]]
+            # 数据分割
+            x_train, x_test, y_train, y_test = train_test_split(data_x, data_y,
+                                                                random_state=random_state,
+                                                                test_size=rate)
+
+            # 模型训练和网格搜索
+            model = LinearRegression(fit_intercept=is_fit_intercept, normalize=is_normalize)
+            model.fit(x_train, y_train)
+
+            # 保存模型
+            if not os.path.exists("./model/LinearRegression/"):
+                os.mkdir("./model/LinearRegression/")
+            joblib.dump(model, "./model/LinearRegression/{}.pkl".format(
+                time.strftime("%y-%m-%d-%H-%M-%S", time.localtime())))
+
+            res = algorithm_show_result(model, x_test, y_test, options=show_options)
+
+            response_data = {"res": res,
+                             "code": "200",
+                             "msg": "ok!",
+                             }
+            return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
+
+
+# ================================ 线性回归-预测 ==============================
+@app.route('/algorithm/logistics/predict', methods=['POST', 'GET'])
+def logistics_predict():
+    """
+    接口请求参数:{
+        "oneSample": False,  # 是否批量上传数据进行预测
+        "tableName": "buy_computer_new",  # str,数据库表名
+        "X": ["x1", "x2"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        }
+    :return:
+    """
+    log.info('logistics_predict_init...')
+    request_data = init_route()
+    try:
+        one_sample = request_data['oneSample']
+        table_name = request_data['tableName']
+        X = request_data['X']
+    except Exception as e:
+        log.info(e)
+        raise e
+    try:
+        model_name_list = os.listdir("./model/LogisticRegression")
+        model_name_list.sort()
+        lastest_model_path = os.path.join("./model/LogisticRegression", model_name_list[-1])
+        model = joblib.load(lastest_model_path)
+        res = {}
+        if one_sample:
+            X = [float(x) for x in X]
+            res.update({"predict": model.predict([X]),
+                        "title": "单样本预测结果"})
+        else:
+            # 从数据库拿数据
+            data = exec_sql(table_name, X)
+            log.info("输入数据大小:{}".format(len(data)))
+            data = data.astype(float)
+            pre_data = model.predict(data.values)
+            res.update({
+                "predict": pre_data,
+                "title": "多样本预测结果",
+                "col": "预测结果"
+            })
+    except Exception as e:
+        log.error(e)
+        raise e
+        # return jsonify({"data": "", "code": "500", "msg": e.args})
+    response_data = {"res": res,
+                     "code": "200",
+                     "msg": "ok!"}
+    return jsonify(response_data)
 
 
 # ================================ 决策树-训练 ==============================
