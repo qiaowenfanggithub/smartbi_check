@@ -22,7 +22,7 @@ import json
 import numpy as np
 import pandas as pd
 from flask_cors import *
-from utils import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, exec_sql
+from utils import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, exec_sql, transform_v_table_data_to_h
 from flask.json import JSONEncoder as _JSONEncoder
 from anova_one_way import normal_test, levene_test, anova_analysis, multiple_test, anova_one_way_describe_info
 from anova_all_way import anova_all_way_describe_info, normal_test_all, levene_test_all, anova_analysis_multivariate, level_info
@@ -33,7 +33,7 @@ from nonparametric_two_independent import wilcoxon_ranksums_test, mannwhitneyu_t
     nonparam_two_independent_describe_info
 from nonparametric_two_pair import mannwhitneyu_test_with_diff, nonparam_two_paired_describe_info
 from nonparametric_multi_independent import kruskal_test, median_test, nonparam_multi_independent_describe_info
-
+from two_independent_MWU import Mann_Whitney_U_describe,Mann_Whitney_U_test
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -423,15 +423,14 @@ def t_two_pair():
         return jsonify({"data": "", "code": "500", "msg": e.args[0]})
 
 
-# ================================ 两独立样本非参数检验 ==============================
-@app.route('/nonparametricTwoIndependent/results', methods=['POST', 'GET'])
-def results_nonparametric_two_independent():
+# ================================ 两独立样本非参数检验 Mann_Whitney_U ==============================
+@app.route('/statistic/nonparametricTwoIndependent', methods=['POST', 'GET'])
+def nonparametric_two_independent():
     """
     接口请求参数:{
         "table_name": "" # str,数据库表名
         "X": ["x1", "x2"], # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
         "Y": ["y"], # list,因变量,当表格方向为v是使用
-        "alpha": "0.05", # str,置信区间百分比
         "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
     }
     :return:
@@ -443,33 +442,36 @@ def results_nonparametric_two_independent():
         X = request_data['X']
         Y = request_data['Y']
         table_direction = request_data['table_direction']
-        alpha = float(request_data['alpha'])
     except Exception as e:
         log.info(e)
         raise e
     assert isinstance([X, Y], list)
     # 从数据库拿数据
-    try:
-        if len(Y) == 1 and Y[0] == "":
-            sql_sentence = "select {} from {};".format(",".join(X), table_name)
-        else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
-        data = get_dataframe_from_mysql(sql_sentence)
-    except Exception as e:
-        log.info(e.args)
-        raise e
+    data = exec_sql(table_name, X, Y)
     log.info("输入数据大小:{}".format(len(data)))
+
     try:
         if table_direction == "v":
-            every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
+            every_level_data_index = [d for d in data[X[0]].unique()]
+            # every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
+            data,X = transform_v_table_data_to_h(data, X, Y)
         elif table_direction == "h":
+            every_level_data_index = X
             every_level_data = [data[l].astype("float16") for l in X]
-            data, X, Y = transform_h_table_data_to_v(data, X)
+            # data, X, Y = transform_h_table_data_to_v(data, X) # 水平的数据，这里不用转
         else:
             raise ValueError("table direction must be h or v")
-        data_info = nonparam_two_independent_describe_info(data, X, Y)
-        res = [{"mannwhitneyu_test": mannwhitneyu_test(every_level_data[0], every_level_data[1])},
-               {"wilcoxon_ranksums": wilcoxon_ranksums_test(every_level_data[0], every_level_data[1])}]
+        if len(every_level_data_index) > 2:
+            raise ValueError("自变量的水平必须是2个")
+
+        # 描述性统计
+        res = []
+        data_info = transform_table_data_to_html(Mann_Whitney_U_describe(data,X))
+        res.append(data_info)
+
+        # Mann-Whitney U 检验
+        Mann_Whitney_U_res = transform_table_data_to_html(Mann_Whitney_U_test(data, X))
+        res.append(Mann_Whitney_U_res)
         response_data = {"res": res,
                          "data_info": data_info,
                          "code": "200",
@@ -478,7 +480,8 @@ def results_nonparametric_two_independent():
     except Exception as e:
         log.error(e)
         raise e
-        # return jsonify({"data": "", "code": "500", "msg": e.args})
+        # return jsonify({"data": "", "code": "500", "msg": e.args[0]})
+
 
 
 # ================================ 两配对样本非参数检验 ==============================

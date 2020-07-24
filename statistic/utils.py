@@ -190,6 +190,20 @@ def transform_h_table_data_to_v(data: pd.DataFrame, X):
     return data, X, Y
 
 
+# 当是一列分类变量，一列数值型变量，将各个分类对应的数值型变量自成一列，由【分类变量，数值型变量】变成【数值型变量1，数值型变量2，...】
+def transform_v_table_data_to_h(data: pd.DataFrame, X,Y):
+    list = []
+    col = [d for d in data[X[0]].unique()]
+    for i in col:
+        zh = data[data[X[0]] == i]
+        l = zh.iloc[:, -1].tolist()
+        list.append(l)
+    new_data = pd.DataFrame(list).T
+    new_data.columns = col
+    X = col
+    return new_data,X
+
+
 # 转换输出的表格数据让前端识别并显示
 def transform_table_data_to_html(data: dict, col0=""):
     data["col"].insert(0, col0)
