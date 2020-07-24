@@ -44,10 +44,10 @@ def pearsonr_test(*args, index=None, alpha=0.05):
     return {
         "row": [" & ".join(index)],
         "col": ["个案数", "相关性", "显著性", "拒绝原假设"],
-        "data": ["{:.0f}".format(len(args[0])),
-                 "{:.4f}".format(correlation),
-                 "{:.4f}".format(p_value),
-                 str(bool(p_value <= alpha))],
+        "data": [["{:.0f}".format(args[0].count()),
+                  "{:.4f}".format(correlation),
+                  "{:.4f}".format(p_value),
+                  str(bool(p_value <= alpha))]],
         "title": "配对样本相关性",
         "remarks": "注：拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
     }
@@ -66,13 +66,13 @@ def t_two_pair_analysis(*args, index=None, alpha=0.05):
     cha_upper = pd.Series([cha_mean - t * cha_error_mean, cha_mean + t * cha_error_mean]).max()
     return {
         "col": ["平均值", "标准偏差", "标准误差平均值",
-                "差值{:.0%}置信区间下限".format(1-alpha),
-                "差值{:.0%}置信区间上限".format(1-alpha),
+                "差值{:.0%}置信区间下限".format(1 - alpha),
+                "差值{:.0%}置信区间上限".format(1 - alpha),
                 "t", "自由度", "P值(双尾)", "拒绝原假设"],
         "data": [["{:.0f}".format(cha_mean), "{:.0f}".format(cha_std),
-                 "{:.0f}".format(cha_error_mean), "{:.0f}".format(cha_lower),
-                 "{:.0f}".format(cha_upper), "{:.0f}".format(ttest),
-                 "{:.0f}".format(cha_df), "{:.0f}".format(pval), str(bool(pval <= alpha))]],
+                  "{:.0f}".format(cha_error_mean), "{:.0f}".format(cha_lower),
+                  "{:.0f}".format(cha_upper), "{:.0f}".format(ttest),
+                  "{:.0f}".format(cha_df), "{:.0f}".format(pval), str(bool(pval <= alpha))]],
         "row": [" & ".join(index)],
         "title": "配对样本检验",
         "remarks": "注：拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"

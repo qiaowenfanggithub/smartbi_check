@@ -22,10 +22,12 @@ import json
 import numpy as np
 import pandas as pd
 from flask_cors import *
-from utils import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, exec_sql, transform_v_table_data_to_h
+from utils import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, exec_sql, \
+    transform_v_table_data_to_h
 from flask.json import JSONEncoder as _JSONEncoder
 from anova_one_way import normal_test, levene_test, anova_analysis, multiple_test, anova_one_way_describe_info
-from anova_all_way import anova_all_way_describe_info, normal_test_all, levene_test_all, anova_analysis_multivariate, level_info
+from anova_all_way import anova_all_way_describe_info, normal_test_all, levene_test_all, anova_analysis_multivariate, \
+    level_info
 from t_single import t_single_analysis, t_single_describe_info
 from t_two_independent import t_two_independent_analysis, t_two_independent_describe_info
 from t_two_paried import pearsonr_test, t_two_paired_describe_info, t_two_pair_analysis
@@ -33,7 +35,8 @@ from nonparametric_two_independent import wilcoxon_ranksums_test, mannwhitneyu_t
     nonparam_two_independent_describe_info
 from nonparametric_two_pair import mannwhitneyu_test_with_diff, nonparam_two_paired_describe_info
 from nonparametric_multi_independent import kruskal_test, median_test, nonparam_multi_independent_describe_info
-from two_independent_MWU import Mann_Whitney_U_describe,Mann_Whitney_U_test
+from two_independent_MWU import Mann_Whitney_U_describe, Mann_Whitney_U_test
+
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -73,7 +76,7 @@ def init_route():
     return request_data
 
 
-# ================================ 单因素方差分析-查看数据 ==============================
+# ================================ 查看数据 ==============================
 @app.route('/statistic/checkData', methods=['POST', 'GET'])
 def check_data():
     """
@@ -97,7 +100,7 @@ def check_data():
     try:
         data = exec_sql(table_name, X, Y)
         res_data = {
-            "title": "单因素方差分析-查看数据",
+            "title": "查看数据",
             "row": data.index.values.tolist(),
             "col": data.columns.values.tolist(),
             "data": data.values.tolist()
@@ -407,8 +410,7 @@ def t_two_pair():
         # 描述性统计分析
         res.append(transform_table_data_to_html(t_two_paired_describe_info(data, X, Y)))
         if "pearsonr" in analysis_options:
-            res.append(transform_table_data_to_html(
-                pearsonr_test(*every_level_data, index=every_level_data_index, alpha=alpha)))
+            res.append(transform_table_data_to_html(pearsonr_test(*every_level_data, index=every_level_data_index, alpha=alpha)))
         if "normal" in analysis_options:
             res.append(transform_table_data_to_html(normal_test(every_level_data_index, every_level_data, alpha)))
         res.append(transform_table_data_to_html(
@@ -454,7 +456,7 @@ def nonparametric_two_independent():
         if table_direction == "v":
             every_level_data_index = [d for d in data[X[0]].unique()]
             # every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
-            data,X = transform_v_table_data_to_h(data, X, Y)
+            data, X = transform_v_table_data_to_h(data, X, Y)
         elif table_direction == "h":
             every_level_data_index = X
             every_level_data = [data[l].astype("float16") for l in X]
@@ -466,7 +468,7 @@ def nonparametric_two_independent():
 
         # 描述性统计
         res = []
-        data_info = transform_table_data_to_html(Mann_Whitney_U_describe(data,X))
+        data_info = transform_table_data_to_html(Mann_Whitney_U_describe(data, X))
         res.append(data_info)
 
         # Mann-Whitney U 检验
@@ -481,7 +483,6 @@ def nonparametric_two_independent():
         log.error(e)
         raise e
         # return jsonify({"data": "", "code": "500", "msg": e.args[0]})
-
 
 
 # ================================ 两配对样本非参数检验 ==============================
