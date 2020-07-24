@@ -800,3 +800,28 @@ Reshape your data either using array.reshape(-1, 1) if your data has a single fe
 2020-07-16 16:31:47,644 [ INFO   ] 输入数据大小:14
 2020-07-16 16:31:47,648 [ INFO   ] 127.0.0.1 - - [16/Jul/2020 16:31:47] "[37mPOST /algorithm/logistics/predict HTTP/1.1[0m" 200 -
 2020-07-16 16:51:15,969 [ INFO   ]  * Detected change in '/Users/leiliang/Downloads/yz_project/statistical_analysis_platform/algorithm/main.py', reloading
+2020-07-24 09:40:26,907 [ INFO   ] {'oneSample': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级']}
+2020-07-24 09:40:26,907 [ INFO   ] receive request :{'oneSample': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级']}
+2020-07-24 09:40:27,282 [ INFO   ] 输入数据大小:14
+2020-07-24 09:40:27,286 [ INFO   ] 127.0.0.1 - - [24/Jul/2020 09:40:27] "[37mPOST /algorithm/logistics/predict HTTP/1.1[0m" 200 -
+2020-07-24 09:44:16,355 [ INFO   ] logistics_predict_init...
+2020-07-24 09:44:16,356 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [1, 1, 1, 0]}
+2020-07-24 09:44:16,356 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [1, 1, 1, 0]}
+2020-07-24 09:44:16,360 [ INFO   ] 127.0.0.1 - - [24/Jul/2020 09:44:16] "[37mPOST /algorithm/logistics/predict HTTP/1.1[0m" 200 -
+2020-07-24 09:44:35,234 [ INFO   ] logistics_predict_init...
+2020-07-24 09:44:35,235 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': ['1', '1', '1', '0']}
+2020-07-24 09:44:35,235 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': ['1', '1', '1', '0']}
+2020-07-24 09:44:35,238 [ ERROR  ] ufunc 'matmul' did not contain a loop with signature matching types (dtype('<U32'), dtype('<U32')) -> dtype('<U32')
+2020-07-24 09:44:35,259 [ INFO   ] 127.0.0.1 - - [24/Jul/2020 09:44:35] "[1m[35mPOST /algorithm/logistics/predict HTTP/1.1[0m" 500 -
+2020-07-24 09:45:52,029 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': ['1', '1', '1', '0']}
+2020-07-24 09:45:52,030 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': ['1', '1', '1', '0']}
+2020-07-24 09:45:52,034 [ INFO   ] 127.0.0.1 - - [24/Jul/2020 09:45:52] "[37mPOST /algorithm/logistics/predict HTTP/1.1[0m" 200 -
+2020-07-24 09:46:01,618 [ INFO   ] logistics_predict_init...
+2020-07-24 09:46:01,619 [ INFO   ] {'oneSample': True, 'tableName': 'buy_computer_new', 'X': [1, 1, 1, 0]}
+2020-07-24 09:46:01,619 [ INFO   ] receive request :{'oneSample': True, 'tableName': 'buy_computer_new', 'X': [1, 1, 1, 0]}
+2020-07-24 09:46:01,621 [ INFO   ] 127.0.0.1 - - [24/Jul/2020 09:46:01] "[37mPOST /algorithm/logistics/predict HTTP/1.1[0m" 200 -
+2020-07-24 09:46:08,696 [ INFO   ] logistics_predict_init...
+2020-07-24 09:46:08,697 [ INFO   ] {'oneSample': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级']}
+2020-07-24 09:46:08,697 [ INFO   ] receive request :{'oneSample': False, 'tableName': 'buy_computer_new', 'X': ['年龄', '收入层次', '是否单身', '信用等级']}
+2020-07-24 09:46:08,978 [ INFO   ] 输入数据大小:14
+2020-07-24 09:46:08,980 [ INFO   ] 127.0.0.1 - - [24/Jul/2020 09:46:08] "[37mPOST /algorithm/logistics/predict HTTP/1.1[0m" 200 -
