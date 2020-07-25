@@ -1,89 +1,126 @@
+# !/usr/bin/python3
 # -*- coding: utf-8 -*-
 import pandas as pd
-
+import scipy
 import scipy.stats as stats
-import logging
-
-log = logging.getLogger(__name__)
+import os
 
 
-def mannwhitneyu_test(x1, x2):
-    alter = ['two-sided', 'greater', 'less']
-    for i in alter:
-        if i == 'two-sided':
-            wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x1, x2, zero_method='wilcox', correction=False,
-                                                                 alternative=i)
-            log.info('双边检测：')
-            log.info(wilcoxon_statistic, wilcoxon_pvalue)
-        elif i == 'greater':
-            wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x1, x2, zero_method='wilcox', correction=False,
-                                                                 alternative=i)
-            log.info('单侧检测，备择假设为">"：')
-            log.info(wilcoxon_statistic, wilcoxon_pvalue)
-        elif i == 'less':
-            wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x1, x2, zero_method='wilcox', correction=False,
-                                                                 alternative=i)
-            log.info('单侧检测，备择假设为"<"：')
-            log.info(wilcoxon_statistic, wilcoxon_pvalue)
-
-
-def mannwhitneyu_test_with_diff(x):
-    alter = ['two-sided', 'greater', 'less']
+# 描述性统计
+def Wilcoxon_describe(data: pd.DataFrame,X):
+    data.astype(float)
     res = []
-    for i in alter:
-        if i == 'two-sided':
-            wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x, zero_method='wilcox', correction=False,
-                                                                 alternative=i)
-            log.info('双边检测：')
-            log.info(wilcoxon_statistic, wilcoxon_pvalue)
-            res.append((wilcoxon_statistic, wilcoxon_pvalue))
-        elif i == 'greater':
-            wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x, zero_method='wilcox', correction=False,
-                                                                 alternative=i)
-            log.info('单侧检测，备择假设为">"：')
-            log.info(wilcoxon_statistic, wilcoxon_pvalue)
-            res.append((wilcoxon_statistic, wilcoxon_pvalue))
-        elif i == 'less':
-            wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x, zero_method='wilcox', correction=False,
-                                                                 alternative=i)
-            log.info('单侧检测，备择假设为"<"：')
-            log.info(wilcoxon_statistic, wilcoxon_pvalue)
-            res.append((wilcoxon_statistic, wilcoxon_pvalue))
-    return [{"title": "Mann-Whitney U 检验 by 两样本差值"},
-            {"row": ["双边检测", "单侧检测，备择假设为'>'", "单侧检测，备择假设为'<'"]},
-            {"col": ["统计量", "P值"]},
-            {"data": res}]
-
-
-# 描述性统计分析
-def nonparam_two_paired_describe_info(data, X, Y):
-    data_groupby = data.groupby(X)
-    new_data = pd.concat([data_groupby[Y[0]].count(), data_groupby[Y[0]].mean(),
-                          data_groupby[Y[0]].std(),
-                          data_groupby[Y[0]].std() / data_groupby[Y[0]].count()], axis=1)
-    new_data.columns = ["count", "mean", "std", "std_err"]
+    for i in range(len(X)):
+        res.append(["{:.0f}".format(data[X[i]].count()),"{:.4f}".format(data[X[i]].mean()),"{:.4f}".format(data[X[i]].std()),"{:.4f}".format(data[X[i]].min()),
+                "{:.4f}".format(data[X[i]].max()),"{:.4f}".format(data[X[i]].quantile(0.25)),"{:.4f}".format(data[X[i]].quantile(0.50)),"{:.4f}".format(data[X[i]].quantile(0.75))])
+    col = ['个案数','平均值','标准偏差','最小值','最大值','25百分位数','50百分位数','75百分位数']
     return {
-        "row": new_data.index.values.tolist(),
-        "col": new_data.columns.values.tolist(),
-        "data": new_data.values.tolist(),
+        'title':'描述性统计',
+        'row':X,
+        'col':col,
+        'data':res
     }
 
-
+# Wilcoxon 符号秩检验
+def Wilcoxon_test(data: pd.DataFrame,X):
+    alter = ['two-sided', 'greater', 'less']
+    res = []
+    row = []
+    if len(X) == 1:
+        for i in alter:
+            if i == 'two-sided':
+                wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x, zero_method='wilcox', correction=False,
+                                                                     alternative=i)
+                row.append(['双边检测'])
+                res.append([wilcoxon_statistic, wilcoxon_pvalue])
+            elif i == 'greater':
+                wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x, zero_method='wilcox', correction=False,
+                                                                     alternative=i)
+                row.append(['单侧检测，备择假设为">"'])
+                res.append([wilcoxon_statistic, wilcoxon_pvalue])
+            elif i == 'less':
+                wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x, zero_method='wilcox', correction=False,
+                                                                     alternative=i)
+                row.append(['单侧检测，备择假设为"<"'])
+                res.append([wilcoxon_statistic, wilcoxon_pvalue])
+    if len(X) == 2:
+        for i in alter:
+            if i == 'two-sided':
+                wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x1, x2, zero_method='wilcox', correction=False,
+                                                                     alternative=i)  # zero_method='wilcox' 丢弃所有零差
+                row.append(['双边检测'])
+                res.append([wilcoxon_statistic, wilcoxon_pvalue])
+            elif i == 'greater':
+                wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x1, x2, zero_method='wilcox', correction=False,
+                                                                     alternative=i)
+                row.append(['单侧检测，备择假设为">"'])
+                res.append([wilcoxon_statistic, wilcoxon_pvalue])
+            elif i == 'less':
+                wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x1, x2, zero_method='wilcox', correction=False,
+                                                                     alternative=i)
+                row.append(['单侧检测，备择假设为"<"'])
+                res.append([wilcoxon_statistic, wilcoxon_pvalue])
+    return {
+        'title': 'Wilcoxon 符号秩检验',
+        'row': ['双侧检验','单侧检验，备择假设为“>”','单侧检验，备择假设为“<”'],
+        'col': ['秩和','显著性'], # 这里返回的不是统计量，是正秩负秩中秩和较小的那个秩和
+        'data': res
+    }
 if __name__ == '__main__':
-    data = pd.read_csv('./data/nonparametric_two_pair.csv')
-
-    # 此代码中丢弃所有零差
-    '''
-    第一种情况：
-    当用户输出两列数值型变量时
-    '''
+    os.chdir('/Users/chuckzhao/Documents/qwf/pyworkspace/tool_data')
+    data = pd.read_excel('twopari_feican.xlsx')
     x1 = data['x1']
     x2 = data['x2']
-    log.info(mannwhitneyu_test(x1, x2))
-    log.info("============================")
-    '''
-    第二种情况：
-    当用户输出一列差值数值型变量时
-    '''
-    x = x1 - x2
-    log.info(mannwhitneyu_test_with_diff(x))
+    X = ['x1', 'x2']
+    r = Wilcoxon_test(data,X)
+    print(r)
+
+    d = Wilcoxon_describe(data,X)
+    print(d)
+
+
+
+
+
+# 此代码中丢弃所有零差
+# 本地里源码里stats.wilcoxon()改了返回值，改成了返回z和p值，原来是返回较小的秩和，平台里的是没有改的，还是返回秩和
+'''
+第一种情况：
+当用户输出两列数值型变量时
+'''
+
+'''
+for i in alter:
+    if i == 'two-sided':
+        wilcoxon_statistic,wilcoxon_pvalue = stats.wilcoxon(x1,x2,zero_method='wilcox',correction=False,alternative=i) #zero_method='wilcox' 丢弃所有零差
+        print('双边检测：')
+        print(wilcoxon_statistic,wilcoxon_pvalue)
+    elif i == 'greater':
+        wilcoxon_statistic,wilcoxon_pvalue = stats.wilcoxon(x1,x2,zero_method='wilcox',correction=False,alternative=i)
+        print('单侧检测，备择假设为">"：')
+        print(wilcoxon_statistic,wilcoxon_pvalue)
+    elif i == 'less':
+        wilcoxon_statistic,wilcoxon_pvalue = stats.wilcoxon(x1,x2,zero_method='wilcox',correction=False,alternative=i)
+        print('单侧检测，备择假设为"<"：')
+        print(wilcoxon_statistic,wilcoxon_pvalue)
+
+# 第二种情况：
+# 当用户输出一列差值数值型变量时
+
+x = x1-x2
+
+for i in alter:
+    if i == 'two-sided':
+        wilcoxon_statistic,wilcoxon_pvalue = stats.wilcoxon(x,zero_method='wilcox',correction=False,alternative=i)
+        print('双边检测：')
+        print(wilcoxon_statistic,wilcoxon_pvalue)
+    elif i == 'greater':
+        wilcoxon_statistic,wilcoxon_pvalue = stats.wilcoxon(x,zero_method='wilcox',correction=False,alternative=i)
+        print('单侧检测，备择假设为">"：')
+        print(wilcoxon_statistic,wilcoxon_pvalue)
+    elif i == 'less':
+        wilcoxon_statistic,wilcoxon_pvalue = stats.wilcoxon(x,zero_method='wilcox',correction=False,alternative=i)
+        print('单侧检测，备择假设为"<"：')
+        print(wilcoxon_statistic,wilcoxon_pvalue)
+
+'''

@@ -33,10 +33,10 @@ from t_two_independent import t_two_independent_analysis, t_two_independent_desc
 from t_two_paried import pearsonr_test, t_two_paired_describe_info, t_two_pair_analysis
 from nonparametric_two_independent import wilcoxon_ranksums_test, mannwhitneyu_test, \
     nonparam_two_independent_describe_info
-from nonparametric_two_pair import mannwhitneyu_test_with_diff, nonparam_two_paired_describe_info
 from nonparametric_multi_independent import kruskal_test, median_test, nonparam_multi_independent_describe_info
 from two_independent_MWU import Mann_Whitney_U_describe,Mann_Whitney_U_test
 from more_independent_KWH import Kruskal_Wallis_H_describe,Kruskal_Wallis_H_test
+from nonparametric_two_pair import Wilcoxon_test,Wilcoxon_describe
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -548,61 +548,47 @@ def results_nonparametric_multi_independent():
 
 
 
-# ================================ 两配对样本非参数检验 ==============================
-@app.route('/nonparametricTwoPair/results', methods=['POST', 'GET'])
-def results_nonparametric_two_pair():
+# ================================ 两配对样本非参数检验  Wilcoxon 符号秩检验 ==============================
+@app.route('/statistic/nonparametricTwoPair', methods=['POST', 'GET'])
+def results_nonparametric_multi_independent():
     """
     接口请求参数:{
         "table_name": "" # str,数据库表名
         "X": ["x1", "x2"], # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-        "Y": ["y"], # list,因变量,当表格方向为v是使用
-        "alpha": "0.05", # str,置信区间百分比
-        "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+        # "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
     }
     :return:
     """
-    log.info('nonparametric_two_pair_get_results_init...')
+    log.info('nonparametric_multi_independent_get_results_init...')
     request_data = init_route()
     try:
         table_name = request_data['table_name']
         X = request_data['X']
-        Y = request_data['Y']
-        table_direction = request_data['table_direction']
-        alpha = float(request_data['alpha'])
+        # Y = request_data['Y']
+        # table_direction = request_data['table_direction']
+        # alpha = float(request_data['alpha'])
     except Exception as e:
         log.info(e)
         raise e
-    assert isinstance([X, Y], list)
+    # assert isinstance([X, Y], list)
+    assert isinstance([X], list)
     # 从数据库拿数据
-    try:
-        if len(Y) == 1 and Y[0] == "":
-            sql_sentence = "select {} from {};".format(",".join(X), table_name)
-        else:
-            sql_sentence = "select {} from {};".format(",".join(X + Y), table_name)
-        data = get_dataframe_from_mysql(sql_sentence)
-    except Exception as e:
-        log.info(e.args)
-        raise e
+    # data = exec_sql(table_name, X, Y)
+    data = exec_sql(table_name, X)
     log.info("输入数据大小:{}".format(len(data)))
-    try:
-        if table_direction == "v":
-            every_level_data = [data[data[X[0]] == d][Y[0]].astype("float16") for d in data[X[0]].unique()]
-        elif table_direction == "h":
-            every_level_data = [data[l].astype("float16") for l in X]
-            data, X, Y = transform_h_table_data_to_v(data, X)
-        else:
-            raise ValueError("table direction must be h or v")
-        if len(X) == 2:
-            mannwhitneyu_test_res = mannwhitneyu_test(every_level_data[0], every_level_data[1])
-        elif len(X) == 1:
-            mannwhitneyu_test_res = mannwhitneyu_test_with_diff(data[X[0]].astype("float16"))
-        else:
-            raise ValueError("input X must be 1 or 2")
-        # todo:这里应该是要加入秩和检验
 
-        # 描述性统计分析
-        data_info = nonparam_two_paired_describe_info(data, X, Y)
-        res = [{"mannwhitneyu_test": mannwhitneyu_test_res}]
+    try:
+        # 描述性统计
+        res = []
+        data_info = transform_table_data_to_html(Wilcoxon_describe(data,X))
+        res.append(data_info)
+        log.info("描述性统计分析完成")
+
+        # Wilcoxon 符号秩检验
+        Wilcoxon_res = transform_table_data_to_html(Wilcoxon_test(data,X))
+        res.append(Wilcoxon_res)
+        log.info("Wilcoxon 符号秩检验完成")
+
         response_data = {"res": res,
                          "data_info": data_info,
                          "code": "200",
@@ -611,8 +597,6 @@ def results_nonparametric_two_pair():
     except Exception as e:
         log.error(e)
         raise e
-        # return jsonify({"data": "", "code": "500", "msg": e.args})
-
 
 
 
