@@ -550,7 +550,7 @@ def results_nonparametric_multi_independent():
 
 # ================================ 两配对样本非参数检验  Wilcoxon 符号秩检验 ==============================
 @app.route('/statistic/nonparametricTwoPair', methods=['POST', 'GET'])
-def results_nonparametric_multi_independent():
+def results_nonparametric_two_independent():
     """
     接口请求参数:{
         "table_name": "" # str,数据库表名
@@ -559,7 +559,7 @@ def results_nonparametric_multi_independent():
     }
     :return:
     """
-    log.info('nonparametric_multi_independent_get_results_init...')
+    log.info('nonparametric_two_independent_get_results_init...')
     request_data = init_route()
     try:
         table_name = request_data['table_name']
