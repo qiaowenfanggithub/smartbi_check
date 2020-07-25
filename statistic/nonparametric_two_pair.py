@@ -8,7 +8,7 @@ import os
 
 # 描述性统计
 def Wilcoxon_describe(data: pd.DataFrame,X):
-    data.astype(float)
+    data = data.astype(float)
     res = []
     for i in range(len(X)):
         res.append(["{:.0f}".format(data[X[i]].count()),"{:.4f}".format(data[X[i]].mean()),"{:.4f}".format(data[X[i]].std()),"{:.4f}".format(data[X[i]].min()),
@@ -27,6 +27,7 @@ def Wilcoxon_test(data: pd.DataFrame,X):
     res = []
     row = []
     if len(X) == 1:
+        x = data[X[0]]
         for i in alter:
             if i == 'two-sided':
                 wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x, zero_method='wilcox', correction=False,
@@ -44,19 +45,21 @@ def Wilcoxon_test(data: pd.DataFrame,X):
                 row.append(['单侧检测，备择假设为"<"'])
                 res.append([wilcoxon_statistic, wilcoxon_pvalue])
     if len(X) == 2:
+        v1 = data[X[0]]
+        v2 = data[X[1]]
         for i in alter:
             if i == 'two-sided':
-                wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x1, x2, zero_method='wilcox', correction=False,
+                wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(v1, v2, zero_method='wilcox', correction=False,
                                                                      alternative=i)  # zero_method='wilcox' 丢弃所有零差
                 row.append(['双边检测'])
                 res.append([wilcoxon_statistic, wilcoxon_pvalue])
             elif i == 'greater':
-                wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x1, x2, zero_method='wilcox', correction=False,
+                wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(v1, v2, zero_method='wilcox', correction=False,
                                                                      alternative=i)
                 row.append(['单侧检测，备择假设为">"'])
                 res.append([wilcoxon_statistic, wilcoxon_pvalue])
             elif i == 'less':
-                wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x1, x2, zero_method='wilcox', correction=False,
+                wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(v1, v2, zero_method='wilcox', correction=False,
                                                                      alternative=i)
                 row.append(['单侧检测，备择假设为"<"'])
                 res.append([wilcoxon_statistic, wilcoxon_pvalue])
@@ -68,9 +71,9 @@ def Wilcoxon_test(data: pd.DataFrame,X):
     }
 if __name__ == '__main__':
     os.chdir('/Users/chuckzhao/Documents/qwf/pyworkspace/tool_data')
-    data = pd.read_excel('twopari_feican.xlsx')
-    x1 = data['x1']
-    x2 = data['x2']
+    data = pd.read_excel('twopair_feican.xlsx')
+    v1 = data['x1']
+    v2 = data['x2']
     X = ['x1', 'x2']
     r = Wilcoxon_test(data,X)
     print(r)

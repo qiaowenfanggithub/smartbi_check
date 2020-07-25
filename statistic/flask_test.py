@@ -100,9 +100,9 @@ if __name__ == '__main__':
     kwargs = {
         "table_name": "twopair_feican",  # str,数据库表名
         "X": ["x1","x2"],  # list,自变量
-        "Y": [""],  # list,因变量
+        # "Y": [""],  # list,因变量
         # "alpha": "0.05",  # str,置信区间百分比
-        "table_direction": "h",  # 表格方向，一般为竖向，即有一列是分类变量
+        # "table_direction": "h",  # 表格方向，一般为竖向，即有一列是分类变量
     }
     res = my_session.post(url='http://127.0.0.1:5000/statistic/nonparametricTwoPair', json=kwargs, timeout=30)
 
@@ -117,7 +117,7 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/statistic/nonparametricMultiIndependent', json=kwargs, timeout=30)
     #
     # # print(json.loads(res.text, encoding="utf-8"))
-    # print(res.text)
+    print(res.text)
 
 
 

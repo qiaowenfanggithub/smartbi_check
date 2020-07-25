@@ -555,7 +555,7 @@ def results_nonparametric_two_independent():
     接口请求参数:{
         "table_name": "" # str,数据库表名
         "X": ["x1", "x2"], # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-        # "table_direction": "", str,表格方向,水平方向为h,竖直方向为v
+        # "table_direction": "h", str,表格方向,水平方向为h,竖直方向为v
     }
     :return:
     """
@@ -572,12 +572,15 @@ def results_nonparametric_two_independent():
         raise e
     # assert isinstance([X, Y], list)
     assert isinstance([X], list)
+    if len(X) >2:
+        raise ValueError("只支持一列数据或两列数据")
     # 从数据库拿数据
     # data = exec_sql(table_name, X, Y)
     data = exec_sql(table_name, X)
     log.info("输入数据大小:{}".format(len(data)))
 
     try:
+
         # 描述性统计
         res = []
         data_info = transform_table_data_to_html(Wilcoxon_describe(data,X))
