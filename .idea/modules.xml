@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../project/0128-matrix-1/algorithm/.idea/algorithm.iml" filepath="$PROJECT_DIR$/../../project/0128-matrix-1/algorithm/.idea/algorithm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../yz_data_analysis/logistic_analysis/.idea/logistic_analysis.iml" filepath="$PROJECT_DIR$/../../yz_data_analysis/logistic_analysis/.idea/logistic_analysis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../paper_popularity_predict/.idea/paper_popularity_predict.iml" filepath="$PROJECT_DIR$/../paper_popularity_predict/.idea/paper_popularity_predict.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/statistical_analysis_platform.iml" filepath="$PROJECT_DIR$/.idea/statistical_analysis_platform.iml" />
+    </modules>
+  </component>
+</project>

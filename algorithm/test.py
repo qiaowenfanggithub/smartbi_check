@@ -14,17 +14,32 @@ Date : 2020/7/9 10:33 下午
 --------------------------------------------------------
 
 """
-import matplotlib.pyplot as plt  # doctest: +SKIP
-from sklearn.datasets import make_classification
-from sklearn.metrics import plot_confusion_matrix
-from sklearn.model_selection import train_test_split
-from sklearn.svm import SVC
-X, y = make_classification(random_state=0)
-X_train, X_test, y_train, y_test = train_test_split(
-        X, y, random_state=0)
-clf = SVC(random_state=0)
-clf.fit(X_train, y_train)
 
-a = plot_confusion_matrix(clf, X_test, y_test)  # doctest: +SKIP
-plt.show()  # doctest: +SKIP
 
+class Person(object):
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        self.weight = 'weight'
+
+    def talk(self):
+        print("person is talking....")
+
+
+class Chinese(Person):
+
+    def __init__(self, name, age, language):  # 先继承，在重构
+        super(Chinese, self).__init__(name, age)
+        # Person.__init__(self, name, age)  # 继承父类的构造方法，也可以写成：super(Chinese,self).__init__(name,age)
+        self.language = language  # 定义类的本身属性
+
+    def walk(self):
+        print('is walking...')
+
+
+class American(Person):
+    pass
+
+
+c = Chinese('bigberg', 22, 'Chinese')

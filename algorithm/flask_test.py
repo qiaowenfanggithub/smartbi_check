@@ -70,24 +70,25 @@ if __name__ == '__main__':
     #     },
     #     "show_options": ["matrix", "roc", "r2", "coff"]
     # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logistics/train', json=kwargs, timeout=30)
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/train', json=kwargs, timeout=30)
 
-    # ======================= 逻辑回归-预测(多个测试样本) =============================
+    # ======================= 逻辑回归-评估 =============================
     kwargs = {
-        "oneSample": False,  # 是否批量上传数据进行预测
         "tableName": "buy_computer_new",  # str,数据库表名
-        # "X": [1,1,1,0],  # list,自变量
-        "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
+        "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
+        "show_options": ["matrix", "roc", "r2", "coff"]
     }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/logistics/predict', json=kwargs, timeout=30)
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/evaluate', json=kwargs, timeout=30)
 
-    # ======================= 逻辑回归-预测(单个测试样本) =============================
+    # ======================= 逻辑回归-预测 =============================
     # kwargs = {
     #     "oneSample": True,  # 是否批量上传数据进行预测
     #     "tableName": "buy_computer_new",  # str,数据库表名
-    #     "X": [1, 0, 0, 0],  # list,自变量，每个元素是浮点类型
+    #     "X": [1, 1, 1, 0],  # list,自变量
+    #     # "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
     # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logistics/predict', json=kwargs, timeout=30)
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/predict', json=kwargs, timeout=30)
 
     # ======================= K-Means 聚类 =============================
     # kwargs = {

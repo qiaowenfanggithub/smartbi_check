@@ -33,8 +33,7 @@ from sklearn.cluster import KMeans
 from sklearn.ensemble import RandomForestClassifier
 import joblib
 import os
-# from statsmodels.formula.api import OLS
-
+import statsmodels.api as sm
 
 log = logging.getLogger(__name__)
 
@@ -84,7 +83,6 @@ def logistics_train():
         "rate": "0.3", # str,测试集训练集分割比例
         "param":{
             "fit_intercept": True, # bool,True或者False，是否有截距项
-            "normalize": True, # bool,True或者False，是否将数据归一化
         }
         "show_options": ["matrix", "roc", "r2", "coff"]
     :return:
@@ -104,7 +102,6 @@ def logistics_train():
         log.info(e)
         raise e
     is_fit_intercept = param.get("fit_intercept", True)
-    is_normalize = param.get("normalize", False)
     # 从数据库拿数据
     data = exec_sql(table_name, X, Y)
     log.info("输入数据大小:{}".format(len(data)))
@@ -136,16 +133,31 @@ def logistics_train():
                                                                 test_size=rate)
 
             # 模型训练和网格搜索
-            model = LinearRegression(fit_intercept=is_fit_intercept, normalize=is_normalize)
-            model.fit(x_train, y_train)
+            if is_fit_intercept:
+                x_train = sm.add_constant(x_train)
+            model = sm.OLS(y_train, x_train).fit
+            # 拟合优度、系数解读、独立性检验
+            summary = model.summary2()
+            # 残差正态性检测
 
-            # 保存模型
-            if not os.path.exists("./model/LinearRegression/"):
-                os.mkdir("./model/LinearRegression/")
-            joblib.dump(model, "./model/LinearRegression/{}.pkl".format(
-                time.strftime("%y-%m-%d-%H-%M-%S", time.localtime())))
+            # 残差qq图和pp图
+            residuals = model.resid
+            sm.qqplot(residuals)
+            plt.title('QQ图')
+            residuals_base64 = plot_and_output_base64_png(plt)
+            # 自变量和残差的关系
 
-            res = algorithm_show_result(model, x_test, y_test, options=show_options)
+            # 因变量预测值和残差的关系
+
+            # 预测置信区间图
+
+            # 保存模型(如果用statsmodels模块没有模型保存,暂时保留)
+            # if not os.path.exists("./model/LinearRegression/"):
+            #     os.mkdir("./model/LinearRegression/")
+            # joblib.dump(model, "./model/LinearRegression/{}.pkl".format(
+            #     time.strftime("%y-%m-%d-%H-%M-%S", time.localtime())))
+            #
+            # res = algorithm_show_result(model, x_test, y_test, options=show_options)
 
             response_data = {"res": res,
                              "code": "200",
@@ -411,50 +423,7 @@ def logistics_train():
     # 数据类型统一为float，假设数据已经是处理后的（编码+归一化）
     data = data.astype("float")
     try:
-        # 利用测试数据评估模型
-        if not is_train:
-            model_name_list = os.listdir("./model/LogisticRegression")
-            model_name_list.sort()
-            latest_model_path = os.path.join("./model/LogisticRegression", model_name_list[-1])
-            test_model = joblib.load(latest_model_path)
-            x_test = data.loc[:, X]
-            y_test = data[Y[0]]
-
-            res = algorithm_show_result(test_model, x_test, y_test, options=show_options)
-
-            response_data = {"res": res,
-                             "code": "200",
-                             "msg": "ok!"}
-            return jsonify(response_data)
-        # 训练模式
-        else:
-            data_x = data[X]
-            data_y = data[Y[0]]
-            # 数据分割
-            x_train, x_test, y_train, y_test = train_test_split(data_x, data_y,
-                                                                random_state=random_state,
-                                                                test_size=rate)
-
-            # 模型训练和网格搜索
-            clf = LogisticRegression(random_state=random_state)
-            model = GridSearchCV(clf, param, cv=cv)
-            model.fit(x_train, y_train)
-            best_param = model.best_params_
-            model = LogisticRegression(**best_param, random_state=random_state).fit(x_test, y_test)
-
-            # 保存模型
-            if not os.path.exists("./model/LogisticRegression/"):
-                os.mkdir("./model/LogisticRegression/")
-            joblib.dump(model, "./model/LogisticRegression/{}.pkl".format(
-                time.strftime("%y-%m-%d-%H-%M-%S", time.localtime())))
-
-            res = algorithm_show_result(model, x_test, y_test, options=show_options)
-
-            response_data = {"res": res,
-                             "code": "200",
-                             "msg": "ok!",
-                             }
-            return jsonify(response_data)
+        pass
     except Exception as e:
         log.error(e)
         raise e
