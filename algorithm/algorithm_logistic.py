@@ -144,7 +144,7 @@ class logisticAlgorithm(BaseAlgorithm):
                 raise ImportError("statsmodels.api cannot import")
             x_train = self.table_data[self.config["X"]].astype(float)
             y_train = self.table_data[self.config["Y"][0]].astype(float)
-            if self.config["param"]["fit_intercept"] == "True":
+            if self.config["param"]["fit_intercept"]:
                 x = sm.add_constant(x_train)
                 self.model = sm.OLS(y_train, x).fit()
             else:
