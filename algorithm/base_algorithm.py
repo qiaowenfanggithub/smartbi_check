@@ -83,7 +83,7 @@ class BaseAlgorithm(object):
         try:
             # 保存模型
             if not os.path.exists("./model/{}/".format(model_name)):
-                os.mkdir("./model/{}/".format(model_name))
+                os.makedirs("./model/{}/".format(model_name))
             save_path = "./model/{}/{}.pkl".format(model_name, time.strftime("%y-%m-%d-%H-%M-%S", time.localtime()))
             joblib.dump(model, save_path)
             log.info("save model in {}".format(save_path))
