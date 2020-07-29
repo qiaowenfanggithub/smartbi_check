@@ -21,12 +21,16 @@ import pymysql
 from sklearn import metrics
 import numpy as np
 import pandas as pd
-from flask import request, jsonify
-from sklearn.model_selection import train_test_split, GridSearchCV
+from flask import request
+from sklearn.model_selection import train_test_split
 import os
 import joblib
 import time
-import matplotlib.pyplot as plt
+import seaborn as sns
+import scipy.stats as stats
+from pylab import *
+import statsmodels.api as sm
+from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 log = logging.getLogger(__name__)
 
@@ -92,7 +96,7 @@ class BaseAlgorithm(object):
         data["col"].insert(0, col0)
         for idx, (index, row) in enumerate(zip(data["row"], data["data"])):
             if not isinstance(data["data"][idx], list):
-                data["data"][idx] = list(data["data"][idx])
+                raise ValueError("data must be 2-d list")
             data["data"][idx].insert(0, str(index))
         if "row" in data:
             del data["row"]
@@ -156,81 +160,211 @@ class BaseAlgorithm(object):
         :param options: 可选参数，控制输出结果["report", "matrix", "roc"]
         :return: 给前端的结果
         """
+        plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
+        plt.rcParams['axes.unicode_minus'] = False
         res = []
-        # 输出结果展示
-        y_predict = model.predict(x)
-        # y_predict_proba = model.predict_proba(x)
+        try:
+            # 输出结果展示
+            y_predict = model.predict(x)
+            # y_predict_proba = model.predict_proba(x)
 
-        # 分类评估报告输出表格数据,默认展示
-        # accuracy_score = metrics.accuracy_score(y, y_predict)
-        # precision_score = metrics.precision_score(y, y_predict)
-        # recall_score = metrics.recall_score(y, y_predict)
-        # f1_score = metrics.f1_score(y, y_predict)
-        report = metrics.classification_report(y, y_predict, target_names=model.classes_.tolist())
-        res.append(self.transform_table_data_to_html(self.report_to_table_data(report)))
+            # 分类评估报告输出表格数据,默认展示
+            # accuracy_score = metrics.accuracy_score(y, y_predict)
+            # precision_score = metrics.precision_score(y, y_predict)
+            # recall_score = metrics.recall_score(y, y_predict)
+            # f1_score = metrics.f1_score(y, y_predict)
+            report = metrics.classification_report(y, y_predict, target_names=model.classes_.tolist())
+            res.append(self.transform_table_data_to_html(self.report_to_table_data(report)))
 
-        # 输出混淆矩阵图片
-        if "matrix" in options:
-            metrics.plot_confusion_matrix(model, x, y)
-            plt.title("confusion_matrix")
+            # 输出混淆矩阵图片
+            if "matrix" in options:
+                metrics.plot_confusion_matrix(model, x, y)
+                plt.title("confusion_matrix")
+                res.append({
+                    "title": "混淆矩阵",
+                    "base64": "{}".format(self.plot_and_output_base64_png(plt))
+                })
+
+            # 输出roc、auc图片
+            if "roc" in options:
+                metrics.plot_roc_curve(model, x, y)
+                plt.title("roc-auc")
+                res.append({
+                    "title": "ROC曲线和auc",
+                    "base64": "{}".format(self.plot_and_output_base64_png(plt))
+                })
+        except Exception as e:
+            log.error(e)
+            res = []
+        return res
+
+    def show_regression_result(self, x, y, model, options=[]):
+        """
+        回归模型拟合效果展示
+        :param x: 特征列
+        :param y: 标签列
+        :param model: 已经训练好的回归模型
+        :param options: 可选参数，控制输出结果["coff", "independence", "resid_normal"]
+        :return: 给前端的结果
+        """
+        plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
+        plt.rcParams['axes.unicode_minus'] = False
+        res = []
+        # 拟合优度
+        res.append({
+            "title": "拟合优度",
+            "data": str(model.summary().tables[0])
+        })
+
+        # 系数解读
+        if "coff" in options:
             res.append({
-                "title": "混淆矩阵",
+                "title": "系数解读",
+                "data": str(model.summary().tables[1])
+            })
+
+        # 独立性检验
+        if "independence" in options:
+            res.append({
+                "title": "独立性检验",
+                "data": str(model.summary().tables[2])
+            })
+
+        # 残差正态性检验
+        if "resid_normal" in options:
+            sns.distplot(a=model.resid,
+                         bins=10,
+                         fit=stats.norm,
+                         norm_hist=True,
+                         hist_kws={'color': 'green', 'edgecolor': 'black'},
+                         kde_kws={'color': 'black', 'linestyle': '--', 'label': '核密度曲线'},
+                         fit_kws={'color': 'red', 'linestyle': ':', 'label': '正态密度曲线'}
+                         )
+            plt.legend()
+            res.append({
+                "title": "残差正态性检验",
                 "base64": "{}".format(self.plot_and_output_base64_png(plt))
             })
 
-        # 输出roc、auc图片
-        if "roc" in options:
-            metrics.plot_roc_curve(model, x, y)
-            plt.title("roc-auc")
+        # 残差pp图
+        if "pp" in options:
+            pp_qq_plot = sm.ProbPlot(model.resid)
+            pp_qq_plot.ppplot(line='45')
+            plt.title('P-P图')
             res.append({
-                "title": "ROC曲线和auc",
+                "title": "残差pp图",
                 "base64": "{}".format(self.plot_and_output_base64_png(plt))
             })
 
+        # 残差qq图
+        if "qq" in options:
+            pp_qq_plot = sm.ProbPlot(model.resid)
+            pp_qq_plot.qqplot(line='q')
+            plt.title('Q-Q图')
+            res.append({
+                "title": "残差qq图",
+                "base64": "{}".format(self.plot_and_output_base64_png(plt))
+            })
+
+        # 标准化残差与预测值之间的散点图(验证残差的方差齐性)
+        if "var" in options:
+            plt.scatter(model.predict(), (model.resid - model.resid.mean()) / model.resid.std())
+            plt.xlabel('预测值')
+            plt.ylabel('标准化残差')
+            plt.title('方差齐性检验')
+            # 添加水平参考线
+            plt.axhline(y=0, color='r', linewidth=2)
+            res.append({
+                "title": "方差齐性检验",
+                "base64": "{}".format(self.plot_and_output_base64_png(plt))
+            })
+
+        # 多重共线性检验
+        if len(x.columns) > 1 and "vif" in options:
+            X = sm.add_constant(x)
+            vif = pd.DataFrame()
+            vif['features'] = X.columns
+            vif["VIF Factor"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+            res.append(self.transform_table_data_to_html(
+                {
+                    "title": "多重共线性检验",
+                    "row": vif['features'].values.tolist(),
+                    "col": ["VIF Factor"],
+                    "data": [vif["VIF Factor"].values.tolist()],
+                    "remarks": "VIF>10，存在多重共线性，>100则变量间存在严重的多重共线性"
+                }
+            ))
+
+        # 线性相关性检验(留在数据探索里面展示)
+
+        # 异常值检测（帽子矩阵、DFFITS准则、学生化残差、Cook距离）
+        if "outliers" in options:
+            outliers = model.get_influence()
+            # 帽子矩阵
+            leverage = outliers.hat_matrix_diag
+            # dffits值
+            dffits = outliers.dffits[0]
+            # 学生化残差
+            resid_stu = outliers.resid_studentized_external
+            # cook距离
+            cook = outliers.cooks_distance[0]
+            # 合并各种异常值检验的统计量值
+            """
+
+            """
+            contatl = pd.concat([pd.Series(leverage, name='leverage'),
+                                 pd.Series(dffits, name='dffits'),
+                                 pd.Series(resid_stu, name='resid_stu'),
+                                 pd.Series(cook, name='cook')
+                                 ], axis=1)
+
+            x.index = range(x.shape[0])
+            profit_outliers = pd.concat([x, contatl], axis=1)
+            res.append(self.transform_table_data_to_html(
+                {
+                    "title": "异常值检测",
+                    "row": profit_outliers.index.tolist(),
+                    "col": profit_outliers.columns.tolist(),
+                    "data": profit_outliers.values.tolist(),
+                    "remarks": "当高杠杆值点（或帽子矩阵）大于2(p+1)/n时，则认为该样本点可能存在异常（其中p为自变量的个数，n为观测的个数）；当DFFITS统计值大于2sqrt((p+1)/n)时，则认为该样本点可能存在异常；当学生化残差的绝对值大于2，则认为该样本点可能存在异常；对于cook距离来说，则没有明确的判断标准，一般来说，值越大则为异常点的可能性就越高；对于covratio值来说，如果一个样本的covratio值离数值1越远，则认为该样本越可能是异常值。"
+                }
+            ))
+
+        # 预测值与真实值的散点图
+        if "pred_y_contrast" in options:
+            plt.scatter(model.predict(), y)
+            plt.plot([model.predict().min(), model.predict().max()],
+                     [y.min(), y.max()], 'r-', linewidth=3)
+            plt.xlabel('预测值')
+            plt.ylabel('实际值')
+            plt.title('预测值与真实值对比散点图')
+            res.append({
+                "title": "预测值与真实值对比散点图",
+                "base64": "{}".format(self.plot_and_output_base64_png(plt))
+            })
         return res
 
     # 算法输出结果
-    def algorithm_show_result(self, model, x, y, options=[], method=[]):
+    def algorithm_show_result(self, model, x, y, options=[], method=None):
         res = []
-        if "classifier" in method:
-            # 分类测试集结果
-            res.extend(self.show_classifier_results(x, y, model, options=options))
-
-        if "regression" in method:
-            # 拟合优度结果（回归算法才有）
-            try:
-                import statsmodels.api as sm
-            except:
-                raise ImportError("statsmodels.api cannot import")
-            try:
-                x = x.astype(float)
-                y = y.astype(float)
-                x = sm.add_constant(x)
-                logit_stats_res = sm.Logit(y, x).fit()
-                # 拟合优度
-                if "r2" in options:
-                    res.append({
-                        "title": "逻辑回归统计分析结果",
-                        "data": str(logit_stats_res.summary().tables[0])
-                    })
-                # 系数解读
-                if "coff" in options:
-                    res.append({
-                        "title": "逻辑回归系数解读",
-                        "data": str(logit_stats_res.summary().tables[1])
-                    })
-            except Exception as e:
-                log.error("statsmodels analysis error")
-                # raise e
-        if "cluster" in method:
-            pass
+        try:
+            if method == "classifier":
+                # 分类测试集结果
+                res.extend(self.show_classifier_results(x, y, model, options=options))
+            if method == "regression":
+                res.extend(self.show_regression_result(x, y, model, options=options))
+            if method == "cluster":
+                pass
+        except Exception as e:
+            log.error(e)
+            raise e
         return res
 
     # 初始化数据库读取sql语句
     @staticmethod
     def get_dataframe_from_mysql(sql_sentence, host=None, port=None, user=None, password=None, database=None):
         conn = pymysql.connect(host='rm-2ze5vz4174qj2epm7so.mysql.rds.aliyuncs.com', port=3306, user='yzkj',
-                               password='yzkj2020@', database='sophia_manager', charset='utf8')
+                               password='yzkj2020@', database='sophia_data', charset='utf8')
         try:
             df = pd.read_sql(sql_sentence, conn)
             return df

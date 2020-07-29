@@ -54,6 +54,21 @@ class JSONEncoder(_JSONEncoder):
             return super(JSONEncoder, self).default(obj)
 
 
+def exec(method, algorithm):
+    if method == 'train':
+        log.info(str(algorithm) + '_train_init...')
+        response_data = algorithm.train()
+    elif method == "evaluate":
+        log.info(str(algorithm) + '_evaluate_init...')
+        response_data = algorithm.evaluate()
+    elif method == "predict":
+        log.info(str(algorithm) + '_predict_init...')
+        response_data = algorithm.predict()
+    else:
+        raise ValueError("input method:{} error".format(method))
+    return response_data
+
+
 # ================================ 算法总入口 ==============================
 @app.route('/algorithm/<algorithm>/<method>', methods=['POST', 'GET'])
 def main(algorithm, method):
@@ -70,7 +85,13 @@ def main(algorithm, method):
     logging.getLogger().addFilter(logging.StreamHandler())
     logging.getLogger().setLevel(logging.WARNING)
     if algorithm == "linerRegression":
-        pass
+        try:
+            from algorithm_liner_regression import linerRegression
+        except NotImplementedError as e:
+            raise e
+        liner_regression = linerRegression(method)
+        response_data = exec(method, liner_regression)
+        return jsonify(response_data)
     elif algorithm == "polyRegression":
         pass
     elif algorithm == "svm":
@@ -85,17 +106,7 @@ def main(algorithm, method):
         except NotImplementedError as e:
             raise e
         logistic = logisticAlgorithm(method)
-        if method == 'train':
-            log.info('logistics_train_init...')
-            response_data = logistic.train()
-        elif method == "evaluate":
-            log.info('logistics_evaluate_init...')
-            response_data = logistic.evaluate()
-        elif method == "predict":
-            log.info('logistics_predict_init...')
-            response_data = logistic.predict()
-        else:
-            raise ValueError("input method:{} error".format(method))
+        response_data = exec(method, logistic)
         return jsonify(response_data)
     elif algorithm == "kMeans":
         pass
@@ -103,8 +114,6 @@ def main(algorithm, method):
         pass
     else:
         raise ValueError("输入算法参数错误:{}".format(algorithm))
-
-
 
 
 if __name__ == '__main__':

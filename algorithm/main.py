@@ -81,9 +81,7 @@ def logistics_train():
         "Y": ["y"], # list,因变量,当表格方向为v是使用
         "randomState": "2020", # str,测试集训练集分割比例时的随机种子数
         "rate": "0.3", # str,测试集训练集分割比例
-        "param":{
-            "fit_intercept": True, # bool,True或者False，是否有截距项
-        }
+        "param":{"fit_intercept": True}, # bool,True或者False，是否有截距项
         "show_options": ["matrix", "roc", "r2", "coff"]
     :return:
     """
