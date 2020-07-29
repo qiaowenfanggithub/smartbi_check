@@ -15,26 +15,10 @@ Date : 2020/7/27 9:12 上午
 
 """
 from __future__ import print_function
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 from flask.json import JSONEncoder as _JSONEncoder
-import logging
-import numpy as np
-import pandas as pd
-import time
 from flask_cors import *
 from utils import *
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.tree import DecisionTreeClassifier, export_graphviz
-from sklearn.linear_model import LogisticRegression, LinearRegression
-import pydotplus
-from sklearn.externals.six import StringIO
-from sklearn import metrics
-from sklearn.cluster import KMeans
-from sklearn.ensemble import RandomForestClassifier
-import joblib
-import os
-import statsmodels.api as sm
-import base_algorithm
 
 log = logging.getLogger(__name__)
 
