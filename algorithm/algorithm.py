@@ -38,6 +38,10 @@ class JSONEncoder(_JSONEncoder):
             return super(JSONEncoder, self).default(obj)
 
 
+app.json_encoder = JSONEncoder
+app.config['JSON_AS_ASCII'] = False
+
+
 def exec(method, algorithm):
     if method == 'train':
         log.info(str(algorithm) + '_train_init...')
