@@ -174,7 +174,11 @@ class BaseAlgorithm(object):
             # recall_score = metrics.recall_score(y, y_predict)
             # f1_score = metrics.f1_score(y, y_predict)
             report = metrics.classification_report(y, y_predict, target_names=model.classes_.tolist())
-            res.append(self.transform_table_data_to_html(self.report_to_table_data(report)))
+            # res.append(self.transform_table_data_to_html(self.report_to_table_data(report)))
+            res.append({
+                "title": "分类报告:precision/recall/F1/分类个数",
+                "data": report
+            })
 
             # 输出混淆矩阵图片
             if "matrix" in options:

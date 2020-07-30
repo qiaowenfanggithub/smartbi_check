@@ -22,8 +22,8 @@ import json
 import numpy as np
 import pandas as pd
 from flask_cors import *
-from utils import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, exec_sql, \
-    transform_v_table_data_to_h
+from statistic.utils import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, \
+    exec_sql, transform_v_table_data_to_h
 from flask.json import JSONEncoder as _JSONEncoder
 from anova_one_way import normal_test, levene_test, anova_analysis, multiple_test, anova_one_way_describe_info
 from anova_all_way import anova_all_way_describe_info, normal_test_all, levene_test_all, anova_analysis_multivariate, \
@@ -34,9 +34,10 @@ from t_two_paried import pearsonr_test, t_two_paired_describe_info, t_two_pair_a
 from nonparametric_two_independent import wilcoxon_ranksums_test, mannwhitneyu_test, \
     nonparam_two_independent_describe_info
 from nonparametric_multi_independent import kruskal_test, median_test, nonparam_multi_independent_describe_info
-from two_independent_MWU import Mann_Whitney_U_describe,Mann_Whitney_U_test
-from more_independent_KWH import Kruskal_Wallis_H_describe,Kruskal_Wallis_H_test
-from nonparametric_two_pair import Wilcoxon_test,Wilcoxon_describe
+from two_independent_MWU import Mann_Whitney_U_describe, Mann_Whitney_U_test
+from more_independent_KWH import Kruskal_Wallis_H_describe, Kruskal_Wallis_H_test
+from nonparametric_two_pair import Wilcoxon_test, Wilcoxon_describe
+
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -410,7 +411,8 @@ def t_two_pair():
         # 描述性统计分析
         res.append(transform_table_data_to_html(t_two_paired_describe_info(data, X, Y)))
         if "pearsonr" in analysis_options:
-            res.append(transform_table_data_to_html(pearsonr_test(*every_level_data, index=every_level_data_index, alpha=alpha)))
+            res.append(transform_table_data_to_html(
+                pearsonr_test(*every_level_data, index=every_level_data_index, alpha=alpha)))
         if "normal" in analysis_options:
             res.append(transform_table_data_to_html(normal_test(every_level_data_index, every_level_data, alpha)))
         res.append(transform_table_data_to_html(
@@ -484,6 +486,7 @@ def nonparametric_two_independent():
         raise e
         # return jsonify({"data": "", "code": "500", "msg": e.args[0]})
 
+
 # ================================ 多个独立样本非参数检验 Kruskal-Wallis H 检验==============================
 @app.route('/statistic/nonparametricMultiIndependent', methods=['POST', 'GET'])
 def results_nonparametric_multi_independent():
@@ -528,12 +531,12 @@ def results_nonparametric_multi_independent():
 
         # 描述性统计
         res = []
-        data_info = transform_table_data_to_html(Kruskal_Wallis_H_describe(data,X))
+        data_info = transform_table_data_to_html(Kruskal_Wallis_H_describe(data, X))
         res.append(data_info)
         log.info("描述性统计分析完成")
 
         # Kruska-Wallis H 检验
-        Kruskal_Wallis_H_res = Kruskal_Wallis_H_test(data,X)
+        Kruskal_Wallis_H_res = Kruskal_Wallis_H_test(data, X)
         res.append(Kruskal_Wallis_H_res)
         log.info("Kruska-Wallis H 检验完成")
 
@@ -545,7 +548,6 @@ def results_nonparametric_multi_independent():
     except Exception as e:
         log.error(e)
         raise e
-
 
 
 # ================================ 两配对样本非参数检验  Wilcoxon 符号秩检验 ==============================
@@ -572,7 +574,7 @@ def results_nonparametric_two_independent():
         raise e
     # assert isinstance([X, Y], list)
     assert isinstance([X], list)
-    if len(X) >2:
+    if len(X) > 2:
         raise ValueError("只支持一列数据或两列数据")
     # 从数据库拿数据
     # data = exec_sql(table_name, X, Y)
@@ -583,12 +585,12 @@ def results_nonparametric_two_independent():
 
         # 描述性统计
         res = []
-        data_info = transform_table_data_to_html(Wilcoxon_describe(data,X))
+        data_info = transform_table_data_to_html(Wilcoxon_describe(data, X))
         res.append(data_info)
         log.info("描述性统计分析完成")
 
         # Wilcoxon 符号秩检验
-        Wilcoxon_res = transform_table_data_to_html(Wilcoxon_test(data,X))
+        Wilcoxon_res = transform_table_data_to_html(Wilcoxon_test(data, X))
         res.append(Wilcoxon_res)
         log.info("Wilcoxon 符号秩检验完成")
 
@@ -600,8 +602,6 @@ def results_nonparametric_two_independent():
     except Exception as e:
         log.error(e)
         raise e
-
-
 
 
 if __name__ == '__main__':

@@ -121,6 +121,9 @@ class linerRegression(BaseAlgorithm):
             else:
                 self.model = sm.OLS(y_train, x_train).fit()
 
+            # 保存模型
+            self.save_model(self.model, "linerRegression")
+
             # 结果可视化
             x_train = x_train.astype(float)
             y_train = y_train.astype(float)
@@ -138,7 +141,7 @@ class linerRegression(BaseAlgorithm):
 
     def evaluate(self):
         try:
-            model = self.load_model("logisticRegression")
+            model = self.load_model("linerRegression")
             x_test = self.table_data.loc[:, self.config['X']]
             y_test = self.table_data[self.config['Y'][0]]
 
@@ -155,7 +158,7 @@ class linerRegression(BaseAlgorithm):
 
     def predict(self):
         try:
-            model = self.load_model("logisticRegression")
+            model = self.load_model("linerRegression")
             res = {}
             if self.config['oneSample']:
                 if not self.config['X']:

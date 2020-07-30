@@ -18,6 +18,7 @@ import logging
 from base_algorithm import BaseAlgorithm
 from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
+import copy
 
 log = logging.getLogger(__name__)
 
@@ -62,18 +63,28 @@ class logisticAlgorithm(BaseAlgorithm):
             self.config['X'] = self.web_data.get('X')
             self.config['Y'] = self.web_data.get('Y')
             self.config['param'] = self.web_data['param']
-            self.config['randomState'] = int(self.web_data.get('randomState', 0))
-            self.config['rate'] = float(self.web_data.get('rate', 0))
+            self.config['randomState'] = int(self.web_data.get('randomState', 666))
+            self.config['rate'] = float(self.web_data.get('rate', 0.3))
             self.config['cv'] = int(self.web_data.get('cv', 0))
             self.config['show_options'] = self.web_data.get("show_options", [])
-            self.config['param']["penalty"] = self.config['param'].get("penalty", "")
-            self.config['param']["C"] = self.config['param'].get("C", ["0"])
+            self.config['param']["penalty"] = self.config['param'].get("penalty", ["l1"])
+            self.config['param']["C"] = self.config['param'].get("C", ["1"])
             self.config['param']["C"] = [float(c) for c in self.config['param']["C"]]
             # 默认saga随机梯度下降
-            self.config['param']["fit_intercept"] = [self.config['param'].get("fit_intercept", True)]
-            self.config['param']["solver"] = self.config['param'].get("solver", ["saga"])
-            self.config['param']["max_iter"] = self.config['param'].get("max_iter", ["1000"])
+            self.config['param']["fit_intercept"] = self.config['param'].get("fit_intercept", True)
+            self.config['param']["solver"] = self.config['param'].get("solver", ["liblinear"])
+            self.config['param']["max_iter"] = self.config['param'].get("max_iter", ["100"])
             self.config['param']["max_iter"] = [int(m) for m in self.config['param']["max_iter"]]
+            if len(self.config['param']["penalty"]) > 1:
+                l1_solver = [s for s in self.config['param']["solver"] if s in ["liblinear", "saga"]]
+                l2_solver = [s for s in self.config['param']["solver"] if s in ["lbfgs", "sag", "newton-cg"]]
+                self.config['param']["penalty"] = ["l1"]
+                self.config['param']["solver"] = l1_solver
+                l1_param = copy.deepcopy(self.config['param'])
+                self.config['param']["penalty"] = ["l2"]
+                self.config['param']["solver"] = l2_solver
+                l2_param = self.config['param']
+                self.config['param'] = [l1_param, l2_param]
         except Exception as e:
             log.info(e)
             raise e
@@ -144,7 +155,7 @@ class logisticAlgorithm(BaseAlgorithm):
                 raise ImportError("statsmodels.api cannot import")
             x_train = self.table_data[self.config["X"]].astype(float)
             y_train = self.table_data[self.config["Y"][0]].astype(float)
-            if self.config["param"]["fit_intercept"]:
+            if best_param["fit_intercept"]:
                 x = sm.add_constant(x_train)
                 self.model = sm.OLS(y_train, x).fit()
             else:

@@ -54,24 +54,23 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/decisionTree/predict', json=kwargs, timeout=30)
 
     # ======================= 逻辑回归-训练 =============================
-    # kwargs = {
-    #     "isTrain": True,  # True,进行训练还是测试
-    #     "tableName": "buy_computer_new",  # str,数据库表名
-    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-    #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
-    #     "rate": "0.3",  # str,测试集训练集分割比例
-    #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
-    #     "cv": "3",  # str,几折交叉验证
-    #     "param": {
-    #         "penalty": ["l2"],  # str,惩罚项
-    #         "C": ["2"],  # str,惩罚项系数
-    #         "solver": ["saga"],  # str，优化算法
-    #         "max_iter": ["1000"],  # str，最大迭代步数
-    #         "fit_intercept": True
-    #     },
-    #     "show_options": ["matrix", "roc", "coff", "independence"]
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/train', json=kwargs, timeout=30)
+    kwargs = {
+        "tableName": "buy_computer_new",  # str,数据库表名
+        "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
+        "rate": "0.3",  # str,测试集训练集分割比例
+        "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
+        "cv": "3",  # str,几折交叉验证
+        "param": {
+            "penalty": ["l1", "l2"],  # str,惩罚项
+            "C": ["2"],  # str,惩罚项系数
+            "solver": ["saga", "lbfgs"],  # str，优化算法
+            "max_iter": ["100"],  # str，最大迭代步数
+            "fit_intercept": [True, False]
+        },
+        "show_options": ["matrix", "roc", "coff", "independence"]
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/train', json=kwargs, timeout=30)
 
     # ======================= 逻辑回归-评估 =============================
     # kwargs = {
@@ -83,13 +82,13 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/evaluate', json=kwargs, timeout=30)
 
     # ======================= 逻辑回归-预测 =============================
-    kwargs = {
-        "oneSample": False,  # 是否批量上传数据进行预测
-        "tableName": "buy_computer_new",  # str,数据库表名
-        # "X": [1, 1, 1, 0],  # list,自变量
-        "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/predict', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "oneSample": False,  # 是否批量上传数据进行预测
+    #     "tableName": "buy_computer_new",  # str,数据库表名
+    #     # "X": [1, 1, 1, 0],  # list,自变量
+    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/predict', json=kwargs, timeout=30)
 
     # ======================= 线性回归-训练 =============================
     # kwargs = {
@@ -99,19 +98,20 @@ if __name__ == '__main__':
     #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
     #     "rate": "0.3",  # str,测试集训练集分割比例
     #     "param": {"fit_intercept": True},  # bool,True或者False，是否有截距项
-    #     "show_options": ["r2", "coff", "Independence", "resid_normal",
+    #     "show_options": ["coff", "Independence", "resid_normal",
     #                      "pp", "qq", "var", "vif", "outliers", "pred_y_contrast"]
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/train', json=kwargs, timeout=30)
 
     # ======================= 线性回归-评估 =============================
     # kwargs = {
-    #     "tableName": "buy_computer_new",  # str,数据库表名
-    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-    #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
-    #     "show_options": ["matrix", "roc", "r2", "coff"]
+    #     "tableName": "liner_regression",  # str,数据库表名
+    #     "X": ["year"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     "Y": ["salary"],  # list,因变量,当表格方向为v是使用
+    #     "show_options": ["coff", "Independence", "resid_normal",
+    #                      "pp", "qq", "var", "vif", "outliers", "pred_y_contrast"]
     # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/evaluate', json=kwargs, timeout=30)
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/evaluate', json=kwargs, timeout=30)
 
     # ======================= 线性回归-预测 =============================
     # kwargs = {
