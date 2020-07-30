@@ -55,20 +55,51 @@ if __name__ == '__main__':
 
     # ======================= 逻辑回归-训练 =============================
     kwargs = {
-        "tableName": "buy_computer_new",  # str,数据库表名
-        "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-        "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
-        "rate": "0.3",  # str,测试集训练集分割比例
-        "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
-        "cv": "3",  # str,几折交叉验证
+        "tableName": "91ceb15911c0441e86eeb791a6d08720",
+        "X": [
+            "年龄",
+            "收入层次",
+            "是否单身",
+            "信用等级"
+        ],
+        "Y": [
+            "是否购买电脑"
+        ],
+        "rate": "0.4",
+        "randomState": "2",
+        "cv": "2",
         "param": {
-            "penalty": ["l1", "l2"],  # str,惩罚项
-            "C": ["2"],  # str,惩罚项系数
-            "solver": ["saga", "lbfgs"],  # str，优化算法
-            "max_iter": ["100"],  # str，最大迭代步数
-            "fit_intercept": [True, False]
+            "penalty": [
+                "l1"
+            ],
+            "C": [
+                "1"
+            ],
+            "solver": [
+                "liblinear",
+                "saga"
+            ],
+            "max_iter": [
+                "100"
+            ],
+            "fit_intercept": [
+                True
+            ]
         },
-        "show_options": ["matrix", "roc", "coff", "independence"]
+        "show_options": [
+            "report",
+            "matrix",
+            "roc",
+            "r2",
+            "coff",
+            "independence",
+            "resid_normal",
+            "pp",
+            "qq",
+            "var",
+            "vif",
+            "outliers"
+        ]
     }
     res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/train', json=kwargs, timeout=30)
 

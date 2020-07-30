@@ -164,7 +164,7 @@ class logisticAlgorithm(BaseAlgorithm):
             # 保存模型
             self.save_model(self.model, "logisticRegression2")
 
-            res.extend(self.algorithm_show_result(self.model, x_test, y_test,
+            res.extend(self.algorithm_show_result(self.model, x_train, y_train,
                                                   options=self.config['show_options'],
                                                   method="regression"))
 

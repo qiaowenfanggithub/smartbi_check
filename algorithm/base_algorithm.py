@@ -31,6 +31,7 @@ import scipy.stats as stats
 from pylab import *
 import statsmodels.api as sm
 from statsmodels.stats.outliers_influence import variance_inflation_factor
+from utils import format_dataframe
 
 log = logging.getLogger(__name__)
 
@@ -71,6 +72,8 @@ class BaseAlgorithm(object):
         try:
             model_name_list = os.listdir("./model/{}".format(name))
             model_name_list.sort()
+            if len(model_name_list) > 20:
+                del model_name_list[:len(model_name_list) - 20]
             latest_model_path = os.path.join("./model/{}".format(name), model_name_list[-1])
             test_model = joblib.load(latest_model_path)
             return test_model
@@ -84,6 +87,11 @@ class BaseAlgorithm(object):
             # 保存模型
             if not os.path.exists("./model/{}/".format(model_name)):
                 os.makedirs("./model/{}/".format(model_name))
+            model_name_list = os.listdir("./model/{}".format(model_name))
+            model_name_list.sort()
+            if len(model_name_list) > 19:
+                for m in model_name_list[:len(model_name_list) - 19]:
+                    os.remove("./model/{}/{}".format(model_name, m))
             save_path = "./model/{}/{}.pkl".format(model_name, time.strftime("%y-%m-%d-%H-%M-%S", time.localtime()))
             joblib.dump(model, save_path)
             log.info("save model in {}".format(save_path))
@@ -173,12 +181,13 @@ class BaseAlgorithm(object):
             # precision_score = metrics.precision_score(y, y_predict)
             # recall_score = metrics.recall_score(y, y_predict)
             # f1_score = metrics.f1_score(y, y_predict)
-            report = metrics.classification_report(y, y_predict, target_names=model.classes_.tolist())
-            # res.append(self.transform_table_data_to_html(self.report_to_table_data(report)))
-            res.append({
-                "title": "分类报告:precision/recall/F1/分类个数",
-                "data": report
-            })
+            if "report" in options:
+                report = metrics.classification_report(y, y_predict, target_names=model.classes_.tolist())
+                # res.append(self.transform_table_data_to_html(self.report_to_table_data(report)))
+                res.append({
+                    "title": "分类报告",
+                    "data": report
+                })
 
             # 输出混淆矩阵图片
             if "matrix" in options:
@@ -215,10 +224,11 @@ class BaseAlgorithm(object):
         plt.rcParams['axes.unicode_minus'] = False
         res = []
         # 拟合优度
-        res.append({
-            "title": "拟合优度",
-            "data": str(model.summary().tables[0])
-        })
+        if "r2" in options:
+            res.append({
+                "title": "拟合优度",
+                "data": str(model.summary().tables[0])
+            })
 
         # 系数解读
         if "coff" in options:
@@ -289,6 +299,7 @@ class BaseAlgorithm(object):
             vif = pd.DataFrame()
             vif['features'] = X.columns
             vif["VIF Factor"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+            vif = format_dataframe(vif, {"VIF Factor": ".4f"})
             res.append(self.transform_table_data_to_html(
                 {
                     "title": "多重共线性检验",
@@ -324,6 +335,7 @@ class BaseAlgorithm(object):
 
             x.index = range(x.shape[0])
             profit_outliers = pd.concat([x, contatl], axis=1)
+            profit_outliers = format_dataframe(profit_outliers, {"leverage": ".4f", "dffits": ".4f", "resid_stu": ".4f", "cook": ".4f"})
             res.append(self.transform_table_data_to_html(
                 {
                     "title": "异常值检测",
