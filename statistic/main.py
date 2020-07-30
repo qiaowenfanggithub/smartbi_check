@@ -22,8 +22,7 @@ import json
 import numpy as np
 import pandas as pd
 from flask_cors import *
-from utils import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, exec_sql, \
-    transform_v_table_data_to_h
+from statistic.utils import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, exec_sql, format_data,transform_v_table_data_to_h
 from flask.json import JSONEncoder as _JSONEncoder
 from anova_one_way import normal_test, levene_test, anova_analysis, multiple_test, anova_one_way_describe_info
 from anova_all_way import anova_all_way_describe_info, normal_test_all, levene_test_all, anova_analysis_multivariate, \
@@ -37,6 +36,7 @@ from nonparametric_multi_independent import kruskal_test, median_test, nonparam_
 from two_independent_MWU import Mann_Whitney_U_describe,Mann_Whitney_U_test
 from more_independent_KWH import Kruskal_Wallis_H_describe,Kruskal_Wallis_H_test
 from nonparametric_two_pair import Wilcoxon_test,Wilcoxon_describe
+from crosstable_chi import cross_chi2
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -559,7 +559,7 @@ def results_nonparametric_two_independent():
     }
     :return:
     """
-    log.info('nonparametric_two_independent_get_results_init...')
+    log.info('nonparametric_two_pair_get_results_init...')
     request_data = init_route()
     try:
         table_name = request_data['table_name']
@@ -601,6 +601,51 @@ def results_nonparametric_two_independent():
         log.error(e)
         raise e
 
+# ================================ 交叉表 及卡方检验 ==============================
+@app.route('/statistic/crosstable', methods=['POST', 'GET'])
+def results_crosstable():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1"], # list,自变量，行
+        "Y": ["y"], # list,因变量，列
+
+    }
+    :return:
+    """
+    log.info('crosstable_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        # table_direction = request_data['table_direction']
+        # alpha = float(request_data['alpha'])
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X, Y], list)
+    # assert isinstance([X], list)
+    # 从数据库拿数据
+    data = exec_sql(table_name, X, Y)
+    # data = exec_sql(table_name, X)
+    log.info("输入数据大小:{}".format(len(data)))
+
+    try:
+        index = data[X[0]]
+        columns = data[Y[0]]
+        res = cross_chi2(index,columns)
+
+        response_data = {"res": res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+
+
+
 
 
 
@@ -608,3 +653,9 @@ if __name__ == '__main__':
     app.json_encoder = JSONEncoder
     app.config['JSON_AS_ASCII'] = False
     app.run(host="0.0.0.0", debug=True, port=5000)
+
+
+
+
+
+

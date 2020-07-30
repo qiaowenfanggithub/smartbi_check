@@ -191,7 +191,7 @@ def transform_h_table_data_to_v(data: pd.DataFrame, X):
 
 
 # 当是一列分类变量，一列数值型变量，将各个分类对应的数值型变量自成一列，由【分类变量，数值型变量】变成【数值型变量1，数值型变量2，...】
-def transform_v_table_data_to_h(data: pd.DataFrame, X,Y):
+def transform_v_table_data_to_h(data: pd.DataFrame, X, Y):
     list = []
     col = [d for d in data[X[0]].unique()]
     for i in col:
@@ -201,7 +201,7 @@ def transform_v_table_data_to_h(data: pd.DataFrame, X,Y):
     new_data = pd.DataFrame(list).T
     new_data.columns = col
     X = col
-    return new_data,X
+    return new_data, X
 
 
 # 转换输出的表格数据让前端识别并显示
@@ -220,4 +220,13 @@ def transform_table_data_to_html(data: dict, col0=""):
 def format_dataframe(data, config):
     for key, value in config.items():
         data[key] = data[key].map(lambda x: format(x, value))
+    return data
+
+
+# 对无列名的dataframe，将数据全转成整数型
+def format_data(data):
+    data = data.astype(float)
+    length = data.shape[1]
+    for i in range(length):
+        data[i] = data[i].apply(lambda x: "{:.0f}".format(x))
     return data
