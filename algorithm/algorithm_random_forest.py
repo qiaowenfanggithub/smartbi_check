@@ -18,7 +18,7 @@ import logging
 from base_algorithm import BaseAlgorithm
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
-import copy
+from utils import transform_table_data_to_html
 
 log = logging.getLogger(__name__)
 
@@ -33,8 +33,11 @@ class randomForestAlgorithm(BaseAlgorithm):
             self.get_evaluate_config_from_web()
         else:
             self.get_predict_config_from_web()
-        if method == 'predict' and self.config["oneSample"]:
-            self.table_data = None
+        if method == 'predict':
+            if self.config["oneSample"]:
+                self.table_data = None
+            else:
+                self.table_data = self.exec_sql(self.config['tableName'], self.config['X'])
         else:
             self.table_data = self.exec_sql(self.config['tableName'], self.config['X'], self.config['Y'])
 
@@ -111,8 +114,6 @@ class randomForestAlgorithm(BaseAlgorithm):
             self.config['oneSample'] = self.web_data['oneSample']
             self.config['tableName'] = self.web_data.get('tableName')
             self.config['X'] = self.web_data.get('X')
-            self.config['Y'] = self.web_data.get('Y')
-            self.config['show_options'] = self.web_data.get("show_options", [])
         except Exception as e:
             log.info(e)
             raise e
@@ -149,39 +150,14 @@ class randomForestAlgorithm(BaseAlgorithm):
     def evaluate(self):
         res = []
         try:
-            model = self.load_model("logisticRegression")
+            model = self.load_model("randomForest")
             x_test = self.table_data.loc[:, self.config['X']]
             y_test = self.table_data[self.config['Y'][0]]
 
             # 分类结果可视化
-            if any([d in self.config['show_options'] for d in ["matrix", "roc"]]):
-                res.extend(self.algorithm_show_result(model, x_test, y_test,
-                                                      options=self.config['show_options'],
-                                                      method="classifier"))
-
-            # 回归结果可视化
-            if any([d in self.config['show_options'] for d in ["coff", "independence",
-                                                               "resid_normal", "pp",
-                                                               "qq", "var", "vif",
-                                                               "outliers",
-                                                               "pred_y_contrast"]]):
-                try:
-                    import statsmodels.api as sm
-                except:
-                    raise ImportError("statsmodels.api cannot import")
-                x_test = self.table_data[self.config["X"]].astype(float)
-                y_test = self.table_data[self.config["Y"][0]].astype(float)
-                # if self.config["param"]["fit_intercept"]:
-                #     x = sm.add_constant(x_train)
-                #     self.model = sm.OLS(y_train, x).fit()
-                # else:
-                #     self.model = sm.OLS(y_train, x_train).fit()
-
-                # 加载statsmodels回归模型
-                model = self.load_model("logisticRegression2")
-                res.extend(self.algorithm_show_result(model, x_test, y_test,
-                                                      options=self.config['show_options'],
-                                                      method="regression"))
+            res.extend(self.algorithm_show_result(model, x_test, y_test,
+                                                  options=self.config['show_options'],
+                                                  method="classifier"))
 
             response_data = {"res": res,
                              "code": "200",
@@ -193,27 +169,32 @@ class randomForestAlgorithm(BaseAlgorithm):
 
     def predict(self):
         try:
-            model = self.load_model("logisticRegression")
+            model = self.load_model("randomForest")
             res = {}
             if self.config['oneSample']:
                 if not self.config['X']:
                     raise ValueError("feature must not be empty when one-sample")
-                X = [float(x) for x in self.config['X']]
-                res.update({"predict": model.predict([X]),
-                            "title": "单样本预测结果"})
+                X = [[float(x) for x in self.config['X']]]
+                predict = model.predict(X)[0] if isinstance(model.predict(X)[0], str) else "{:.4f}".format(model.predict(X)[0])
+                res.update({
+                    "data": [[",".join([str(s) for s in self.config['X']]), predict]],
+                    "title": "单样本预测结果",
+                    "col": ["样本特征", "模型预测结果"],
+                })
             else:
                 # 从数据库拿数据
-                if not self.config['tableName']:
+                if not self.config['tableName'] or self.config['tableName'] == "":
                     raise ValueError("cannot find table data when multi-sample")
-                data = self.exec_sql(self.config['tableName'], self.config['X'])
+                data = self.table_data
                 log.info("输入数据大小:{}".format(len(data)))
                 data = data.astype(float)
-                pre_data = model.predict(data.values)
-                res.update({
-                    "predict": pre_data,
+                data["predict"] = model.predict(data.values)
+                res.update(transform_table_data_to_html({
+                    "data": data.values.tolist(),
                     "title": "多样本预测结果",
-                    "col": "预测结果"
-                })
+                    "col": data.columns.tolist(),
+                    "row": data.index.tolist()
+                }))
             response_data = {"res": res,
                              "code": "200",
                              "msg": "ok!"}

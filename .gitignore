@@ -2,3 +2,5 @@
 *.py[cod]
 *.log
 *.pkl
+*.jpg
+*.png

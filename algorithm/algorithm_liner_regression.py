@@ -17,6 +17,7 @@ Date : 2020/7/27 9:55 下午
 import logging
 from base_algorithm import BaseAlgorithm
 from utils import transform_table_data_to_html
+import statsmodels.api as sm
 
 log = logging.getLogger(__name__)
 
@@ -55,8 +56,7 @@ class linerRegression(BaseAlgorithm):
             self.config['X'] = self.web_data.get('X')
             self.config['Y'] = self.web_data.get('Y')
             self.config['param'] = self.web_data['param']
-            self.config['randomState'] = int(self.web_data.get('randomState', 0))
-            self.config['rate'] = float(self.web_data.get('rate', 0))
+            self.config['param']["fit_intercept"] = self.config['param'].get("fit_intercept", True)
             self.config['show_options'] = self.web_data.get("show_options", [])
         except Exception as e:
             log.info(e)
@@ -110,10 +110,6 @@ class linerRegression(BaseAlgorithm):
             y_train = self.table_data[self.config["Y"][0]]
 
             # 模型训练
-            try:
-                import statsmodels.api as sm
-            except:
-                raise ImportError("statsmodels.api cannot import")
             x_train = x_train.astype(float)
             y_train = y_train.astype(float)
             if self.config["param"]["fit_intercept"]:
