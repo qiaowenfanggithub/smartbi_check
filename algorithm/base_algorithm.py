@@ -32,6 +32,7 @@ from pylab import *
 import statsmodels.api as sm
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from utils import format_dataframe
+from base64_to_png import base64_to_img
 
 log = logging.getLogger(__name__)
 
@@ -156,6 +157,9 @@ class BaseAlgorithm(object):
 
         # 转换base64并以utf8格式输出
         save_file_base64 = base64.b64encode(save_file.getvalue()).decode('utf8')
+        # debug
+        base64_to_img(save_file_base64)
+        plot.close("all")
         return save_file_base64
 
     # 机器学习模型分类效果展示
@@ -182,11 +186,11 @@ class BaseAlgorithm(object):
             # recall_score = metrics.recall_score(y, y_predict)
             # f1_score = metrics.f1_score(y, y_predict)
             if "report" in options:
-                report = metrics.classification_report(y, y_predict, target_names=model.classes_.tolist())
+                report = metrics.classification_report(y, y_predict, target_names=["{}".format(s) for s in model.classes_.tolist()])
                 # res.append(self.transform_table_data_to_html(self.report_to_table_data(report)))
                 res.append({
                     "title": "分类报告",
-                    "data": report
+                    "data": report.replace("\n", "<br>")
                 })
 
             # 输出混淆矩阵图片
@@ -227,21 +231,21 @@ class BaseAlgorithm(object):
         if "r2" in options:
             res.append({
                 "title": "拟合优度",
-                "data": str(model.summary().tables[0])
+                "data": str(model.summary().tables[0]).replace("\n", "<br>")
             })
 
         # 系数解读
         if "coff" in options:
             res.append({
                 "title": "系数解读",
-                "data": str(model.summary().tables[1])
+                "data": str(model.summary().tables[1]).replace("\n", "<br>")
             })
 
         # 独立性检验
         if "independence" in options:
             res.append({
                 "title": "独立性检验",
-                "data": str(model.summary().tables[2])
+                "data": str(model.summary().tables[2]).replace("\n", "<br>")
             })
 
         # 残差正态性检验

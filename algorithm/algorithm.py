@@ -72,6 +72,7 @@ def main(algorithm, method):
                         level='INFO')
     logging.getLogger().addFilter(logging.StreamHandler())
     logging.getLogger().setLevel(logging.WARNING)
+    # 线性回归（lei）
     if algorithm == "linerRegression":
         try:
             from algorithm_liner_regression import linerRegression
@@ -80,24 +81,37 @@ def main(algorithm, method):
         liner_regression = linerRegression(method)
         response_data = exec(method, liner_regression)
         return jsonify(response_data)
+    # 多项式回归（qwf）
     elif algorithm == "polyRegression":
         pass
+    # 支持向量机（hyj）
     elif algorithm == "svm":
         pass
+    # 决策树（qwf）
     elif algorithm == "decisionTree":
         pass
+    # 随机森林（lei）
     elif algorithm == "randomForest":
-        pass
-    elif algorithm == "logisticRegression":
         try:
-            from algorithm_logistic import logisticAlgorithm
+            from algorithm_random_forest import randomForestAlgorithm
         except NotImplementedError as e:
             raise e
-        logistic = logisticAlgorithm(method)
-        response_data = exec(method, logistic)
+        random_forest = randomForestAlgorithm(method)
+        response_data = exec(method, random_forest)
         return jsonify(response_data)
+    # 逻辑回归（lei）
+    elif algorithm == "logisticRegression":
+        try:
+            from algorithm_logistic import logistic
+        except NotImplementedError as e:
+            raise e
+        logistics = logistic(method)
+        response_data = exec(method, logistics)
+        return jsonify(response_data)
+    # k-means聚类（lei）
     elif algorithm == "kMeans":
         pass
+    # 层次聚类（hyj）
     elif algorithm == "hierarchicalCluster":
         pass
     else:

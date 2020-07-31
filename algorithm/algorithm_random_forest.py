@@ -3,13 +3,13 @@
 
 --------------------------------------------------------
 
-File Name : algorithm_logistic
+File Name : algorithm_random_forest
 
 Description : 
 
 Author : leiliang
 
-Date : 2020/7/27 10:41 上午
+Date : 2020/7/30 11:15 下午
 
 --------------------------------------------------------
 
@@ -17,13 +17,13 @@ Date : 2020/7/27 10:41 上午
 import logging
 from base_algorithm import BaseAlgorithm
 from sklearn.model_selection import GridSearchCV
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 import copy
 
 log = logging.getLogger(__name__)
 
 
-class logistic(BaseAlgorithm):
+class randomForestAlgorithm(BaseAlgorithm):
     def __init__(self, method):
         BaseAlgorithm.__init__(self)
         # super(logisticAlgorithm, self).__init__()
@@ -67,24 +67,12 @@ class logistic(BaseAlgorithm):
             self.config['rate'] = float(self.web_data.get('rate', 0.3))
             self.config['cv'] = int(self.web_data.get('cv', 0))
             self.config['show_options'] = self.web_data.get("show_options", [])
-            self.config['param']["penalty"] = self.config['param'].get("penalty", ["l1"])
-            self.config['param']["C"] = self.config['param'].get("C", ["1"])
-            self.config['param']["C"] = [float(c) for c in self.config['param']["C"]]
-            # 默认saga随机梯度下降
-            self.config['param']["fit_intercept"] = self.config['param'].get("fit_intercept", True)
-            self.config['param']["solver"] = self.config['param'].get("solver", ["liblinear"])
-            self.config['param']["max_iter"] = self.config['param'].get("max_iter", ["100"])
-            self.config['param']["max_iter"] = [int(m) for m in self.config['param']["max_iter"]]
-            if len(self.config['param']["penalty"]) > 1:
-                l1_solver = [s for s in self.config['param']["solver"] if s in ["liblinear", "saga"]]
-                l2_solver = [s for s in self.config['param']["solver"] if s in ["lbfgs", "sag", "newton-cg"]]
-                self.config['param']["penalty"] = ["l1"]
-                self.config['param']["solver"] = l1_solver
-                l1_param = copy.deepcopy(self.config['param'])
-                self.config['param']["penalty"] = ["l2"]
-                self.config['param']["solver"] = l2_solver
-                l2_param = self.config['param']
-                self.config['param'] = [l1_param, l2_param]
+            self.config["param"]["n_estimators"] = self.config["param"]["n_estimators"]
+            self.config["param"]["criterion"] = self.config["param"]["criterion"]
+            self.config["param"]["max_features"] = self.config["param"]["max_features"]
+            self.config["param"]["max_depth"] = self.config["param"]["max_depth"]
+            self.config["param"]["min_samples_split"] = self.config["param"]["min_samples_split"]
+            self.config["param"]["min_samples_leaf"] = self.config["param"]["min_samples_leaf"]
         except Exception as e:
             log.info(e)
             raise e
@@ -135,38 +123,19 @@ class logistic(BaseAlgorithm):
             x_train, x_test, y_train, y_test = self.split_data(self.table_data, self.config)
 
             # 模型训练和网格搜索
-            clf = LogisticRegression(random_state=self.config["randomState"])
-            self.model = GridSearchCV(clf, self.config['param'], cv=self.config['cv'])
-            self.model.fit(x_train, y_train)
-            best_param = self.model.best_params_
-            self.model = LogisticRegression(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
+            clf = RandomForestClassifier(random_state=self.config["randomState"])
+            model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'], scoring="roc_auc")
+            model.fit(x_train, y_train)
+            best_param = model.best_params_
+            self.model = RandomForestClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
 
             # 保存模型
-            self.save_model(self.model, "logisticRegression")
+            self.save_model(self.model, "randomForest")
 
             # 分类结果可视化
             res = self.algorithm_show_result(self.model, x_test, y_test,
                                              options=self.config['show_options'],
                                              method="classifier")
-            # 回归结果可视化
-            try:
-                import statsmodels.api as sm
-            except:
-                raise ImportError("statsmodels.api cannot import")
-            x_train = self.table_data[self.config["X"]].astype(float)
-            y_train = self.table_data[self.config["Y"][0]].astype(float)
-            if best_param["fit_intercept"]:
-                x = sm.add_constant(x_train)
-                self.model = sm.OLS(y_train, x).fit()
-            else:
-                self.model = sm.OLS(y_train, x_train).fit()
-
-            # 保存模型
-            self.save_model(self.model, "logisticRegression2")
-
-            res.extend(self.algorithm_show_result(self.model, x_train, y_train,
-                                                  options=self.config['show_options'],
-                                                  method="regression"))
 
             response_data = {"res": res,
                              "code": "200",
@@ -187,8 +156,8 @@ class logistic(BaseAlgorithm):
             # 分类结果可视化
             if any([d in self.config['show_options'] for d in ["matrix", "roc"]]):
                 res.extend(self.algorithm_show_result(model, x_test, y_test,
-                                                 options=self.config['show_options'],
-                                                 method="classifier"))
+                                                      options=self.config['show_options'],
+                                                      method="classifier"))
 
             # 回归结果可视化
             if any([d in self.config['show_options'] for d in ["coff", "independence",
@@ -254,4 +223,4 @@ class logistic(BaseAlgorithm):
             # return {"data": "", "code": "500", "msg": "".format(e.args)}
 
     def __str__(self):
-        return "logistic_regression"
+        return "random_forest"

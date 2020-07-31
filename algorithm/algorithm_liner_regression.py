@@ -16,6 +16,7 @@ Date : 2020/7/27 9:55 下午
 """
 import logging
 from base_algorithm import BaseAlgorithm
+from utils import transform_table_data_to_html
 
 log = logging.getLogger(__name__)
 
@@ -147,7 +148,7 @@ class linerRegression(BaseAlgorithm):
 
             res = self.algorithm_show_result(model, x_test, y_test,
                                              options=self.config['show_options'],
-                                             method=["classifier", "regression"])
+                                             method="regression")
 
             response_data = {"res": res,
                              "code": "200",
@@ -158,14 +159,24 @@ class linerRegression(BaseAlgorithm):
 
     def predict(self):
         try:
+            try:
+                import statsmodels.api as sm
+            except:
+                raise ImportError("statsmodels.api cannot import")
             model = self.load_model("linerRegression")
             res = {}
             if self.config['oneSample']:
-                if not self.config['X']:
+                if len(self.config['X']) == 0 or self.config['X'][0] == "":
                     raise ValueError("feature must not be empty when one-sample")
-                X = [float(x) for x in self.config['X']]
-                res.update({"predict": model.predict([X]),
-                            "title": "单样本预测结果"})
+                if "const" in model.params:
+                    X = [1.] + [float(x) for x in self.config['X']]
+                else:
+                    X = [float(x) for x in self.config['X']]
+                res.update({
+                    "data": [[",".join([str(s) for s in self.config['X']]), "{:.4f}".format(model.predict(X)[0])]],
+                    "title": "单样本预测结果",
+                    "col": ["样本特征", "模型预测结果"],
+                })
             else:
                 # 从数据库拿数据
                 if not self.config['tableName']:
@@ -173,12 +184,16 @@ class linerRegression(BaseAlgorithm):
                 data = self.exec_sql(self.config['tableName'], self.config['X'])
                 log.info("输入数据大小:{}".format(len(data)))
                 data = data.astype(float)
-                pre_data = model.predict(data.values)
-                res.update({
-                    "predict": pre_data,
+                if "const" in model.params:
+                    data = sm.add_constant(data)
+                data["predict"] = model.predict(data)
+                data.drop(["const"], axis=1, inplace=True)
+                res.update(transform_table_data_to_html({
+                    "data": data.values.tolist(),
                     "title": "多样本预测结果",
-                    "col": "预测结果"
-                })
+                    "col": data.columns.tolist(),
+                    "row": data.index.tolist()
+                }))
             response_data = {"res": res,
                              "code": "200",
                              "msg": "ok!"}
