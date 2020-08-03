@@ -190,7 +190,7 @@ class BaseAlgorithm(object):
                 # res.append(self.transform_table_data_to_html(self.report_to_table_data(report)))
                 res.append({
                     "title": "分类报告",
-                    "data": report.replace("\n", "<br>")
+                    "data": report.replace("\n", "<br/>")
                 })
 
             # 输出混淆矩阵图片
@@ -231,21 +231,21 @@ class BaseAlgorithm(object):
         if "r2" in options:
             res.append({
                 "title": "拟合优度",
-                "data": str(model.summary().tables[0]).replace("\n", "<br>")
+                "data": str(model.summary().tables[0]).replace("\n", "<br/>")
             })
 
         # 系数解读
         if "coff" in options:
             res.append({
                 "title": "系数解读",
-                "data": str(model.summary().tables[1]).replace("\n", "<br>")
+                "data": str(model.summary().tables[1]).replace("\n", "<br/>")
             })
 
         # 独立性检验
         if "independence" in options:
             res.append({
                 "title": "独立性检验",
-                "data": str(model.summary().tables[2]).replace("\n", "<br>")
+                "data": str(model.summary().tables[2]).replace("\n", "<br/>")
             })
 
         # 残差正态性检验
