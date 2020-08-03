@@ -134,8 +134,8 @@ class linerRegression(BaseAlgorithm):
                              }
             return response_data
         except Exception as e:
-            raise e
-            # return {"data": "", "code": "500", "msg": "".format(e.args)}
+            # raise e
+            return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def evaluate(self):
         try:
@@ -152,7 +152,7 @@ class linerRegression(BaseAlgorithm):
                              "msg": "ok!"}
             return response_data
         except Exception as e:
-            return {"data": "", "code": "500", "msg": "".format(e.args)}
+            return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def predict(self):
         try:
@@ -196,7 +196,7 @@ class linerRegression(BaseAlgorithm):
                              "msg": "ok!"}
             return response_data
         except Exception as e:
-            return {"data": "", "code": "500", "msg": "".format(e.args)}
+            return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def __str__(self):
         return "liner_regression"

@@ -14,7 +14,7 @@ from itertools import combinations
 import os
 import logging
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
-from utils import transform_table_data_to_html
+from util import transform_table_data_to_html
 
 log = logging.getLogger(__name__)
 

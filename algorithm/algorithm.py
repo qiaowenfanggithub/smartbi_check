@@ -118,7 +118,13 @@ def main(algorithm, method):
         return jsonify(response_data)
     # k-means聚类（lei）
     elif algorithm == "kMeans":
-        pass
+        try:
+            from algorithm_kmeans import kMeans
+        except NotImplementedError as e:
+            raise e
+        logistics = kMeans(method)
+        response_data = exec(method, logistics)
+        return jsonify(response_data)
     # 层次聚类（hyj）
     elif algorithm == "hierarchicalCluster":
         pass

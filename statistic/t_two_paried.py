@@ -18,7 +18,7 @@ import pandas as pd
 import numpy as np
 import scipy.stats as stats
 from scipy.stats import ttest_rel
-from utils import transform_h_table_data_to_v, format_dataframe
+from util import transform_h_table_data_to_v, format_dataframe
 
 
 # 描述性统计分析

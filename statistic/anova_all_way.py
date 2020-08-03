@@ -27,7 +27,7 @@ import pandas as pd
 from itertools import combinations
 import copy
 from anova_one_way import normal_test, levene_test
-from utils import format_dataframe
+from util import format_dataframe
 
 import os
 

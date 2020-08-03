@@ -123,18 +123,25 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/predict', json=kwargs, timeout=30)
 
     # ======================= 线性回归-训练 =============================
-    kwargs = {
-        "tableName": "liner_regression",  # str,数据库表名
-        "X": ["year"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-        "Y": ["salary"],  # list,因变量,当表格方向为v是使用
-        "param": {"fit_intercept": True},  # bool,True或者False，是否有截距项
-        "show_options": ["r2", "coff", "Independence", "resid_normal",
-                         "pp", "qq", "var", "vif", "outliers", "pred_y_contrast"]
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/train', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "tableName": "liner_regression",  # str,数据库表名
+    #     "X": ["year"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     "Y": ["salary"],  # list,因变量,当表格方向为v是使用
+    #     "param": {"fit_intercept": True},  # bool,True或者False，是否有截距项
+    #     "show_options": ["r2", "coff", "Independence", "resid_normal",
+    #                      "pp", "qq", "var", "vif", "outliers", "pred_y_contrast"]
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/train', json=kwargs, timeout=30)
 
     # ======================= 线性回归-预测 =============================
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/predict', json=kwargs, timeout=30)
+    kwargs = {
+        "oneSample": False,  # 是否批量上传数据进行预测
+        "tableName": "liner_regression",  # str,数据库表名
+        # "X": [12.0],  # list,自变量
+        "X": ["year"],  # list,自变量
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/predict', json=kwargs, timeout=30)
+
     # ======================= 多项回归-训练 =============================
     # kwargs = {
     #     "tableName": "poly_reg",  # str,数据库表名
@@ -144,36 +151,27 @@ if __name__ == '__main__':
     #     "param": {"fit_intercept": True},  # bool,True或者False，是否有截距项
     #     "show_options": ["r2", "coff", "Independence", "resid_normal",
     #                      "pp", "qq", "var", "vif", "outliers", "pred_y_contrast"]
-    #     "oneSample": False,  # 是否批量上传数据进行预测
-    #     "tableName": "liner_regression",  # str,数据库表名
-    #     # "X": [12.0],  # list,自变量
-    #     "X": ["year"],  # list,自变量
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/polyRegression/train', json=kwargs, timeout=30)
+
     # ======================= 多项回归-预测=============================
-    kwargs = {
-        "tableName": "poly_reg",  # str,数据库表名
-        "X": ["x1",'x2','x3'],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-        "Y": ["y"],  # list,因变量,当表格方向为v是使用
-        "M":[{'x1':2,'x2':2,'x3':2}],
-        "param": {"fit_intercept": True},  # bool,True或者False，是否有截距项
-        "show_options": ["r2", "coff", "Independence", "resid_normal",
-                         "pp", "qq", "var", "vif", "outliers", "pred_y_contrast"]
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/polyRegression/train', json=kwargs, timeout=30)
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/predict', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "oneSample": False,  # 是否批量上传数据进行预测
+    #     "tableName": "poly_regression",  # str,数据库表名
+    #     # "X": [12.0],  # list,自变量
+    #     "X": ["x1",'x2','x3'],  # list,自变量
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/polyRegression/predict', json=kwargs, timeout=30)
 
     # ======================= K-Means 聚类 =============================
     # kwargs = {
-    #     "tableName": "buy_computer_new",  # str,数据库表名
-    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，每个元素是浮点类型
-    #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
+    #     "tableName": "iris_kmeans",  # str,数据库表名
+    #     "X": ["sl", "sw", "pl", "pw"],  # list,自变量，每个元素是浮点类型
     #     "param": {
-    #         "n_clusters": ["2", "3"],  # list,聚类中心数量，默认2个,如果是多个画图展示每个聚类的效果
-    #         "max_iter": "1000",  # str，最大迭代步数，默认1000个
+    #         "n_clusters": "3",  # list,聚类中心数量，默认2个,如果是多个画图展示每个聚类的效果
     #     }
     # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/kMeans', json=kwargs, timeout=30)
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/kMeans/train', json=kwargs, timeout=30)
 
     # ======================= 随机森林-训练 =============================
     # kwargs = {

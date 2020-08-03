@@ -4,7 +4,7 @@ from scipy.stats import chi2_contingency
 import pandas as pd
 import os
 import xlrd
-from statistic.utils import format_data,transform_table_data_to_html
+from util import format_data,transform_table_data_to_html
 
 def cross_chi2(index,columns):
     chi_res = []

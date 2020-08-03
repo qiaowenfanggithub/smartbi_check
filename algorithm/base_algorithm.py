@@ -374,6 +374,39 @@ class BaseAlgorithm(object):
             })
         return res
 
+    # 聚类结果可视化
+    def show_cluster_result(self, x, model):
+        res = []
+        if len(x.columns) == 2:
+            x_new = x
+        elif len(x.columns) > 2:
+            try:
+                from sklearn.decomposition import PCA
+            except:
+                raise NotImplementedError("cannot import sklearn PCA")
+            pca = PCA(n_components=2).fit(x)
+            x_new = pca.transform(x)
+        else:
+            raise ValueError("input feature's count must >= 2 ")
+
+        for i in range(0, x_new.shape[0]):
+            if model.labels_[i] == 0:
+                plt.scatter(x_new[i, 0], x_new[i, 1], c='r', marker='+')
+            elif model.labels_[i] == 1:
+                plt.scatter(x_new[i, 0], x_new[i, 1], c='g', marker='o')
+            elif model.labels_[i] == 2:
+                plt.scatter(x_new[i, 0], x_new[i, 1], c='b', marker='*')
+
+        res.append({
+            "is_test": False,
+            "title": "聚类结果可视化",
+            "base64": "{}".format(self.plot_and_output_base64_png(plt))
+        })
+        return res
+
+
+
+
     # 算法输出结果
     def algorithm_show_result(self, model, x, y, options=[], method=None):
         res = []
@@ -384,7 +417,7 @@ class BaseAlgorithm(object):
             if method == "regression":
                 res.extend(self.show_regression_result(x, y, model, options=options))
             if method == "cluster":
-                pass
+                res.extend(self.show_cluster_result(x, model))
         except Exception as e:
             log.error(e)
             raise e

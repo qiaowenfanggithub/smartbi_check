@@ -22,7 +22,8 @@ import json
 import numpy as np
 import pandas as pd
 from flask_cors import *
-from statistic.utils import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, exec_sql, format_data,transform_v_table_data_to_h
+from util import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, \
+    exec_sql, format_data, transform_v_table_data_to_h
 from flask.json import JSONEncoder as _JSONEncoder
 from anova_one_way import normal_test, levene_test, anova_analysis, multiple_test, anova_one_way_describe_info
 from anova_all_way import anova_all_way_describe_info, normal_test_all, levene_test_all, anova_analysis_multivariate, \
@@ -33,10 +34,11 @@ from t_two_paried import pearsonr_test, t_two_paired_describe_info, t_two_pair_a
 from nonparametric_two_independent import wilcoxon_ranksums_test, mannwhitneyu_test, \
     nonparam_two_independent_describe_info
 from nonparametric_multi_independent import kruskal_test, median_test, nonparam_multi_independent_describe_info
-from two_independent_MWU import Mann_Whitney_U_describe,Mann_Whitney_U_test
-from more_independent_KWH import Kruskal_Wallis_H_describe,Kruskal_Wallis_H_test
-from nonparametric_two_pair import Wilcoxon_test,Wilcoxon_describe
+from two_independent_MWU import Mann_Whitney_U_describe, Mann_Whitney_U_test
+from more_independent_KWH import Kruskal_Wallis_H_describe, Kruskal_Wallis_H_test
+from nonparametric_two_pair import Wilcoxon_test, Wilcoxon_describe
 from crosstable_chi import cross_chi2
+
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -602,6 +604,7 @@ def results_nonparametric_two_independent():
         log.error(e)
         raise e
 
+
 # ================================ 交叉表 及卡方检验 ==============================
 @app.route('/statistic/crosstable', methods=['POST', 'GET'])
 def results_crosstable():
@@ -635,7 +638,7 @@ def results_crosstable():
     try:
         index = data[X[0]]
         columns = data[Y[0]]
-        res = cross_chi2(index,columns)
+        res = cross_chi2(index, columns)
 
         response_data = {"res": res,
                          "code": "200",
@@ -646,15 +649,7 @@ def results_crosstable():
         raise e
 
 
-
-
 if __name__ == '__main__':
     app.json_encoder = JSONEncoder
     app.config['JSON_AS_ASCII'] = False
     app.run(host="0.0.0.0", debug=True, port=5000)
-
-
-
-
-
-

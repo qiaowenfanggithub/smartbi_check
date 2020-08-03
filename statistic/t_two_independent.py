@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 import logging
-from utils import format_dataframe
+from util import format_dataframe
 
 log = logging.getLogger(__name__)
 

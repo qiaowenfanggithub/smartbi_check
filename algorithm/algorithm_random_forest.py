@@ -144,8 +144,8 @@ class randomForest(BaseAlgorithm):
                              }
             return response_data
         except Exception as e:
-            raise e
-            # return {"data": "", "code": "500", "msg": "".format(e.args)}
+            # raise e
+            return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def evaluate(self):
         res = []
@@ -164,8 +164,8 @@ class randomForest(BaseAlgorithm):
                              "msg": "ok!"}
             return response_data
         except Exception as e:
-            raise e
-            # return {"data": "", "code": "500", "msg": "".format(e.args)}
+            # raise e
+            return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def predict(self):
         try:
@@ -200,8 +200,8 @@ class randomForest(BaseAlgorithm):
                              "msg": "ok!"}
             return response_data
         except Exception as e:
-            raise e
-            # return {"data": "", "code": "500", "msg": "".format(e.args)}
+            # raise e
+            return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def __str__(self):
         return "random_forest"

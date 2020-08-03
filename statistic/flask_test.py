@@ -94,29 +94,29 @@ if __name__ == '__main__':
     #     # "alpha": "0.05",  # str,置信区间百分比
     #     "table_direction": "h",  # 表格方向，一般为竖向，即有一列是分类变量
     # }
-    # res = my_session.post(url='http://127.0.0.1:5000//statistic/nonparametricTwoIndependent', json=kwargs, timeout=30)
+    # res = my_session.post(url='http://127.0.0.1:5000/statistic/nonparametricTwoIndependent', json=kwargs, timeout=30)
 
     # ======================= 两配对样本非参数检验-结果 =============================
-    kwargs = {
-        "table_name": "crosstable",  # str,数据库表名
-        "X": ["c1"],  # list,自变量
-
-        "Y": ["c2"]  # list,因变量
-        # "alpha": "0.05",  # str,置信区间百分比
-        # "table_direction": "h",  # 表格方向，一般为竖向，即有一列是分类变量
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/statistic/crosstable', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "table_name": "crosstable",  # str,数据库表名
+    #     "X": ["c1"],  # list,自变量
+    #
+    #     "Y": ["c2"]  # list,因变量
+    #     # "alpha": "0.05",  # str,置信区间百分比
+    #     # "table_direction": "h",  # 表格方向，一般为竖向，即有一列是分类变量
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/statistic/crosstable', json=kwargs, timeout=30)
 
     # ======================= 多个独立样本非参数检验-结果 =============================
-    # kwargs = {
-    #     "table_name": "more_independent_feican",  # str,数据库表名
-    #     "X": ["fam"],  # list,自变量
-    #     "Y": ["creative"],  # list,因变量
-    #     # "alpha": "0.05",  # str,置信区间百分比
-    #     "table_direction": "v",  # 表格方向，一般为竖向，即有一列是分类变量
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/statistic/nonparametricMultiIndependent', json=kwargs, timeout=30)
-    #
+    kwargs = {
+        "table_name": "more_independent_feican",  # str,数据库表名
+        "X": ["fam"],  # list,自变量
+        "Y": ["creative"],  # list,因变量
+        # "alpha": "0.05",  # str,置信区间百分比
+        "table_direction": "v",  # 表格方向，一般为竖向，即有一列是分类变量
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/statistic/nonparametricMultiIndependent', json=kwargs, timeout=30)
+
     # # print(json.loads(res.text, encoding="utf-8"))
     print(res.text)
 
