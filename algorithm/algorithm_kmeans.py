@@ -5,7 +5,7 @@
 
 File Name : algorithm_random_forest
 
-Description : 
+Description : K-means算法封装
 
 Author : leiliang
 
@@ -23,7 +23,7 @@ from utils import transform_table_data_to_html
 log = logging.getLogger(__name__)
 
 
-class randomForest(BaseAlgorithm):
+class kMeans(BaseAlgorithm):
     def __init__(self, method):
         BaseAlgorithm.__init__(self)
         # super(logisticAlgorithm, self).__init__()

@@ -93,7 +93,7 @@ def main(algorithm, method):
     # 随机森林（lei）
     elif algorithm == "randomForest":
         try:
-            from algorithm_random_forest import randomForestAlgorithm
+            from algorithm_random_forest import randomForest
         except NotImplementedError as e:
             raise e
         random_forest = randomForestAlgorithm(method)

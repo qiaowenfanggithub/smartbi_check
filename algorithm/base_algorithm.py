@@ -158,7 +158,7 @@ class BaseAlgorithm(object):
         # 转换base64并以utf8格式输出
         save_file_base64 = base64.b64encode(save_file.getvalue()).decode('utf8')
         # debug
-        base64_to_img(save_file_base64)
+        # base64_to_img(save_file_base64)
         plot.close("all")
         return save_file_base64
 
