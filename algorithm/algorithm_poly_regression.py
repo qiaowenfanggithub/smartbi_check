@@ -3,26 +3,26 @@
 
 --------------------------------------------------------
 
-File Name : algorithm_liner_regression
+File Name : algorithm_poly_regression
 
-Description : 
+Description :
 
-Author : leiliang
+Author : qiaowenfang
 
-Date : 2020/7/27 9:55 下午
+Date : 2020/8/3 11:36 上午
 
 --------------------------------------------------------
 
 """
 import logging
 from base_algorithm import BaseAlgorithm
-from utils import transform_table_data_to_html
+from utils import transform_table_data_to_html,gen_poly_col
 import statsmodels.api as sm
 
 log = logging.getLogger(__name__)
 
 
-class linerRegression(BaseAlgorithm):
+class polyRegression(BaseAlgorithm):
     def __init__(self, method):
         BaseAlgorithm.__init__(self)
         # super(logisticAlgorithm, self).__init__()
@@ -43,6 +43,7 @@ class linerRegression(BaseAlgorithm):
             "tableName": "", # str,数据库表名
             "X": ["x1", "x2"], # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
             "Y": ["y"], # list,因变量,当表格方向为v是使用
+            "M": [{'x1':2,'x2':3}] # 自变量相对应的用户指定的最高阶数
             "randomState": "2020", # str,测试集训练集分割比例时的随机种子数
             "rate": "0.3", # str,测试集训练集分割比例
             "param":{"fit_intercept": True}, # bool,True或者False，是否有截距项
@@ -55,6 +56,7 @@ class linerRegression(BaseAlgorithm):
             self.config['tableName'] = self.web_data['tableName']
             self.config['X'] = self.web_data.get('X')
             self.config['Y'] = self.web_data.get('Y')
+            self.config['M'] = self.web_data.get('M')
             self.config['param'] = self.web_data['param']
             self.config['param']["fit_intercept"] = self.config['param'].get("fit_intercept", True)
             self.config['show_options'] = self.web_data.get("show_options", [])
@@ -106,8 +108,12 @@ class linerRegression(BaseAlgorithm):
         try:
             # 划分测试集和训练集
             # x_train, x_test, y_train, y_test = self.split_data(self.table_data, self.config)
-            x_train = self.table_data[self.config["X"]]
-            y_train = self.table_data[self.config["Y"][0]]
+            self.table_data = self.table_data.astype(float)
+            data = gen_poly_col(self.table_data, self.config['M'][0])
+            data['newy'] = data[self.config["Y"][0]]
+            del data[self.config["Y"][0]]
+            x_train = data.iloc[:, :-1]
+            y_train = data.iloc[:, -1]
 
             # 模型训练
             x_train = x_train.astype(float)

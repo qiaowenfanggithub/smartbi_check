@@ -410,7 +410,8 @@ def t_two_pair():
         # 描述性统计分析
         res.append(transform_table_data_to_html(t_two_paired_describe_info(data, X, Y)))
         if "pearsonr" in analysis_options:
-            res.append(transform_table_data_to_html(pearsonr_test(*every_level_data, index=every_level_data_index, alpha=alpha)))
+            res.append(transform_table_data_to_html(
+                pearsonr_test(*every_level_data, index=every_level_data_index, alpha=alpha)))
         if "normal" in analysis_options:
             res.append(transform_table_data_to_html(normal_test(every_level_data_index, every_level_data, alpha)))
         res.append(transform_table_data_to_html(
@@ -484,6 +485,7 @@ def nonparametric_two_independent():
         raise e
         # return jsonify({"data": "", "code": "500", "msg": e.args[0]})
 
+
 # ================================ 多个独立样本非参数检验 Kruskal-Wallis H 检验==============================
 @app.route('/statistic/nonparametricMultiIndependent', methods=['POST', 'GET'])
 def results_nonparametric_multi_independent():
@@ -528,12 +530,12 @@ def results_nonparametric_multi_independent():
 
         # 描述性统计
         res = []
-        data_info = transform_table_data_to_html(Kruskal_Wallis_H_describe(data,X))
+        data_info = transform_table_data_to_html(Kruskal_Wallis_H_describe(data, X))
         res.append(data_info)
         log.info("描述性统计分析完成")
 
         # Kruska-Wallis H 检验
-        Kruskal_Wallis_H_res = Kruskal_Wallis_H_test(data,X)
+        Kruskal_Wallis_H_res = Kruskal_Wallis_H_test(data, X)
         res.append(Kruskal_Wallis_H_res)
         log.info("Kruska-Wallis H 检验完成")
 
@@ -545,7 +547,6 @@ def results_nonparametric_multi_independent():
     except Exception as e:
         log.error(e)
         raise e
-
 
 
 # ================================ 两配对样本非参数检验  Wilcoxon 符号秩检验 ==============================
@@ -572,7 +573,7 @@ def results_nonparametric_two_independent():
         raise e
     # assert isinstance([X, Y], list)
     assert isinstance([X], list)
-    if len(X) >2:
+    if len(X) > 2:
         raise ValueError("只支持一列数据或两列数据")
     # 从数据库拿数据
     # data = exec_sql(table_name, X, Y)
@@ -583,12 +584,12 @@ def results_nonparametric_two_independent():
 
         # 描述性统计
         res = []
-        data_info = transform_table_data_to_html(Wilcoxon_describe(data,X))
+        data_info = transform_table_data_to_html(Wilcoxon_describe(data, X))
         res.append(data_info)
         log.info("描述性统计分析完成")
 
         # Wilcoxon 符号秩检验
-        Wilcoxon_res = transform_table_data_to_html(Wilcoxon_test(data,X))
+        Wilcoxon_res = transform_table_data_to_html(Wilcoxon_test(data, X))
         res.append(Wilcoxon_res)
         log.info("Wilcoxon 符号秩检验完成")
 
@@ -643,8 +644,6 @@ def results_crosstable():
     except Exception as e:
         log.error(e)
         raise e
-
-
 
 
 

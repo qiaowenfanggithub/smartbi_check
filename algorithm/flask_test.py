@@ -55,21 +55,52 @@ if __name__ == '__main__':
 
     # ======================= 逻辑回归-训练 =============================
     # kwargs = {
-    #     "isTrain": True,  # True,进行训练还是测试
-    #     "tableName": "buy_computer_new",  # str,数据库表名
-    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-    #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
-    #     "rate": "0.3",  # str,测试集训练集分割比例
-    #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
-    #     "cv": "3",  # str,几折交叉验证
+    #     "tableName": "91ceb15911c0441e86eeb791a6d08720",
+    #     "X": [
+    #         "年龄",
+    #         "收入层次",
+    #         "是否单身",
+    #         "信用等级"
+    #     ],
+    #     "Y": [
+    #         "是否购买电脑"
+    #     ],
+    #     "rate": "0.4",
+    #     "randomState": "2",
+    #     "cv": "2",
     #     "param": {
-    #         "penalty": ["l2"],  # str,惩罚项
-    #         "C": ["2"],  # str,惩罚项系数
-    #         "solver": ["saga"],  # str，优化算法
-    #         "max_iter": ["1000"],  # str，最大迭代步数
-    #         "fit_intercept": True
+    #         "penalty": [
+    #             "l1"
+    #         ],
+    #         "C": [
+    #             "1"
+    #         ],
+    #         "solver": [
+    #             "liblinear",
+    #             "saga"
+    #         ],
+    #         "max_iter": [
+    #             "100"
+    #         ],
+    #         "fit_intercept": [
+    #             True
+    #         ]
     #     },
-    #     "show_options": ["matrix", "roc", "coff", "independence"]
+    #     "show_options": [
+    #         "report",
+    #         "matrix",
+    #         "roc",
+    #         "r2",
+    #         "coff",
+    #         "independence",
+    #         "resid_normal",
+    #         "pp",
+    #         "qq",
+    #         "var",
+    #         "vif",
+    #         "outliers",
+    #         "pred_y_contrast"
+    #     ]
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/train', json=kwargs, timeout=30)
 
@@ -83,44 +114,54 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/evaluate', json=kwargs, timeout=30)
 
     # ======================= 逻辑回归-预测 =============================
-    kwargs = {
-        "oneSample": False,  # 是否批量上传数据进行预测
-        "tableName": "buy_computer_new",  # str,数据库表名
-        # "X": [1, 1, 1, 0],  # list,自变量
-        "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/predict', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "oneSample": False,  # 是否批量上传数据进行预测
+    #     "tableName": "buy_computer_new",  # str,数据库表名
+    #     # "X": [1, 1, 1, 0],  # list,自变量
+    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/predict', json=kwargs, timeout=30)
 
     # ======================= 线性回归-训练 =============================
+    kwargs = {
+        "tableName": "liner_regression",  # str,数据库表名
+        "X": ["year"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["salary"],  # list,因变量,当表格方向为v是使用
+        "param": {"fit_intercept": True},  # bool,True或者False，是否有截距项
+        "show_options": ["r2", "coff", "Independence", "resid_normal",
+                         "pp", "qq", "var", "vif", "outliers", "pred_y_contrast"]
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/train', json=kwargs, timeout=30)
+
+    # ======================= 线性回归-预测 =============================
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/predict', json=kwargs, timeout=30)
+    # ======================= 多项回归-训练 =============================
     # kwargs = {
-    #     "tableName": "liner_regression",  # str,数据库表名
-    #     "X": ["year"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-    #     "Y": ["salary"],  # list,因变量,当表格方向为v是使用
-    #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
-    #     "rate": "0.3",  # str,测试集训练集分割比例
+    #     "tableName": "poly_reg",  # str,数据库表名
+    #     "X": ["x1",'x2','x3'],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     "Y": ["y"],  # list,因变量,当表格方向为v是使用
+    #     "M":[{'x1':2,'x2':2,'x3':2}],
     #     "param": {"fit_intercept": True},  # bool,True或者False，是否有截距项
     #     "show_options": ["r2", "coff", "Independence", "resid_normal",
     #                      "pp", "qq", "var", "vif", "outliers", "pred_y_contrast"]
+    #     "oneSample": False,  # 是否批量上传数据进行预测
+    #     "tableName": "liner_regression",  # str,数据库表名
+    #     # "X": [12.0],  # list,自变量
+    #     "X": ["year"],  # list,自变量
     # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/train', json=kwargs, timeout=30)
-
-    # ======================= 线性回归-评估 =============================
-    # kwargs = {
-    #     "tableName": "buy_computer_new",  # str,数据库表名
-    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-    #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
-    #     "show_options": ["matrix", "roc", "r2", "coff"]
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/evaluate', json=kwargs, timeout=30)
-
-    # ======================= 线性回归-预测 =============================
-    # kwargs = {
-    #     "oneSample": True,  # 是否批量上传数据进行预测
-    #     "tableName": "buy_computer_new",  # str,数据库表名
-    #     "X": [1, 1, 1, 0],  # list,自变量
-    #     # "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/predict', json=kwargs, timeout=30)
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/polyRegression/train', json=kwargs, timeout=30)
+    # ======================= 多项回归-预测=============================
+    kwargs = {
+        "tableName": "poly_reg",  # str,数据库表名
+        "X": ["x1",'x2','x3'],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["y"],  # list,因变量,当表格方向为v是使用
+        "M":[{'x1':2,'x2':2,'x3':2}],
+        "param": {"fit_intercept": True},  # bool,True或者False，是否有截距项
+        "show_options": ["r2", "coff", "Independence", "resid_normal",
+                         "pp", "qq", "var", "vif", "outliers", "pred_y_contrast"]
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/polyRegression/train', json=kwargs, timeout=30)
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/predict', json=kwargs, timeout=30)
 
     # ======================= K-Means 聚类 =============================
     # kwargs = {
@@ -136,7 +177,6 @@ if __name__ == '__main__':
 
     # ======================= 随机森林-训练 =============================
     # kwargs = {
-    #     "isTrain": False,  # True,进行训练还是测试
     #     "tableName": "buy_computer_new",  # str,数据库表名
     #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
     #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
@@ -144,15 +184,34 @@ if __name__ == '__main__':
     #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
     #     "cv": "3",  # str,几折交叉验证
     #     "param": {
-    #         "n_estimators": [100],  # list,树的个数
+    #         "n_estimators": [100, 200],  # list,树的个数
     #         "criterion": ["gini"],  # list,树划分准则
-    #         "max_features": [2],  # list，用于训练的最大特征数量
-    #         "max_depth": [5],  # list，树的最大深度列表
-    #         "min_samples_split": [2],  # list， 内部节点再划分所需最小样本数
-    #         "min_samples_leaf": [1],  # list，叶子节点最少样本数
-    #     }
+    #         "max_features": [2, 3],  # list，用于训练的最大特征数量
+    #         "max_depth": [5, 6],  # list，树的最大深度列表
+    #         "min_samples_split": [2, 3],  # list， 内部节点再划分所需最小样本数
+    #         "min_samples_leaf": [1, 2],  # list，叶子节点最少样本数
+    #     },
+    #     "show_options": ["report", "matrix", "roc"]
     # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/train', json=kwargs, timeout=30)
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/train', json=kwargs, timeout=50)
+
+    # ======================= 随机森林-评估 =============================
+    # kwargs = {
+    #     "tableName": "buy_computer_new",  # str,数据库表名
+    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
+    #     "show_options": ["report", "matrix", "roc"]
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/evaluate', json=kwargs, timeout=50)
+
+    # ======================= 随机森林-预测 =============================
+    # kwargs = {
+    #     "oneSample": False,  # 是否批量上传数据进行预测
+    #     "tableName": "buy_computer_new",  # str,数据库表名
+    #     # "X": [0, 1, 1, 1],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/predict', json=kwargs, timeout=50)
 
     # ======================= 决策树-预测(多个测试样本) =============================
     # kwargs = {

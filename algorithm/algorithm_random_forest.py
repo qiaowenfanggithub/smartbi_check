@@ -3,13 +3,13 @@
 
 --------------------------------------------------------
 
-File Name : algorithm_logistic
+File Name : algorithm_random_forest
 
 Description : 
 
 Author : leiliang
 
-Date : 2020/7/27 10:41 上午
+Date : 2020/7/30 11:15 下午
 
 --------------------------------------------------------
 
@@ -17,13 +17,13 @@ Date : 2020/7/27 10:41 上午
 import logging
 from base_algorithm import BaseAlgorithm
 from sklearn.model_selection import GridSearchCV
-from sklearn.linear_model import LogisticRegression
-import copy
+from sklearn.ensemble import RandomForestClassifier
+from utils import transform_table_data_to_html
 
 log = logging.getLogger(__name__)
 
 
-class logistic(BaseAlgorithm):
+class randomForest(BaseAlgorithm):
     def __init__(self, method):
         BaseAlgorithm.__init__(self)
         # super(logisticAlgorithm, self).__init__()
@@ -33,8 +33,11 @@ class logistic(BaseAlgorithm):
             self.get_evaluate_config_from_web()
         else:
             self.get_predict_config_from_web()
-        if method == 'predict' and self.config["oneSample"]:
-            self.table_data = None
+        if method == 'predict':
+            if self.config["oneSample"]:
+                self.table_data = None
+            else:
+                self.table_data = self.exec_sql(self.config['tableName'], self.config['X'])
         else:
             self.table_data = self.exec_sql(self.config['tableName'], self.config['X'], self.config['Y'])
 
@@ -67,24 +70,12 @@ class logistic(BaseAlgorithm):
             self.config['rate'] = float(self.web_data.get('rate', 0.3))
             self.config['cv'] = int(self.web_data.get('cv', 0))
             self.config['show_options'] = self.web_data.get("show_options", [])
-            self.config['param']["penalty"] = self.config['param'].get("penalty", ["l1"])
-            self.config['param']["C"] = self.config['param'].get("C", ["1"])
-            self.config['param']["C"] = [float(c) for c in self.config['param']["C"]]
-            # 默认saga随机梯度下降
-            self.config['param']["fit_intercept"] = self.config['param'].get("fit_intercept", True)
-            self.config['param']["solver"] = self.config['param'].get("solver", ["liblinear"])
-            self.config['param']["max_iter"] = self.config['param'].get("max_iter", ["100"])
-            self.config['param']["max_iter"] = [int(m) for m in self.config['param']["max_iter"]]
-            if len(self.config['param']["penalty"]) > 1:
-                l1_solver = [s for s in self.config['param']["solver"] if s in ["liblinear", "saga"]]
-                l2_solver = [s for s in self.config['param']["solver"] if s in ["lbfgs", "sag", "newton-cg"]]
-                self.config['param']["penalty"] = ["l1"]
-                self.config['param']["solver"] = l1_solver
-                l1_param = copy.deepcopy(self.config['param'])
-                self.config['param']["penalty"] = ["l2"]
-                self.config['param']["solver"] = l2_solver
-                l2_param = self.config['param']
-                self.config['param'] = [l1_param, l2_param]
+            self.config["param"]["n_estimators"] = self.config["param"]["n_estimators"]
+            self.config["param"]["criterion"] = self.config["param"]["criterion"]
+            self.config["param"]["max_features"] = self.config["param"]["max_features"]
+            self.config["param"]["max_depth"] = self.config["param"]["max_depth"]
+            self.config["param"]["min_samples_split"] = self.config["param"]["min_samples_split"]
+            self.config["param"]["min_samples_leaf"] = self.config["param"]["min_samples_leaf"]
         except Exception as e:
             log.info(e)
             raise e
@@ -123,8 +114,6 @@ class logistic(BaseAlgorithm):
             self.config['oneSample'] = self.web_data['oneSample']
             self.config['tableName'] = self.web_data.get('tableName')
             self.config['X'] = self.web_data.get('X')
-            self.config['Y'] = self.web_data.get('Y')
-            self.config['show_options'] = self.web_data.get("show_options", [])
         except Exception as e:
             log.info(e)
             raise e
@@ -135,38 +124,19 @@ class logistic(BaseAlgorithm):
             x_train, x_test, y_train, y_test = self.split_data(self.table_data, self.config)
 
             # 模型训练和网格搜索
-            clf = LogisticRegression(random_state=self.config["randomState"])
-            self.model = GridSearchCV(clf, self.config['param'], cv=self.config['cv'])
-            self.model.fit(x_train, y_train)
-            best_param = self.model.best_params_
-            self.model = LogisticRegression(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
+            clf = RandomForestClassifier(random_state=self.config["randomState"])
+            model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'], scoring="roc_auc")
+            model.fit(x_train, y_train)
+            best_param = model.best_params_
+            self.model = RandomForestClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
 
             # 保存模型
-            self.save_model(self.model, "logisticRegression")
+            self.save_model(self.model, "randomForest")
 
             # 分类结果可视化
             res = self.algorithm_show_result(self.model, x_test, y_test,
                                              options=self.config['show_options'],
                                              method="classifier")
-            # 回归结果可视化
-            try:
-                import statsmodels.api as sm
-            except:
-                raise ImportError("statsmodels.api cannot import")
-            x_train = self.table_data[self.config["X"]].astype(float)
-            y_train = self.table_data[self.config["Y"][0]].astype(float)
-            if best_param["fit_intercept"]:
-                x = sm.add_constant(x_train)
-                self.model = sm.OLS(y_train, x).fit()
-            else:
-                self.model = sm.OLS(y_train, x_train).fit()
-
-            # 保存模型
-            self.save_model(self.model, "logisticRegression2")
-
-            res.extend(self.algorithm_show_result(self.model, x_train, y_train,
-                                                  options=self.config['show_options'],
-                                                  method="regression"))
 
             response_data = {"res": res,
                              "code": "200",
@@ -180,39 +150,14 @@ class logistic(BaseAlgorithm):
     def evaluate(self):
         res = []
         try:
-            model = self.load_model("logisticRegression")
+            model = self.load_model("randomForest")
             x_test = self.table_data.loc[:, self.config['X']]
             y_test = self.table_data[self.config['Y'][0]]
 
             # 分类结果可视化
-            if any([d in self.config['show_options'] for d in ["matrix", "roc"]]):
-                res.extend(self.algorithm_show_result(model, x_test, y_test,
-                                                 options=self.config['show_options'],
-                                                 method="classifier"))
-
-            # 回归结果可视化
-            if any([d in self.config['show_options'] for d in ["coff", "independence",
-                                                               "resid_normal", "pp",
-                                                               "qq", "var", "vif",
-                                                               "outliers",
-                                                               "pred_y_contrast"]]):
-                try:
-                    import statsmodels.api as sm
-                except:
-                    raise ImportError("statsmodels.api cannot import")
-                x_test = self.table_data[self.config["X"]].astype(float)
-                y_test = self.table_data[self.config["Y"][0]].astype(float)
-                # if self.config["param"]["fit_intercept"]:
-                #     x = sm.add_constant(x_train)
-                #     self.model = sm.OLS(y_train, x).fit()
-                # else:
-                #     self.model = sm.OLS(y_train, x_train).fit()
-
-                # 加载statsmodels回归模型
-                model = self.load_model("logisticRegression2")
-                res.extend(self.algorithm_show_result(model, x_test, y_test,
-                                                      options=self.config['show_options'],
-                                                      method="regression"))
+            res.extend(self.algorithm_show_result(model, x_test, y_test,
+                                                  options=self.config['show_options'],
+                                                  method="classifier"))
 
             response_data = {"res": res,
                              "code": "200",
@@ -224,27 +169,32 @@ class logistic(BaseAlgorithm):
 
     def predict(self):
         try:
-            model = self.load_model("logisticRegression")
+            model = self.load_model("randomForest")
             res = {}
             if self.config['oneSample']:
                 if not self.config['X']:
                     raise ValueError("feature must not be empty when one-sample")
-                X = [float(x) for x in self.config['X']]
-                res.update({"predict": model.predict([X]),
-                            "title": "单样本预测结果"})
+                X = [[float(x) for x in self.config['X']]]
+                predict = model.predict(X)[0] if isinstance(model.predict(X)[0], str) else "{:.4f}".format(model.predict(X)[0])
+                res.update({
+                    "data": [[",".join([str(s) for s in self.config['X']]), predict]],
+                    "title": "单样本预测结果",
+                    "col": ["样本特征", "模型预测结果"],
+                })
             else:
                 # 从数据库拿数据
-                if not self.config['tableName']:
+                if not self.config['tableName'] or self.config['tableName'] == "":
                     raise ValueError("cannot find table data when multi-sample")
-                data = self.exec_sql(self.config['tableName'], self.config['X'])
+                data = self.table_data
                 log.info("输入数据大小:{}".format(len(data)))
                 data = data.astype(float)
-                pre_data = model.predict(data.values)
-                res.update({
-                    "predict": pre_data,
+                data["predict"] = model.predict(data.values)
+                res.update(transform_table_data_to_html({
+                    "data": data.values.tolist(),
                     "title": "多样本预测结果",
-                    "col": "预测结果"
-                })
+                    "col": data.columns.tolist(),
+                    "row": data.index.tolist()
+                }))
             response_data = {"res": res,
                              "code": "200",
                              "msg": "ok!"}
@@ -254,4 +204,4 @@ class logistic(BaseAlgorithm):
             # return {"data": "", "code": "500", "msg": "".format(e.args)}
 
     def __str__(self):
-        return "logistic_regression"
+        return "random_forest"
