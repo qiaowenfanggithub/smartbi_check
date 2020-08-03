@@ -134,13 +134,13 @@ if __name__ == '__main__':
     res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/train', json=kwargs, timeout=30)
 
     # ======================= 线性回归-预测 =============================
-    kwargs = {
-        "oneSample": False,  # 是否批量上传数据进行预测
-        "tableName": "liner_regression",  # str,数据库表名
-        # "X": [12.0],  # list,自变量
-        "X": ["year"],  # list,自变量
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/predict', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "oneSample": False,  # 是否批量上传数据进行预测
+    #     "tableName": "liner_regression",  # str,数据库表名
+    #     # "X": [12.0],  # list,自变量
+    #     "X": ["year"],  # list,自变量
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/predict', json=kwargs, timeout=30)
 
     # ======================= K-Means 聚类 =============================
     # kwargs = {

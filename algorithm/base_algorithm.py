@@ -189,6 +189,7 @@ class BaseAlgorithm(object):
                 report = metrics.classification_report(y, y_predict, target_names=["{}".format(s) for s in model.classes_.tolist()])
                 # res.append(self.transform_table_data_to_html(self.report_to_table_data(report)))
                 res.append({
+                    "is_test": False,
                     "title": "分类报告",
                     "data": report.replace("\n", "<br/>")
                 })
@@ -196,8 +197,9 @@ class BaseAlgorithm(object):
             # 输出混淆矩阵图片
             if "matrix" in options:
                 metrics.plot_confusion_matrix(model, x, y)
-                plt.title("confusion_matrix")
+                plt.title("confusion matrix")
                 res.append({
+                    "is_test": False,
                     "title": "混淆矩阵",
                     "base64": "{}".format(self.plot_and_output_base64_png(plt))
                 })
@@ -205,8 +207,9 @@ class BaseAlgorithm(object):
             # 输出roc、auc图片
             if "roc" in options:
                 metrics.plot_roc_curve(model, x, y)
-                plt.title("roc-auc")
+                plt.title("roc curve")
                 res.append({
+                    "is_test": False,
                     "title": "ROC曲线和auc",
                     "base64": "{}".format(self.plot_and_output_base64_png(plt))
                 })
@@ -230,6 +233,7 @@ class BaseAlgorithm(object):
         # 拟合优度
         if "r2" in options:
             res.append({
+                "is_test": False,
                 "title": "拟合优度",
                 "data": str(model.summary().tables[0]).replace("\n", "<br/>")
             })
@@ -237,6 +241,7 @@ class BaseAlgorithm(object):
         # 系数解读
         if "coff" in options:
             res.append({
+                "is_test": False,
                 "title": "系数解读",
                 "data": str(model.summary().tables[1]).replace("\n", "<br/>")
             })
@@ -244,6 +249,7 @@ class BaseAlgorithm(object):
         # 独立性检验
         if "independence" in options:
             res.append({
+                "is_test": True,
                 "title": "独立性检验",
                 "data": str(model.summary().tables[2]).replace("\n", "<br/>")
             })
@@ -260,6 +266,7 @@ class BaseAlgorithm(object):
                          )
             plt.legend()
             res.append({
+                "is_test": True,
                 "title": "残差正态性检验",
                 "base64": "{}".format(self.plot_and_output_base64_png(plt))
             })
@@ -268,8 +275,8 @@ class BaseAlgorithm(object):
         if "pp" in options:
             pp_qq_plot = sm.ProbPlot(model.resid)
             pp_qq_plot.ppplot(line='45')
-            plt.title('P-P图')
             res.append({
+                "is_test": True,
                 "title": "残差pp图",
                 "base64": "{}".format(self.plot_and_output_base64_png(plt))
             })
@@ -278,8 +285,8 @@ class BaseAlgorithm(object):
         if "qq" in options:
             pp_qq_plot = sm.ProbPlot(model.resid)
             pp_qq_plot.qqplot(line='q')
-            plt.title('Q-Q图')
             res.append({
+                "is_test": True,
                 "title": "残差qq图",
                 "base64": "{}".format(self.plot_and_output_base64_png(plt))
             })
@@ -289,10 +296,10 @@ class BaseAlgorithm(object):
             plt.scatter(model.predict(), (model.resid - model.resid.mean()) / model.resid.std())
             plt.xlabel('预测值')
             plt.ylabel('标准化残差')
-            plt.title('方差齐性检验')
             # 添加水平参考线
             plt.axhline(y=0, color='r', linewidth=2)
             res.append({
+                "is_test": True,
                 "title": "方差齐性检验",
                 "base64": "{}".format(self.plot_and_output_base64_png(plt))
             })
@@ -306,6 +313,7 @@ class BaseAlgorithm(object):
             vif = format_dataframe(vif, {"VIF Factor": ".4f"})
             res.append(self.transform_table_data_to_html(
                 {
+                    "is_test": True,
                     "title": "多重共线性检验",
                     "row": vif['features'].values.tolist(),
                     "col": ["VIF Factor"],
@@ -342,6 +350,7 @@ class BaseAlgorithm(object):
             profit_outliers = format_dataframe(profit_outliers, {"leverage": ".4f", "dffits": ".4f", "resid_stu": ".4f", "cook": ".4f"})
             res.append(self.transform_table_data_to_html(
                 {
+                    "is_test": True,
                     "title": "异常值检测",
                     "row": profit_outliers.index.tolist(),
                     "col": profit_outliers.columns.tolist(),
@@ -357,8 +366,8 @@ class BaseAlgorithm(object):
                      [y.min(), y.max()], 'r-', linewidth=3)
             plt.xlabel('预测值')
             plt.ylabel('实际值')
-            plt.title('预测值与真实值对比散点图')
             res.append({
+                "is_test": False,
                 "title": "预测值与真实值对比散点图",
                 "base64": "{}".format(self.plot_and_output_base64_png(plt))
             })
