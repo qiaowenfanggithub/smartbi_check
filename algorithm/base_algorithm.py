@@ -191,7 +191,7 @@ class BaseAlgorithm(object):
                 res.append({
                     "is_test": False,
                     "title": "分类报告",
-                    "data": report.replace("\n", "<br/>")
+                    "str": report.replace("\n", "<br/>")
                 })
 
             # 输出混淆矩阵图片
@@ -235,7 +235,7 @@ class BaseAlgorithm(object):
             res.append({
                 "is_test": False,
                 "title": "拟合优度",
-                "data": str(model.summary().tables[0]).replace("\n", "<br/>")
+                "str": str(model.summary().tables[0]).replace("\n", "<br/>")
             })
 
         # 系数解读
@@ -243,7 +243,7 @@ class BaseAlgorithm(object):
             res.append({
                 "is_test": False,
                 "title": "系数解读",
-                "data": str(model.summary().tables[1]).replace("\n", "<br/>")
+                "str": str(model.summary().tables[1]).replace("\n", "<br/>")
             })
 
         # 独立性检验
@@ -251,7 +251,7 @@ class BaseAlgorithm(object):
             res.append({
                 "is_test": True,
                 "title": "独立性检验",
-                "data": str(model.summary().tables[2]).replace("\n", "<br/>")
+                "str": str(model.summary().tables[2]).replace("\n", "<br/>")
             })
 
         # 残差正态性检验

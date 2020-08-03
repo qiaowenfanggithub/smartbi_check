@@ -96,7 +96,7 @@ def main(algorithm, method):
             from algorithm_random_forest import randomForest
         except NotImplementedError as e:
             raise e
-        random_forest = randomForestAlgorithm(method)
+        random_forest = randomForest(method)
         response_data = exec(method, random_forest)
         return jsonify(response_data)
     # 逻辑回归（lei）

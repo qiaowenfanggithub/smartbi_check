@@ -134,7 +134,8 @@ class linerRegression(BaseAlgorithm):
                              }
             return response_data
         except Exception as e:
-            return {"data": "", "code": "500", "msg": "".format(e.args)}
+            raise e
+            # return {"data": "", "code": "500", "msg": "".format(e.args)}
 
     def evaluate(self):
         try:
