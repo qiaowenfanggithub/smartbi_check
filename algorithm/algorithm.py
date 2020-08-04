@@ -83,8 +83,6 @@ def main(algorithm, method):
         return jsonify(response_data)
     # 多项式回归（qwf）
     elif algorithm == "polyRegression":
-        pass
-    # 支持向量机（hyj）
         try:
             from algorithm_poly_regression import polyRegression
         except NotImplementedError as e:
@@ -97,7 +95,13 @@ def main(algorithm, method):
         pass
     # 决策树（qwf）
     elif algorithm == "decisionTree":
-        pass
+        try:
+            from decision_tree import decisionTree
+        except NotImplementedError as e:
+            raise e
+        random_forest = decisionTree(method)
+        response_data = exec(method, random_forest)
+        return jsonify(response_data)
     # 随机森林（lei）
     elif algorithm == "randomForest":
         try:

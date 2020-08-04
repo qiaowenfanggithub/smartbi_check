@@ -30,10 +30,16 @@ if __name__ == '__main__':
     #     "cv": "2",  # str,几折交叉验证
     #     "param": {
     #         "criterion": ["gini"],  # 不纯度指标gini、entropy
-    #         "max_depth": ["2"],  # 指定树的最大深度
-    #         "min_samples_split": ["2"],  # :int, float, optional (default=2)。表示分裂一个内部节点需要的最少样本数。
-    #         "min_samples_leaf": ["1"],  # int, float, optional (default=1)。指定每个叶子节点需要的最少样本数。
-    #     }
+    #         "max_features": [1],
+    #         "max_depth": [2],  # 指定树的最大深度
+    #         "min_samples_split": [2],  # :int, float, optional (default=2)。表示分裂一个内部节点需要的最少样本数。
+    #         "min_samples_leaf": [1],  # int, float, optional (default=1)。指定每个叶子节点需要的最少样本数。
+    #     },
+    #     "show_options": [
+    #             "report",
+    #             "matrix",
+    #             "roc"
+    #         ]
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/decisionTree/train', json=kwargs, timeout=30)
 
@@ -42,6 +48,11 @@ if __name__ == '__main__':
     #     "oneSample": False,  # 是否批量上传数据进行预测
     #     "tableName": "buy_computer_new",  # str,数据库表名
     #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
+    #     "show_options": [
+    #                 "report",
+    #                 "matrix",
+    #                 "roc"
+    #             ]
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/decisionTree/predict', json=kwargs, timeout=30)
 
@@ -52,6 +63,20 @@ if __name__ == '__main__':
     #     "X": [0, 0, 0, 0],  # list,自变量，每个元素是浮点类型
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/decisionTree/predict', json=kwargs, timeout=30)
+
+    # ======================= 决策树-评估 =============================
+    kwargs = {
+        "oneSample": False,  # 是否批量上传数据进行预测
+        "tableName": "buy_computer_new",  # str,数据库表名
+        "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
+        "Y": ["是否购买电脑"],  # list,标签
+        "show_options": [
+                    "report",
+                    "matrix",
+                    "roc"
+                ]
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/decisionTree/evaluate', json=kwargs, timeout=30)
 
     # ======================= 逻辑回归-训练 =============================
     # kwargs = {
@@ -134,13 +159,13 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/train', json=kwargs, timeout=30)
 
     # ======================= 线性回归-预测 =============================
-    kwargs = {
-        "oneSample": False,  # 是否批量上传数据进行预测
-        "tableName": "liner_regression",  # str,数据库表名
-        # "X": [12.0],  # list,自变量
-        "X": ["year"],  # list,自变量
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/predict', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "oneSample": False,  # 是否批量上传数据进行预测
+    #     "tableName": "liner_regression",  # str,数据库表名
+    #     # "X": [12.0],  # list,自变量
+    #     "X": ["year"],  # list,自变量
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/predict', json=kwargs, timeout=30)
 
     # ======================= 多项回归-训练 =============================
     # kwargs = {

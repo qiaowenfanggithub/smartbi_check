@@ -125,7 +125,7 @@ class polyRegression(BaseAlgorithm):
                 self.model = sm.OLS(y_train, x_train).fit()
 
             # 保存模型
-            self.save_model(self.model, "linerRegression")
+            self.save_model(self.model, "polyRegression")
 
             # 结果可视化
             x_train = x_train.astype(float)
@@ -145,7 +145,7 @@ class polyRegression(BaseAlgorithm):
 
     def evaluate(self):
         try:
-            model = self.load_model("linerRegression")
+            model = self.load_model("polyRegression")
             x_test = self.table_data.loc[:, self.config['X']]
             y_test = self.table_data[self.config['Y'][0]]
 
@@ -166,7 +166,7 @@ class polyRegression(BaseAlgorithm):
                 import statsmodels.api as sm
             except:
                 raise ImportError("statsmodels.api cannot import")
-            model = self.load_model("linerRegression")
+            model = self.load_model("polyRegression")
             res = {}
             if self.config['oneSample']:
                 if len(self.config['X']) == 0 or self.config['X'][0] == "":
@@ -205,4 +205,4 @@ class polyRegression(BaseAlgorithm):
             return {"data": "", "code": "500", "msg": "".format(e.args)}
 
     def __str__(self):
-        return "liner_regression"
+        return "polyRegression"
