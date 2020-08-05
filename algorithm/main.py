@@ -189,9 +189,9 @@ def logistics_predict():
         log.info(e)
         raise e
     try:
-        model_name_list = os.listdir("./model/LogisticRegression")
+        model_name_list = os.listdir("./model/logisticRegression")
         model_name_list.sort()
-        lastest_model_path = os.path.join("./model/LogisticRegression", model_name_list[-1])
+        lastest_model_path = os.path.join("./model/logisticRegression", model_name_list[-1])
         model = joblib.load(lastest_model_path)
         res = {}
         if one_sample:
@@ -449,9 +449,9 @@ def logistics_predict():
         log.info(e)
         raise e
     try:
-        model_name_list = os.listdir("./model/LogisticRegression")
+        model_name_list = os.listdir("./model/logisticRegression")
         model_name_list.sort()
-        lastest_model_path = os.path.join("./model/LogisticRegression", model_name_list[-1])
+        lastest_model_path = os.path.join("./model/logisticRegression", model_name_list[-1])
         model = joblib.load(lastest_model_path)
         res = {}
         if one_sample:
