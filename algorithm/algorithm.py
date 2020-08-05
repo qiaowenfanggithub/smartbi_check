@@ -92,7 +92,7 @@ def main(algorithm, method):
         response_data = exec(method, poly_regression)
         return jsonify(response_data)
     # 支持向量机（hyj）--》训练、评估、预测
-    elif algorithm == "svm":
+    elif algorithm == "svmClassifier":
         pass
     # 决策树（qwf）--》训练、评估、预测
     elif algorithm == "decisionTree":
@@ -135,6 +135,25 @@ def main(algorithm, method):
         pass
     else:
         raise ValueError("输入算法参数错误:{}".format(algorithm))
+
+
+# ================================ 算法模型查询接口 ==============================
+@app.route('/algorithm/selectModel/<algorithm>', methods=['POST', 'GET'])
+def select_model(algorithm):
+    try:
+        sql = "SELECT name FROM algorithm_model WHERE type='{}';".format(algorithm)
+        res_tuple = exec_select_sql(sql)
+        res = [d[0] for d in res_tuple]
+        response_data = {
+            "model_name_list": res,
+            "code": "200",
+            "msg": "ok!",
+        }
+        return jsonify(response_data)
+    except Exception as e:
+        response_data = {"data": "", "code": "500", "msg": "{}".format(e.args)}
+        # raise e
+        return jsonify(response_data)
 
 
 # ================================ 评估总入口 ==============================

@@ -277,17 +277,20 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/evaluate', json=kwargs, timeout=50)
 
     # ======================= 预测-总入口 =============================
-    kwargs = {
-        "algorithm": "randomForest",
-        "model": "randomForest-2020-08-04-23-03-45",
-        "oneSample": False,
-        "tableName": "buy_computer_new",
-        "X": ["年龄", "收入层次", "是否单身", "信用等级"],
-        # "X": [0, 1, 1, 1]
+    # kwargs = {
+    #     "algorithm": "randomForest",
+    #     "model": "randomForest-2020-08-04-23-03-45",
+    #     "oneSample": False,
+    #     "tableName": "buy_computer_new",
+    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],
+    #     # "X": [0, 1, 1, 1]
+    #
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/predict', json=kwargs, timeout=50)
 
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/predict', json=kwargs, timeout=50)
-
+    # ======================= 预测-总入口 =============================
+    kwargs = {}
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/selectModel/randomForest', json=kwargs, timeout=50)
     """
     =====================================================================
                                     待完成

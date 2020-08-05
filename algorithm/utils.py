@@ -182,6 +182,28 @@ def exec_sql(table_name, X=None, Y=None):
         raise e
 
 
+# 根据算法查询模型
+def exec_select_sql(sql):
+    conn = pymysql.connect(host='rm-2ze5vz4174qj2epm7so.mysql.rds.aliyuncs.com', port=3306, user='yzkj',
+                           password='yzkj2020@', database='sophia_manager', charset='utf8')
+    cursor = conn.cursor()
+    res = []
+    try:
+        # Execute the SQL command
+        cursor.execute(sql)
+        res = cursor.fetchall()
+        # Commit your changes in the database
+        conn.commit()
+    except Exception as e:
+        log.error(e)
+        # Rollback in case there is any error
+        conn.rollback()
+    conn.close()
+    return res
+
+
+
+
 # 将自变量在多列的表格转成自变量在一列，因变量在一列
 def transform_h_table_data_to_v(data: pd.DataFrame, X):
     level_index = []
