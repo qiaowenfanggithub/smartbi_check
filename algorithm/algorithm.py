@@ -83,7 +83,7 @@ def main(algorithm, method):
         response_data = exec(method, liner_regression)
         return jsonify(response_data)
     # 多项式回归（qwf）--》训练、预测
-    elif algorithm == "polyRegression":
+    elif algorithm == "polyLinerRegression":
         try:
             from algorithm_poly_regression import polyRegression
         except NotImplementedError as e:

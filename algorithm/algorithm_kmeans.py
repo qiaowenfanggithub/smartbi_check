@@ -84,8 +84,8 @@ class kMeans(BaseAlgorithm):
             self.model = kmeans.fit(self.table_data)
 
             # 保存模型
-            # self.save_model(self.model, "kmeans")
-            self.save_model_into_database("kmeans")
+            # self.save_model(self.model, "kMeans")
+            self.save_model_into_database("kMeans")
 
             # 聚类结果可视化
             res = self.algorithm_show_result(self.model, self.table_data, None,
@@ -106,7 +106,7 @@ class kMeans(BaseAlgorithm):
 
     def predict(self):
         try:
-            # model = self.load_model("kmeans")
+            # model = self.load_model("kMeans")
             model = self.load_model_by_database(self.config["algorithm"], self.config["model"])
             res = {}
             if self.config['oneSample']:
