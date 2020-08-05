@@ -16,7 +16,7 @@ Date : 2020/8/3 11:36 上午
 """
 import logging
 from base_algorithm import BaseAlgorithm
-from utils import transform_table_data_to_html,gen_poly_col
+from utils import transform_table_data_to_html, gen_poly_col
 import statsmodels.api as sm
 
 log = logging.getLogger(__name__)
@@ -76,6 +76,8 @@ class polyRegression(BaseAlgorithm):
         """
         self.config = {}
         try:
+            self.config['algorithm'] = self.web_data['algorithm']
+            self.config['model'] = self.web_data['model']
             self.config['tableName'] = self.web_data['tableName']
             self.config['X'] = self.web_data.get('X')
             self.config['Y'] = self.web_data.get('Y')
@@ -95,6 +97,8 @@ class polyRegression(BaseAlgorithm):
         """
         self.config = {}
         try:
+            self.config['algorithm'] = self.web_data['algorithm']
+            self.config['model'] = self.web_data['model']
             self.config['oneSample'] = self.web_data['oneSample']
             self.config['tableName'] = self.web_data.get('tableName')
             self.config['X'] = self.web_data.get('X')
@@ -125,7 +129,8 @@ class polyRegression(BaseAlgorithm):
                 self.model = sm.OLS(y_train, x_train).fit()
 
             # 保存模型
-            self.save_model(self.model, "polyRegression")
+            # self.save_model(self.model, "polyLinerRegression")
+            self.save_model_into_database("polyLinerRegression")
 
             # 结果可视化
             x_train = x_train.astype(float)
@@ -140,12 +145,13 @@ class polyRegression(BaseAlgorithm):
                              }
             return response_data
         except Exception as e:
-            raise e
-            # return {"data": "", "code": "500", "msg": "".format(e.args)}
+            # raise e
+            return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def evaluate(self):
         try:
-            model = self.load_model("polyRegression")
+            # model = self.load_model("linerRegression")
+            model = self.load_model_by_database(self.config["algorithm"], self.config["model"])
             x_test = self.table_data.loc[:, self.config['X']]
             y_test = self.table_data[self.config['Y'][0]]
 
@@ -158,7 +164,7 @@ class polyRegression(BaseAlgorithm):
                              "msg": "ok!"}
             return response_data
         except Exception as e:
-            return {"data": "", "code": "500", "msg": "".format(e.args)}
+            return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def predict(self):
         try:
@@ -166,17 +172,19 @@ class polyRegression(BaseAlgorithm):
                 import statsmodels.api as sm
             except:
                 raise ImportError("statsmodels.api cannot import")
-            model = self.load_model("polyRegression")
+            # model = self.load_model("linerRegression")
+            self.model = self.load_model_by_database(self.config["algorithm"], self.config["model"])
             res = {}
             if self.config['oneSample']:
                 if len(self.config['X']) == 0 or self.config['X'][0] == "":
                     raise ValueError("feature must not be empty when one-sample")
-                if "const" in model.params:
+                if "const" in self.model.params:
                     X = [1.] + [float(x) for x in self.config['X']]
                 else:
                     X = [float(x) for x in self.config['X']]
+                X = self.get_poly_data_from_model_params(X)
                 res.update({
-                    "data": [[",".join([str(s) for s in self.config['X']]), "{:.4f}".format(model.predict(X)[0])]],
+                    "data": [[",".join(self.model.params.index[1:]), "{:.4f}".format(self.model.predict(X)[0])]],
                     "title": "单样本预测结果",
                     "col": ["样本特征", "模型预测结果"],
                 })
@@ -187,9 +195,10 @@ class polyRegression(BaseAlgorithm):
                 data = self.exec_sql(self.config['tableName'], self.config['X'])
                 log.info("输入数据大小:{}".format(len(data)))
                 data = data.astype(float)
-                if "const" in model.params:
+                if "const" in self.model.params:
                     data = sm.add_constant(data)
-                data["predict"] = model.predict(data)
+                data = self.get_poly_data_from_model_params(data)
+                data["predict"] = self.model.predict(data)
                 data.drop(["const"], axis=1, inplace=True)
                 res.update(transform_table_data_to_html({
                     "data": data.values.tolist(),
@@ -202,7 +211,21 @@ class polyRegression(BaseAlgorithm):
                              "msg": "ok!"}
             return response_data
         except Exception as e:
-            return {"data": "", "code": "500", "msg": "".format(e.args)}
+            return {"data": "", "code": "500", "msg": "{}".format(e.args)}
+
+    # 预测的时候从模型拿到每个自变量对于的最高阶数
+    def get_poly_data_from_model_params(self, data):
+        for x in self.model.params.index:
+            if "**" not in x:
+                continue
+            if isinstance(data, list):
+                x_list = [c for c in self.model.params.index if c != "const" and "**" not in c]
+                idx = x_list.index(x.split("**")[0])
+                i = int(x.split("**")[1])
+                data.append(self.config["X"][idx] ** i)
+            else:
+                data[x] = data[x.split("**")[0]] ** int(x.split("**")[1])
+        return data
 
     def __str__(self):
         return "polyRegression"

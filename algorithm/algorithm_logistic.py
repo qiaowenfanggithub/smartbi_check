@@ -19,6 +19,7 @@ from base_algorithm import BaseAlgorithm
 from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
 import copy
+from utils import transform_table_data_to_html, format_dataframe
 
 log = logging.getLogger(__name__)
 
@@ -101,6 +102,8 @@ class logistic(BaseAlgorithm):
         """
         self.config = {}
         try:
+            self.config['algorithm'] = self.web_data['algorithm']
+            self.config['model'] = self.web_data['model']
             self.config['tableName'] = self.web_data['tableName']
             self.config['X'] = self.web_data.get('X')
             self.config['Y'] = self.web_data.get('Y')
@@ -120,6 +123,8 @@ class logistic(BaseAlgorithm):
         """
         self.config = {}
         try:
+            self.config['algorithm'] = self.web_data['algorithm']
+            self.config['model'] = self.web_data['model']
             self.config['oneSample'] = self.web_data['oneSample']
             self.config['tableName'] = self.web_data.get('tableName')
             self.config['X'] = self.web_data.get('X')
@@ -142,7 +147,8 @@ class logistic(BaseAlgorithm):
             self.model = LogisticRegression(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
 
             # 保存模型
-            self.save_model(self.model, "logisticRegression")
+            # self.save_model(self.model, "logisticRegression")
+            self.save_model_into_database("logisticRegression")
 
             # 分类结果可视化
             res = self.algorithm_show_result(self.model, x_test, y_test,
@@ -162,7 +168,8 @@ class logistic(BaseAlgorithm):
                 self.model = sm.OLS(y_train, x_train).fit()
 
             # 保存模型
-            self.save_model(self.model, "logisticRegression2")
+            # self.save_model(self.model, "logisticRegression2")
+            # self.save_model_into_database("logisticRegression2")
 
             res.extend(self.algorithm_show_result(self.model, x_train, y_train,
                                                   options=self.config['show_options'],
@@ -180,7 +187,8 @@ class logistic(BaseAlgorithm):
     def evaluate(self):
         res = []
         try:
-            model = self.load_model("logisticRegression")
+            # model = self.load_model("logisticRegression")
+            model = self.load_model_by_database(self.config["algorithm"], self.config["model"])
             x_test = self.table_data.loc[:, self.config['X']]
             y_test = self.table_data[self.config['Y'][0]]
 
@@ -224,27 +232,34 @@ class logistic(BaseAlgorithm):
 
     def predict(self):
         try:
-            model = self.load_model("logisticRegression")
+            # model = self.load_model("logisticRegression")
+            model = self.load_model_by_database(self.config["algorithm"], self.config["model"])
             res = {}
             if self.config['oneSample']:
                 if not self.config['X']:
                     raise ValueError("feature must not be empty when one-sample")
-                X = [float(x) for x in self.config['X']]
-                res.update({"predict": model.predict([X]),
-                            "title": "单样本预测结果"})
+                X = [[float(x) for x in self.config['X']]]
+                predict = model.predict(X)[0] if isinstance(model.predict(X)[0], str) else "{:.0f}".format(model.predict(X)[0])
+                res.update({
+                    "data": [[",".join([str(s) for s in self.config['X']]), predict]],
+                    "title": "单样本预测结果",
+                    "col": ["样本特征", "模型预测结果"],
+                })
             else:
                 # 从数据库拿数据
-                if not self.config['tableName']:
+                if not self.config['tableName'] or self.config['tableName'] == "":
                     raise ValueError("cannot find table data when multi-sample")
-                data = self.exec_sql(self.config['tableName'], self.config['X'])
+                data = self.table_data
                 log.info("输入数据大小:{}".format(len(data)))
                 data = data.astype(float)
-                pre_data = model.predict(data.values)
-                res.update({
-                    "predict": pre_data,
+                data["predict"] = model.predict(data.values)
+                data = format_dataframe(data, {"predict": ".0f"})
+                res.update(transform_table_data_to_html({
+                    "data": data.values.tolist(),
                     "title": "多样本预测结果",
-                    "col": "预测结果"
-                })
+                    "col": data.columns.tolist(),
+                    "row": data.index.tolist()
+                }))
             response_data = {"res": res,
                              "code": "200",
                              "msg": "ok!"}

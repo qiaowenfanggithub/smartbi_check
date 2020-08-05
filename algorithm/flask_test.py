@@ -45,6 +45,8 @@ if __name__ == '__main__':
 
     # ======================= 决策树-预测(多个测试样本) =============================
     # kwargs = {
+    #     "algorithm": "decisionTree",  # str,数据库表名
+    #     "model": "decisionTree-2020-08-04-22-39-36",  # str,数据库表名
     #     "oneSample": False,  # 是否批量上传数据进行预测
     #     "tableName": "buy_computer_new",  # str,数据库表名
     #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
@@ -58,25 +60,27 @@ if __name__ == '__main__':
 
     # ======================= 决策树-预测(单个测试样本) =============================
     # kwargs = {
+    #     "algorithm": "decisionTree",  # str,数据库表名
+    #     "model": "decisionTree-2020-08-04-22-39-36",  # str,数据库表名
     #     "oneSample": True,  # 是否批量上传数据进行预测
-    #     "tableName": "buy_computer_new",  # str,数据库表名
     #     "X": [0, 0, 0, 0],  # list,自变量，每个元素是浮点类型
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/decisionTree/predict', json=kwargs, timeout=30)
 
     # ======================= 决策树-评估 =============================
-    kwargs = {
-        "oneSample": False,  # 是否批量上传数据进行预测
-        "tableName": "buy_computer_new",  # str,数据库表名
-        "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
-        "Y": ["是否购买电脑"],  # list,标签
-        "show_options": [
-                    "report",
-                    "matrix",
-                    "roc"
-                ]
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/decisionTree/evaluate', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "algorithm": "decisionTree",  # str,数据库表名
+    #     "model": "decisionTree-2020-08-04-22-39-36",  # str,数据库表名
+    #     "tableName": "buy_computer_new",  # str,数据库表名
+    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
+    #     "Y": ["是否购买电脑"],  # list,标签
+    #     "show_options": [
+    #                 "report",
+    #                 "matrix",
+    #                 "roc"
+    #             ]
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/decisionTree/evaluate', json=kwargs, timeout=30)
 
     # ======================= 逻辑回归-训练 =============================
     # kwargs = {
@@ -131,6 +135,8 @@ if __name__ == '__main__':
 
     # ======================= 逻辑回归-评估 =============================
     # kwargs = {
+    #     "algorithm": "logisticRegression",  # str,数据库表名
+    #     "model": "logisticRegression-2020-08-04-22-15-36",  # str,数据库表名
     #     "tableName": "buy_computer_new",  # str,数据库表名
     #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
     #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
@@ -140,6 +146,8 @@ if __name__ == '__main__':
 
     # ======================= 逻辑回归-预测 =============================
     # kwargs = {
+    #     "algorithm": "logisticRegression",  # str,数据库表名
+    #     "model": "logisticRegression-2020-08-04-22-15-36",  # str,数据库表名
     #     "oneSample": False,  # 是否批量上传数据进行预测
     #     "tableName": "buy_computer_new",  # str,数据库表名
     #     # "X": [1, 1, 1, 0],  # list,自变量
@@ -160,6 +168,8 @@ if __name__ == '__main__':
 
     # ======================= 线性回归-预测 =============================
     # kwargs = {
+    #     "algorithm": "linerRegression",  # str,数据库表名
+    #     "model": "linerRegression-2020-08-04-22-43-24",  # str,数据库表名
     #     "oneSample": False,  # 是否批量上传数据进行预测
     #     "tableName": "liner_regression",  # str,数据库表名
     #     # "X": [12.0],  # list,自变量
@@ -170,9 +180,9 @@ if __name__ == '__main__':
     # ======================= 多项回归-训练 =============================
     # kwargs = {
     #     "tableName": "poly_reg",  # str,数据库表名
-    #     "X": ["x1",'x2','x3'],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     "X": ["x1", 'x2', 'x3'],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
     #     "Y": ["y"],  # list,因变量,当表格方向为v是使用
-    #     "M":[{'x1':2,'x2':2,'x3':2}],
+    #     "M": [{'x1': 2, 'x2': 2, 'x3': 2}],
     #     "param": {"fit_intercept": True},  # bool,True或者False，是否有截距项
     #     "show_options": ["r2", "coff", "Independence", "resid_normal",
     #                      "pp", "qq", "var", "vif", "outliers", "pred_y_contrast"]
@@ -181,22 +191,37 @@ if __name__ == '__main__':
 
     # ======================= 多项回归-预测=============================
     # kwargs = {
-    #     "oneSample": False,  # 是否批量上传数据进行预测
-    #     "tableName": "poly_regression",  # str,数据库表名
-    #     # "X": [12.0],  # list,自变量
-    #     "X": ["x1",'x2','x3'],  # list,自变量
+    #     "algorithm": "polyLinerRegression",  # str,数据库表名
+    #     "model": "polyLinerRegression-2020-08-04-22-54-25",  # str,数据库表名
+    #     "oneSample": True,  # 是否批量上传数据进行预测
+    #     # "tableName": "poly_regression",  # str,数据库表名
+    #     "X": [18, 2, 2],  # list,自变量
+    #     # "X": ["x1", 'x2', 'x3'],  # list,自变量
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/polyRegression/predict', json=kwargs, timeout=30)
 
-    # ======================= K-Means 聚类 =============================
+    # ======================= K-Means 聚类-训练 =============================
     # kwargs = {
     #     "tableName": "iris_kmeans",  # str,数据库表名
+    #     # "X": ["sl", "sw"],  # list,自变量，每个元素是浮点类型
     #     "X": ["sl", "sw", "pl", "pw"],  # list,自变量，每个元素是浮点类型
     #     "param": {
     #         "n_clusters": "3",  # list,聚类中心数量，默认2个,如果是多个画图展示每个聚类的效果
     #     }
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/kMeans/train', json=kwargs, timeout=30)
+
+    # ======================= K-Means 聚类-预测 =============================
+    # kwargs = {
+    #     "algorithm": "kmeans",  # str,数据库表名
+    #     "model": "kmeans-2020-08-04-23-01-42",  # str,数据库表名
+    #     "oneSample": False,  # 是否批量上传数据进行预测
+    #     "tableName": "iris_kmeans",  # str,数据库表名
+    #     # "X": ["sl", "sw"],  # list,自变量，每个元素是浮点类型
+    #     "X": ["sl", "sw", "pl", "pw"],  # list,自变量，每个元素是浮点类型
+    #     # "X": ["5.1", "3.5", "1.4", "0.2"],  # list,自变量，每个元素是浮点类型
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/kMeans/predict', json=kwargs, timeout=30)
 
     # ======================= 随机森林-训练 =============================
     # kwargs = {
@@ -220,6 +245,8 @@ if __name__ == '__main__':
 
     # ======================= 随机森林-评估 =============================
     # kwargs = {
+    #     "algorithm": "randomForest",  # str,数据库表名
+    #     "model": "randomForest-2020-08-04-23-03-45",  # str,数据库表名
     #     "tableName": "buy_computer_new",  # str,数据库表名
     #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
     #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
@@ -229,6 +256,8 @@ if __name__ == '__main__':
 
     # ======================= 随机森林-预测 =============================
     # kwargs = {
+    #     "algorithm": "randomForest",  # str,数据库表名
+    #     "model": "randomForest-2020-08-04-23-03-45",  # str,数据库表名
     #     "oneSample": False,  # 是否批量上传数据进行预测
     #     "tableName": "buy_computer_new",  # str,数据库表名
     #     # "X": [0, 1, 1, 1],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
@@ -236,19 +265,35 @@ if __name__ == '__main__':
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/predict', json=kwargs, timeout=50)
 
-    # ======================= 决策树-预测(多个测试样本) =============================
+    # ======================= 评估-总入口 =============================
     # kwargs = {
-    #     "oneSample": False,  # 是否批量上传数据进行预测
-    #     "tableName": "buy_computer_new",  # str,数据库表名
-    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量
+    #     "algorithm": "randomForest",
+    #     "model": "randomForest-2020-08-04-23-03-45",
+    #     "tableName": "buy_computer_new",
+    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],
+    #     "Y": ["是否购买电脑"],
+    #     "show_options": ["report", "matrix", "roc"]
     # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/predict', json=kwargs, timeout=30)
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/evaluate', json=kwargs, timeout=50)
 
-    # ======================= 决策树-预测(单个测试样本) =============================
-    # kwargs = {
-    #     "oneSample": True,  # 是否批量上传数据进行预测
-    #     "tableName": "buy_computer_new",  # str,数据库表名
-    #     "X": [0, 0, 0, 0],  # list,自变量，每个元素是浮点类型
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/decisionTree/predict', json=kwargs, timeout=30)
+    # ======================= 预测-总入口 =============================
+    kwargs = {
+        "algorithm": "randomForest",
+        "model": "randomForest-2020-08-04-23-03-45",
+        "oneSample": False,
+        "tableName": "buy_computer_new",
+        "X": ["年龄", "收入层次", "是否单身", "信用等级"],
+        # "X": [0, 1, 1, 1]
+
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/predict', json=kwargs, timeout=50)
+
+    """
+    =====================================================================
+                                    待完成
+    =====================================================================
+    """
+
+    # ======================= 支持向量机 =============================
+    # ======================= 层次聚类 ==============================
     print(res.text)

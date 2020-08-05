@@ -93,6 +93,8 @@ class decisionTree(BaseAlgorithm):
         """
         self.config = {}
         try:
+            self.config['algorithm'] = self.web_data['algorithm']
+            self.config['model'] = self.web_data['model']
             self.config['tableName'] = self.web_data['tableName']
             self.config['X'] = self.web_data.get('X')
             self.config['Y'] = self.web_data.get('Y')
@@ -112,6 +114,8 @@ class decisionTree(BaseAlgorithm):
         """
         self.config = {}
         try:
+            self.config['algorithm'] = self.web_data['algorithm']
+            self.config['model'] = self.web_data['model']
             self.config['oneSample'] = self.web_data['oneSample']
             self.config['tableName'] = self.web_data.get('tableName')
             self.config['X'] = self.web_data.get('X')
@@ -132,7 +136,8 @@ class decisionTree(BaseAlgorithm):
             self.model = tree.DecisionTreeClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
 
             # 保存模型
-            self.save_model(self.model, "decisionTree")
+            # self.save_model(self.model, "decisionTree")
+            self.save_model_into_database("decisionTree")
 
             # 分类结果可视化
             res = self.algorithm_show_result(self.model, x_test, y_test,
@@ -151,7 +156,8 @@ class decisionTree(BaseAlgorithm):
     def evaluate(self):
         res = []
         try:
-            model = self.load_model("decisionTree")
+            # model = self.load_model("decisionTree")
+            model = self.load_model_by_database(self.config["algorithm"], self.config["model"])
             x_test = self.table_data.loc[:, self.config['X']]
             y_test = self.table_data[self.config['Y'][0]]
 
@@ -170,7 +176,8 @@ class decisionTree(BaseAlgorithm):
 
     def predict(self):
         try:
-            model = self.load_model("decisionTree")
+            # model = self.load_model("decisionTree")
+            model = self.load_model_by_database(self.config["algorithm"], self.config["model"])
             res = {}
             if self.config['oneSample']:
                 if not self.config['X']:

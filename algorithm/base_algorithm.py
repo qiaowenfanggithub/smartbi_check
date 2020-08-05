@@ -33,6 +33,9 @@ import statsmodels.api as sm
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from utils import format_dataframe
 from base64_to_png import base64_to_img
+import random
+import datetime
+import json
 
 log = logging.getLogger(__name__)
 
@@ -77,6 +80,43 @@ class BaseAlgorithm(object):
                 del model_name_list[:len(model_name_list) - 20]
             latest_model_path = os.path.join("./model/{}".format(name), model_name_list[-1])
             test_model = joblib.load(latest_model_path)
+            return test_model
+        except Exception as e:
+            raise e
+
+    # 模型信心入库
+    def save_model_into_database(self, model_name):
+        try:
+            # 模型入库
+            current_time = datetime.datetime.now()
+            userid = "000"
+            name = "{}-{}".format(model_name, current_time.strftime("%Y-%m-%d-%H-%M-%S"))
+            type = "{}".format(model_name)
+            characteristic_column = ",".join(self.config['X'])
+            label_column = self.config['Y'][0] if self.config['Y'] else ""
+            data_set = self.config['tableName']
+            parameter_config = json.dumps(self.config, ensure_ascii=False)
+            save_path = "./model/{}/{}.pkl".format(model_name, name)
+            result_report = ""
+            updatetime = current_time.strftime("%Y-%m-%d %H:%M:%S")
+            if not os.path.exists("./model/{}".format(model_name)):
+                os.makedirs("./model/{}".format(model_name))
+            joblib.dump(self.model, save_path)
+            key_list = [["userid", "name", "type", "characteristic_column", "label_column",
+                         "data_set", "parameter_config", "save_path", "result_report", "updatetime"]]
+            value_list = [[userid, name, type, characteristic_column, label_column,
+                           data_set, parameter_config, save_path, result_report, updatetime]]
+            sql_list = self.exec_insert_sql("algorithm_model", key_list, value_list)
+            log.info("exec sql:{} finish".format(sql_list[0]))
+        except Exception as e:
+            raise e
+
+    # 从数据库读取模型
+    @staticmethod
+    def load_model_by_database(algorithm, model):
+        try:
+            model_path = "./model/{}/{}.pkl".format(algorithm, model)
+            test_model = joblib.load(model_path)
             return test_model
         except Exception as e:
             raise e
@@ -148,7 +188,6 @@ class BaseAlgorithm(object):
                        "weighted avg:加权平均基于样本个数加权平均精确率、召回率、F1)"
         }
 
-
     # matplotlib作图写入内存并输出base64格式供前端调用
     @staticmethod
     def plot_and_output_base64_png(plot):
@@ -187,7 +226,8 @@ class BaseAlgorithm(object):
             # recall_score = metrics.recall_score(y, y_predict)
             # f1_score = metrics.f1_score(y, y_predict)
             if "report" in options:
-                report = metrics.classification_report(y, y_predict, target_names=["{}".format(s) for s in model.classes_.tolist()])
+                report = metrics.classification_report(y, y_predict,
+                                                       target_names=["{}".format(s) for s in model.classes_.tolist()])
                 # res.append(self.transform_table_data_to_html(self.report_to_table_data(report)))
                 res.append({
                     "is_test": False,
@@ -348,7 +388,8 @@ class BaseAlgorithm(object):
 
             x.index = range(x.shape[0])
             profit_outliers = pd.concat([x, contatl], axis=1)
-            profit_outliers = format_dataframe(profit_outliers, {"leverage": ".4f", "dffits": ".4f", "resid_stu": ".4f", "cook": ".4f"})
+            profit_outliers = format_dataframe(profit_outliers,
+                                               {"leverage": ".4f", "dffits": ".4f", "resid_stu": ".4f", "cook": ".4f"})
             res.append(self.transform_table_data_to_html(
                 {
                     "is_test": True,
@@ -378,7 +419,7 @@ class BaseAlgorithm(object):
     def show_cluster_result(self, x, model):
         res = []
         if len(x.columns) == 2:
-            x_new = x
+            x_new = x.values
         elif len(x.columns) > 2:
             try:
                 from sklearn.decomposition import PCA
@@ -389,23 +430,26 @@ class BaseAlgorithm(object):
         else:
             raise ValueError("input feature's count must >= 2 ")
 
-        for i in range(0, x_new.shape[0]):
-            if model.labels_[i] == 0:
-                plt.scatter(x_new[i, 0], x_new[i, 1], c='r', marker='+')
-            elif model.labels_[i] == 1:
-                plt.scatter(x_new[i, 0], x_new[i, 1], c='g', marker='o')
-            elif model.labels_[i] == 2:
-                plt.scatter(x_new[i, 0], x_new[i, 1], c='b', marker='*')
-
+        x_with_label = pd.DataFrame(np.hstack((x_new, model.labels_.reshape(-1, 1))), columns=["0", "1", "2"])
+        group_data = x_with_label.groupby(["2"])
+        # 每个类绘制不同的颜色和marker
+        color = ["r", "g", "b", "c", "k", "m", "y"]
+        marker = ["+", "o", "*", ".", ",", "^", "1", "v", "<", ">",
+                  "2", "3", "4", "s", "p", "h", "H", "D", "d", "|", "_"]
+        legend_c = []
+        legend_name = []
+        for name, data in group_data:
+            c = plt.scatter(data["0"], data["1"], c=random.sample(color, 1)[0], marker=random.sample(marker, 1)[0])
+            legend_c.append(c)
+            legend_name.append(str(int(name)))
+        plt.legend(legend_c, legend_name)
+        # 可视化结果转base64输出
         res.append({
             "is_test": False,
             "title": "聚类结果可视化",
             "base64": "{}".format(self.plot_and_output_base64_png(plt))
         })
         return res
-
-
-
 
     # 算法输出结果
     def algorithm_show_result(self, model, x, y, options=[], method=None):
@@ -447,6 +491,29 @@ class BaseAlgorithm(object):
         except Exception as e:
             log.info(e.args)
             raise e
+
+    # 执行插入sql数据
+    @staticmethod
+    def exec_insert_sql(table, key_list, value_list):
+        conn = pymysql.connect(host='rm-2ze5vz4174qj2epm7so.mysql.rds.aliyuncs.com', port=3306, user='yzkj',
+                               password='yzkj2020@', database='sophia_manager', charset='utf8')
+        cursor = conn.cursor()
+        sql_list = []
+        for key in key_list:
+            for value in value_list:
+                sql = "INSERT INTO {}({}) VALUES ('{}')".format(table, ",".join(key), "','".join(value))
+                sql_list.append(sql)
+                try:
+                    # Execute the SQL command
+                    cursor.execute(sql)
+                    # Commit your changes in the database
+                    conn.commit()
+                except Exception as e:
+                    log.error(e)
+                    # Rollback in case there is any error
+                    conn.rollback()
+        conn.close()
+        return sql_list
 
     # 获取从前端传来的参数
     @staticmethod

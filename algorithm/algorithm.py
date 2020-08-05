@@ -19,6 +19,7 @@ from flask import Flask, jsonify
 from flask.json import JSONEncoder as _JSONEncoder
 from flask_cors import *
 from utils import *
+from evaluate import evaluateModel
 
 log = logging.getLogger(__name__)
 
@@ -72,7 +73,7 @@ def main(algorithm, method):
                         level='INFO')
     logging.getLogger().addFilter(logging.StreamHandler())
     logging.getLogger().setLevel(logging.WARNING)
-    # 线性回归（lei）
+    # 线性回归（lei）--》训练、预测
     if algorithm == "linerRegression":
         try:
             from algorithm_liner_regression import linerRegression
@@ -81,7 +82,7 @@ def main(algorithm, method):
         liner_regression = linerRegression(method)
         response_data = exec(method, liner_regression)
         return jsonify(response_data)
-    # 多项式回归（qwf）
+    # 多项式回归（qwf）--》训练、预测
     elif algorithm == "polyRegression":
         try:
             from algorithm_poly_regression import polyRegression
@@ -90,13 +91,13 @@ def main(algorithm, method):
         poly_regression = polyRegression(method)
         response_data = exec(method, poly_regression)
         return jsonify(response_data)
-    # 支持向量机（hyj）
+    # 支持向量机（hyj）--》训练、评估、预测
     elif algorithm == "svm":
         pass
-    # 决策树（qwf）
+    # 决策树（qwf）--》训练、评估、预测
     elif algorithm == "decisionTree":
         try:
-            from decision_tree import decisionTree
+            from algorithm_decision_tree import decisionTree
         except NotImplementedError as e:
             raise e
         random_forest = decisionTree(method)
@@ -111,7 +112,7 @@ def main(algorithm, method):
         random_forest = randomForest(method)
         response_data = exec(method, random_forest)
         return jsonify(response_data)
-    # 逻辑回归（lei）
+    # 逻辑回归（lei）--》训练、评估、预测
     elif algorithm == "logisticRegression":
         try:
             from algorithm_logistic import logistic
@@ -120,7 +121,7 @@ def main(algorithm, method):
         logistics = logistic(method)
         response_data = exec(method, logistics)
         return jsonify(response_data)
-    # k-means聚类（lei）
+    # k-means聚类（lei）--》训练、预测
     elif algorithm == "kMeans":
         try:
             from algorithm_kmeans import kMeans
@@ -129,11 +130,56 @@ def main(algorithm, method):
         logistics = kMeans(method)
         response_data = exec(method, logistics)
         return jsonify(response_data)
-    # 层次聚类（hyj）
+    # 层次聚类（hyj）--》训练、预测
     elif algorithm == "hierarchicalCluster":
         pass
     else:
         raise ValueError("输入算法参数错误:{}".format(algorithm))
+
+
+# ================================ 评估总入口 ==============================
+@app.route('/algorithm/evaluate', methods=['POST', 'GET'])
+def evaluate():
+    """
+    前端传过来的参数
+    {
+        "algorithm": "",
+        "model": "",
+        "table": "",
+        "X": "",
+        "Y": "",
+        "show_options": ["report", "matrix", "roc"]
+    }
+    :return:
+    """
+    try:
+        from evaluate import evaluateModel
+    except NotImplementedError as e:
+        raise e
+    response_data = evaluateModel().model_evaluate()
+    return jsonify(response_data)
+
+
+# ================================ 评估总入口 ==============================
+@app.route('/algorithm/predict', methods=['POST', 'GET'])
+def predict():
+    """
+    前端传过来的参数
+    {
+        "algorithm": "",
+        "model": "",
+        "oneSample": False
+        "table": "",
+        "X": "",
+    }
+    :return:
+    """
+    try:
+        from predict import predictModel
+    except NotImplementedError as e:
+        raise e
+    response_data = predictModel().model_predict()
+    return jsonify(response_data)
 
 
 if __name__ == '__main__':

@@ -18,7 +18,7 @@ import logging
 from base_algorithm import BaseAlgorithm
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
-from utils import transform_table_data_to_html
+from utils import transform_table_data_to_html, format_dataframe
 
 log = logging.getLogger(__name__)
 
@@ -92,6 +92,8 @@ class randomForest(BaseAlgorithm):
         """
         self.config = {}
         try:
+            self.config['algorithm'] = self.web_data['algorithm']
+            self.config['model'] = self.web_data['model']
             self.config['tableName'] = self.web_data['tableName']
             self.config['X'] = self.web_data.get('X')
             self.config['Y'] = self.web_data.get('Y')
@@ -111,6 +113,8 @@ class randomForest(BaseAlgorithm):
         """
         self.config = {}
         try:
+            self.config['algorithm'] = self.web_data['algorithm']
+            self.config['model'] = self.web_data['model']
             self.config['oneSample'] = self.web_data['oneSample']
             self.config['tableName'] = self.web_data.get('tableName')
             self.config['X'] = self.web_data.get('X')
@@ -131,7 +135,8 @@ class randomForest(BaseAlgorithm):
             self.model = RandomForestClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
 
             # 保存模型
-            self.save_model(self.model, "randomForest")
+            # self.save_model(self.model, "randomForest")
+            self.save_model_into_database("randomForest")
 
             # 分类结果可视化
             res = self.algorithm_show_result(self.model, x_test, y_test,
@@ -150,7 +155,8 @@ class randomForest(BaseAlgorithm):
     def evaluate(self):
         res = []
         try:
-            model = self.load_model("randomForest")
+            # model = self.load_model("randomForest")
+            model = self.load_model_by_database(self.config["algorithm"], self.config["model"])
             x_test = self.table_data.loc[:, self.config['X']]
             y_test = self.table_data[self.config['Y'][0]]
 
@@ -169,13 +175,14 @@ class randomForest(BaseAlgorithm):
 
     def predict(self):
         try:
-            model = self.load_model("randomForest")
+            # model = self.load_model("randomForest")
+            model = self.load_model_by_database(self.config["algorithm"], self.config["model"])
             res = {}
             if self.config['oneSample']:
                 if not self.config['X']:
                     raise ValueError("feature must not be empty when one-sample")
                 X = [[float(x) for x in self.config['X']]]
-                predict = model.predict(X)[0] if isinstance(model.predict(X)[0], str) else "{:.4f}".format(model.predict(X)[0])
+                predict = model.predict(X)[0] if isinstance(model.predict(X)[0], str) else "{:.0f}".format(model.predict(X)[0])
                 res.update({
                     "data": [[",".join([str(s) for s in self.config['X']]), predict]],
                     "title": "单样本预测结果",
@@ -189,6 +196,8 @@ class randomForest(BaseAlgorithm):
                 log.info("输入数据大小:{}".format(len(data)))
                 data = data.astype(float)
                 data["predict"] = model.predict(data.values)
+                if data["predict"].dtypes != "object":
+                    data = format_dataframe(data, {"predict": ".0f"})
                 res.update(transform_table_data_to_html({
                     "data": data.values.tolist(),
                     "title": "多样本预测结果",

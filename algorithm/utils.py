@@ -354,6 +354,8 @@ def algorithm_show_result(model, x, y, options=[], method="classifier"):
     if method == "cluster":
         pass
     return res
+
+
 # 自变量根据用户指定的最高阶数生成新的数据
 def gen_poly_col(data, conf):
     """
@@ -363,9 +365,6 @@ def gen_poly_col(data, conf):
     :return:
     """
     for x in conf:
-        for i in range(2, conf[x]+1):
-            if i == 1:
-                continue
+        for i in range(2, conf[x] + 1):
             data["{}**{}".format(x, i)] = data[x] ** i
     return data
-

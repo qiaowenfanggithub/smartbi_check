@@ -74,6 +74,8 @@ class linerRegression(BaseAlgorithm):
         """
         self.config = {}
         try:
+            self.config['algorithm'] = self.web_data['algorithm']
+            self.config['model'] = self.web_data['model']
             self.config['tableName'] = self.web_data['tableName']
             self.config['X'] = self.web_data.get('X')
             self.config['Y'] = self.web_data.get('Y')
@@ -93,6 +95,8 @@ class linerRegression(BaseAlgorithm):
         """
         self.config = {}
         try:
+            self.config['algorithm'] = self.web_data['algorithm']
+            self.config['model'] = self.web_data['model']
             self.config['oneSample'] = self.web_data['oneSample']
             self.config['tableName'] = self.web_data.get('tableName')
             self.config['X'] = self.web_data.get('X')
@@ -119,7 +123,8 @@ class linerRegression(BaseAlgorithm):
                 self.model = sm.OLS(y_train, x_train).fit()
 
             # 保存模型
-            self.save_model(self.model, "linerRegression")
+            # self.save_model(self.model, "linerRegression")
+            self.save_model_into_database("linerRegression")
 
             # 结果可视化
             x_train = x_train.astype(float)
@@ -139,7 +144,8 @@ class linerRegression(BaseAlgorithm):
 
     def evaluate(self):
         try:
-            model = self.load_model("linerRegression")
+            # model = self.load_model("linerRegression")
+            model = self.load_model_by_database(self.config["algorithm"], self.config["model"])
             x_test = self.table_data.loc[:, self.config['X']]
             y_test = self.table_data[self.config['Y'][0]]
 
@@ -160,7 +166,8 @@ class linerRegression(BaseAlgorithm):
                 import statsmodels.api as sm
             except:
                 raise ImportError("statsmodels.api cannot import")
-            model = self.load_model("linerRegression")
+            # model = self.load_model("linerRegression")
+            model = self.load_model_by_database(self.config["algorithm"], self.config["model"])
             res = {}
             if self.config['oneSample']:
                 if len(self.config['X']) == 0 or self.config['X'][0] == "":
