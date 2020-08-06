@@ -302,8 +302,8 @@ class BaseAlgorithm(object):
                          fit=stats.norm,
                          norm_hist=True,
                          hist_kws={'color': 'green', 'edgecolor': 'black'},
-                         kde_kws={'color': 'black', 'linestyle': '--', 'label': '核密度曲线'},
-                         fit_kws={'color': 'red', 'linestyle': ':', 'label': '正态密度曲线'}
+                         kde_kws={'color': 'black', 'linestyle': '--', 'label': 'kernel density curve'},
+                         fit_kws={'color': 'red', 'linestyle': ':', 'label': 'normal density curve'}
                          )
             plt.legend()
             res.append({
@@ -335,8 +335,8 @@ class BaseAlgorithm(object):
         # 标准化残差与预测值之间的散点图(验证残差的方差齐性)
         if "var" in options:
             plt.scatter(model.predict(), (model.resid - model.resid.mean()) / model.resid.std())
-            plt.xlabel('预测值')
-            plt.ylabel('标准化残差')
+            plt.xlabel('predict value')
+            plt.ylabel('standardized residual ')
             # 添加水平参考线
             plt.axhline(y=0, color='r', linewidth=2)
             res.append({
@@ -406,8 +406,8 @@ class BaseAlgorithm(object):
             plt.scatter(model.predict(), y)
             plt.plot([model.predict().min(), model.predict().max()],
                      [y.min(), y.max()], 'r-', linewidth=3)
-            plt.xlabel('预测值')
-            plt.ylabel('实际值')
+            plt.xlabel("predict value")
+            plt.ylabel('true value')
             res.append({
                 "is_test": False,
                 "title": "预测值与真实值对比散点图",

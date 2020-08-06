@@ -179,7 +179,7 @@ def evaluate():
     return jsonify(response_data)
 
 
-# ================================ 评估总入口 ==============================
+# ================================ 预测总入口 ==============================
 @app.route('/algorithm/predict', methods=['POST', 'GET'])
 def predict():
     """

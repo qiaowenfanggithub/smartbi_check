@@ -170,10 +170,10 @@ if __name__ == '__main__':
     # kwargs = {
     #     "algorithm": "linerRegression",  # str,数据库表名
     #     "model": "linerRegression-2020-08-04-22-43-24",  # str,数据库表名
-    #     "oneSample": False,  # 是否批量上传数据进行预测
-    #     "tableName": "liner_regression",  # str,数据库表名
-    #     # "X": [12.0],  # list,自变量
-    #     "X": ["year"],  # list,自变量
+    #     "oneSample": True,  # 是否批量上传数据进行预测
+    #     # "tableName": "liner_regression",  # str,数据库表名
+    #     "X": [12.0],  # list,自变量
+    #     # "X": ["year"],  # list,自变量
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/predict', json=kwargs, timeout=30)
 
@@ -277,19 +277,19 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/evaluate', json=kwargs, timeout=50)
 
     # ======================= 预测-总入口 =============================
-    # kwargs = {
-    #     "algorithm": "randomForest",
-    #     "model": "randomForest-2020-08-04-23-03-45",
-    #     "oneSample": False,
-    #     "tableName": "buy_computer_new",
-    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],
-    #     # "X": [0, 1, 1, 1]
-    #
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/predict', json=kwargs, timeout=50)
+    kwargs = {
+        "algorithm": "randomForest",
+        "model": "randomForest-2020-08-04-23-03-45",
+        "oneSample": False,
+        "tableName": "buy_computer_new",
+        "X": ["年龄", "收入层次", "是否单身", "信用等级"],
+        # "X": [0, 1, 1, 1]
+
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/predict', json=kwargs, timeout=50)
 
     # ======================= 模型查询 =============================
-    res = my_session.get(url='http://127.0.0.1:5000/algorithm/selectModel/logisticRegression', timeout=50)
+    # res = my_session.get(url='http://127.0.0.1:5000/algorithm/selectModel/logisticRegression', timeout=50)
     """
     =====================================================================
                                     待完成
