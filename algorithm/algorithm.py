@@ -141,6 +141,7 @@ def main(algorithm, method):
 @app.route('/algorithm/selectModel/<algorithm>', methods=['POST', 'GET'])
 def select_model(algorithm):
     try:
+        # todo:需要筛选出同一用户的编号下的
         sql = "SELECT name FROM algorithm_model WHERE type='{}';".format(algorithm)
         res_tuple = exec_select_sql(sql)
         res = [d[0] for d in res_tuple]

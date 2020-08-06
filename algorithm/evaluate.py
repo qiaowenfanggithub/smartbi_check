@@ -59,9 +59,26 @@ class evaluateModel(BaseAlgorithm):
             y_test = self.table_data[self.config['Y'][0]]
 
             # 分类结果可视化
-            res.extend(self.algorithm_show_result(self.model, x_test, y_test,
-                                                  options=self.config['show_options'],
-                                                  method="classifier"))
+            if self.config['algorithm'] in ["logisticRegression", "decisionTree",
+                                            "randomForest", "svmClassifier"]:
+                res.extend(self.algorithm_show_result(self.model, x_test, y_test,
+                                                      options=self.config['show_options'],
+                                                      method="classifier"))
+
+            # 回归结果可视化
+            if self.config['algorithm'] in ["logisticRegression", "linerRegression",
+                                            "polyLinerRegression"]:
+                model_name = self.config["model"][:18] + "2" + self.config["model"][18:]
+                self.model = self.load_model_by_database("logisticRegression2", model_name)
+                res.extend(self.algorithm_show_result(self.model, x_test, y_test,
+                                                      options=self.config['show_options'],
+                                                      method="regression"))
+
+            # 聚类结果可视化
+            if self.config['algorithm'] in ["kMeans", "hierarchicalCluster"]:
+                res.extend(self.algorithm_show_result(self.model, x_test, y_test,
+                                                      options=self.config['show_options'],
+                                                      method="cluster"))
 
             response_data = {"res": res,
                              "code": "200",

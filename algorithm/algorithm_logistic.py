@@ -20,6 +20,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
 import copy
 from utils import transform_table_data_to_html, format_dataframe
+import datetime
 
 log = logging.getLogger(__name__)
 
@@ -148,7 +149,8 @@ class logistic(BaseAlgorithm):
 
             # 保存模型
             # self.save_model(self.model, "logisticRegression")
-            self.save_model_into_database("logisticRegression")
+            current_time = datetime.datetime.now()
+            self.save_model_into_database("logisticRegression", current_time=current_time)
 
             # 分类结果可视化
             res = self.algorithm_show_result(self.model, x_test, y_test,
@@ -169,7 +171,7 @@ class logistic(BaseAlgorithm):
 
             # 保存模型
             # self.save_model(self.model, "logisticRegression2")
-            # self.save_model_into_database("logisticRegression2")
+            self.save_model_into_database("logisticRegression2", current_time=current_time)
 
             res.extend(self.algorithm_show_result(self.model, x_train, y_train,
                                                   options=self.config['show_options'],

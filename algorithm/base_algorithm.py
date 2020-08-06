@@ -85,10 +85,11 @@ class BaseAlgorithm(object):
             raise e
 
     # 模型信心入库
-    def save_model_into_database(self, model_name):
+    def save_model_into_database(self, model_name, current_time=None):
         try:
             # 模型入库
-            current_time = datetime.datetime.now()
+            if not current_time:
+                current_time = datetime.datetime.now()
             userid = "000"
             name = "{}-{}".format(model_name, current_time.strftime("%Y-%m-%d-%H-%M-%S"))
             type = "{}".format(model_name)

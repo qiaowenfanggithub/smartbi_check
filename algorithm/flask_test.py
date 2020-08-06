@@ -266,27 +266,27 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/predict', json=kwargs, timeout=50)
 
     # ======================= 评估-总入口 =============================
+    kwargs = {
+        "algorithm": "logisticRegression",
+        "model": "logisticRegression-2020-08-06-15-58-29",
+        "tableName": "buy_computer_new",
+        "X": ["年龄", "收入层次", "是否单身", "信用等级"],
+        "Y": ["是否购买电脑"],
+        "show_options": ["report", "matrix", "roc", "r2", "coff", "independence"]
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/evaluate', json=kwargs, timeout=50)
+
+    # ======================= 预测-总入口 =============================
     # kwargs = {
     #     "algorithm": "randomForest",
     #     "model": "randomForest-2020-08-04-23-03-45",
+    #     "oneSample": False,
     #     "tableName": "buy_computer_new",
     #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],
-    #     "Y": ["是否购买电脑"],
-    #     "show_options": ["report", "matrix", "roc"]
+    #     # "X": [0, 1, 1, 1]
+    #
     # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/evaluate', json=kwargs, timeout=50)
-
-    # ======================= 预测-总入口 =============================
-    kwargs = {
-        "algorithm": "randomForest",
-        "model": "randomForest-2020-08-04-23-03-45",
-        "oneSample": False,
-        "tableName": "buy_computer_new",
-        "X": ["年龄", "收入层次", "是否单身", "信用等级"],
-        # "X": [0, 1, 1, 1]
-
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/predict', json=kwargs, timeout=50)
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/predict', json=kwargs, timeout=50)
 
     # ======================= 模型查询 =============================
     # res = my_session.get(url='http://127.0.0.1:5000/algorithm/selectModel/logisticRegression', timeout=50)
