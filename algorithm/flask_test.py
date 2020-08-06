@@ -266,15 +266,15 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/predict', json=kwargs, timeout=50)
 
     # ======================= 评估-总入口 =============================
-    kwargs = {
-        "algorithm": "logisticRegression",
-        "model": "logisticRegression-2020-08-06-15-58-29",
-        "tableName": "buy_computer_new",
-        "X": ["年龄", "收入层次", "是否单身", "信用等级"],
-        "Y": ["是否购买电脑"],
-        "show_options": ["report", "matrix", "roc", "r2", "coff", "independence"]
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/evaluate', json=kwargs, timeout=50)
+    # kwargs = {
+    #     "algorithm": "logisticRegression",
+    #     "model": "logisticRegression-2020-08-06-15-58-29",
+    #     "tableName": "buy_computer_new",
+    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],
+    #     "Y": ["是否购买电脑"],
+    #     "show_options": ["report", "matrix", "roc", "r2", "coff", "independence"]
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/evaluate', json=kwargs, timeout=50)
 
     # ======================= 预测-总入口 =============================
     # kwargs = {
@@ -290,6 +290,15 @@ if __name__ == '__main__':
 
     # ======================= 模型查询 =============================
     # res = my_session.get(url='http://127.0.0.1:5000/algorithm/selectModel/logisticRegression', timeout=50)
+
+    # ======================= 模型特征查看接口 =============================
+    kwargs = {
+        "algorithm": "logisticRegression",
+        "model": "logisticRegression-2020-08-06-15-58-29",
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/checkModelFeatures', json=kwargs, timeout=50)
+
+
     """
     =====================================================================
                                     待完成

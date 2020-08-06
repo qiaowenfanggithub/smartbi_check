@@ -19,7 +19,7 @@ from flask import Flask, jsonify
 from flask.json import JSONEncoder as _JSONEncoder
 from flask_cors import *
 from utils import *
-from evaluate import evaluateModel
+from flask import request
 
 log = logging.getLogger(__name__)
 
@@ -200,6 +200,27 @@ def predict():
         raise e
     response_data = predictModel().model_predict()
     return jsonify(response_data)
+
+
+# ================================ 模型查看特征接口 ==============================
+@app.route('/algorithm/checkModelFeatures', methods=['POST', 'GET'])
+def check_model_features():
+    request_data = request.json
+    try:
+        algorithm = request_data["algorithm"]
+        model = request_data["model"]
+        sql = "SELECT characteristic_column FROM algorithm_model WHERE type='{}' and name='{}';".format(algorithm,
+                                                                                                        model)
+        res_tuple = exec_select_sql(sql)
+        res = res_tuple[0][0]
+        response_data = {"res": res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return response_data
+    except Exception as e:
+        response_data = {"data": "", "code": "500", "msg": "{}".format(e.args)}
+        # raise e
+        return jsonify(response_data)
 
 
 if __name__ == '__main__':
