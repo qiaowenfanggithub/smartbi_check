@@ -146,6 +146,7 @@ class polyRegression(BaseAlgorithm):
             return response_data
         except Exception as e:
             # raise e
+            log.error(e)
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def evaluate(self):
@@ -164,6 +165,7 @@ class polyRegression(BaseAlgorithm):
                              "msg": "ok!"}
             return response_data
         except Exception as e:
+            log.error(e)
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def predict(self):
@@ -211,6 +213,7 @@ class polyRegression(BaseAlgorithm):
                              "msg": "ok!"}
             return response_data
         except Exception as e:
+            log.error(e)
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     # 预测的时候从模型拿到每个自变量对于的最高阶数

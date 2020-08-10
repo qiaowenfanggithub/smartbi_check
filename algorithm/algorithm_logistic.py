@@ -230,6 +230,7 @@ class logistic(BaseAlgorithm):
             return response_data
         except Exception as e:
             # raise e
+            log.error(e)
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def predict(self):
@@ -268,6 +269,7 @@ class logistic(BaseAlgorithm):
             return response_data
         except Exception as e:
             # raise e
+            log.error(e)
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def __str__(self):

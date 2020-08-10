@@ -53,6 +53,9 @@ def exec(method, algorithm):
     elif method == "predict":
         log.info(str(algorithm) + '_predict_init...')
         response_data = algorithm.predict()
+    elif method == "visualization":
+        log.info(str(algorithm) + '_visualization_init...')
+        response_data = algorithm.visualization()
     else:
         raise ValueError("input method:{} error".format(method))
     return response_data
@@ -79,8 +82,8 @@ def main(algorithm, method):
             from algorithm_liner_regression import linerRegression
         except NotImplementedError as e:
             raise e
-        liner_regression = linerRegression(method)
-        response_data = exec(method, liner_regression)
+        liner_regression_alg = linerRegression(method)
+        response_data = exec(method, liner_regression_alg)
         return jsonify(response_data)
     # 多项式回归（qwf）--》训练、预测
     elif algorithm == "polyLinerRegression":
@@ -88,8 +91,8 @@ def main(algorithm, method):
             from algorithm_poly_regression import polyRegression
         except NotImplementedError as e:
             raise e
-        poly_regression = polyRegression(method)
-        response_data = exec(method, poly_regression)
+        poly_regression_alg = polyRegression(method)
+        response_data = exec(method, poly_regression_alg)
         return jsonify(response_data)
     # 支持向量机（hyj）--》训练、评估、预测
     elif algorithm == "svmClassifier":
@@ -100,8 +103,8 @@ def main(algorithm, method):
             from algorithm_decision_tree import decisionTree
         except NotImplementedError as e:
             raise e
-        random_forest = decisionTree(method)
-        response_data = exec(method, random_forest)
+        decision_tree_alg = decisionTree(method)
+        response_data = exec(method, decision_tree_alg)
         return jsonify(response_data)
     # 随机森林（lei）
     elif algorithm == "randomForest":
@@ -109,8 +112,8 @@ def main(algorithm, method):
             from algorithm_random_forest import randomForest
         except NotImplementedError as e:
             raise e
-        random_forest = randomForest(method)
-        response_data = exec(method, random_forest)
+        random_forest_alg = randomForest(method)
+        response_data = exec(method, random_forest_alg)
         return jsonify(response_data)
     # 逻辑回归（lei）--》训练、评估、预测
     elif algorithm == "logisticRegression":
@@ -118,8 +121,8 @@ def main(algorithm, method):
             from algorithm_logistic import logistic
         except NotImplementedError as e:
             raise e
-        logistics = logistic(method)
-        response_data = exec(method, logistics)
+        logistics_alg = logistic(method)
+        response_data = exec(method, logistics_alg)
         return jsonify(response_data)
     # k-means聚类（lei）--》训练、预测
     elif algorithm == "kMeans":
@@ -127,8 +130,8 @@ def main(algorithm, method):
             from algorithm_kmeans import kMeans
         except NotImplementedError as e:
             raise e
-        logistics = kMeans(method)
-        response_data = exec(method, logistics)
+        kmeans_alg = kMeans(method)
+        response_data = exec(method, kmeans_alg)
         return jsonify(response_data)
     # 层次聚类（hyj）--》训练、预测
     elif algorithm == "hierarchicalCluster":
@@ -216,7 +219,65 @@ def check_model_features():
         response_data = {"res": res,
                          "code": "200",
                          "msg": "ok!"}
-        return response_data
+        return jsonify(response_data)
+    except Exception as e:
+        response_data = {"data": "", "code": "500", "msg": "{}".format(e.args)}
+        # raise e
+        return jsonify(response_data)
+
+
+# ================================ 数据预处理-编码和归一化 ==============================
+@app.route('/algorithm/dataProcess/<method>', methods=['POST', 'GET'])
+def data_preprocess(method):
+    """
+    数据预处理请求参数{
+        "tableName": "",  # str,数据库表名
+        "encoder":{
+            "oneHot": [],  # list,需要使用onehot编码的特征列
+            "factorize": [] # list,需要使用序列编码的特征列
+        },
+        "normalize":{
+            "normal": [],  # list,需要使用normal标准化的特征列
+            "standard": [] # list,需要使用归一化的特征列
+        }
+    }
+    :param method:
+    :return:
+    """
+    request_data = request.json
+    try:
+        table_name = request_data["tableName"]
+        # 获取数据从数据表
+        sql = "select * from {};".format("`" + table_name + "`")
+        table_data = get_dataframe_from_mysql(sql, database='sophia_data')
+        encoder_config = request_data.get("encoder")
+        normalize_config = request_data.get("normalize")
+        if method not in ["encoder", "normalize"]:
+            raise ValueError("input dataProcess method:{} is not support".format(method))
+        if method == "encoder":
+            if not any([i in ["oneHot", "factorize"] for i in encoder_config]):
+                raise ValueError("input encoder config:{} is not correct".format(encoder_config))
+            if encoder_config.get("oneHot") and encoder_config["oneHot"][0] != "":
+                table_data = data_encoder(table_data, encoder_config.get("oneHot"), use_onehot=True)
+            if encoder_config.get("factorize") and encoder_config["factorize"][0] != "":
+                table_data = data_encoder(table_data, encoder_config.get("factorize"))
+        if method == "normalize":
+            if not any([i in ["minMaxScale", "standard"] for i in normalize_config]):
+                raise ValueError("input encoder config:{} is not correct".format(normalize_config))
+            if normalize_config.get("minMaxScale") and normalize_config["minMaxScale"][0] != "":
+                table_data = data_standard(table_data, normalize_config.get("minMaxScale"), method="minMaxScale")
+            if normalize_config.get("standard") and normalize_config["standard"][0] != "":
+                table_data = data_standard(table_data, normalize_config.get("standard"), method="standard")
+        res = {
+            "title": "数据预处理后的数据",
+            "row": table_data.index.values.tolist(),
+            "col": table_data.columns.values.tolist(),
+            "data": table_data.values.tolist()
+        }
+        response_data = {"res": transform_table_data_to_html(res),
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
     except Exception as e:
         response_data = {"data": "", "code": "500", "msg": "{}".format(e.args)}
         # raise e
