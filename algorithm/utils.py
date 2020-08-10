@@ -37,7 +37,9 @@ def data_encoder(data: pd.DataFrame, column_name_list, use_onehot=False, default
         if use_onehot:
             if column_name not in data.columns:
                 raise ValueError("{} not in {} columns".format(column_name, data))
-            data = data.join(pd.get_dummies(data[column_name]))
+            one_data = pd.get_dummies(data[column_name])
+            one_data.columns = [column_name + "_" + c for c in one_data.columns]
+            data = data.join(one_data)
             data.drop([column_name], axis=1, inplace=True)
         else:
             # Replace missing values with "default_value"
@@ -49,11 +51,15 @@ def data_encoder(data: pd.DataFrame, column_name_list, use_onehot=False, default
 
 # 归一化
 def data_standard(data: pd.DataFrame, column_name_list, method="normal"):
+    try:
+        data = data.astype("float")
+    except ValueError:
+        raise ValueError("data types;{} cannot convert to float, may be need encoder".format(data.dtypes[0]))
     for column_name in column_name_list:
-        if method == "normal":
+        if method == "minMaxScale":
             data[column_name] = (data[column_name] - data[column_name].min()) / (
                     data[column_name].max() - data[column_name].min())
-        else:
+        if method == "standard":
             data[column_name] = (data[column_name] - data[column_name].mean()) / (data[column_name].std())
     return data
 
@@ -157,9 +163,9 @@ def data_scatter_plot(data, col_name_X, col_name_Y):
     plt.savefig("scatter_plot_{}_by_{}.png".format(col_name_Y, col_name_X))
 
 
-def get_dataframe_from_mysql(sql_sentence, host=None, port=None, user=None, password=None, database=None):
-    conn = pymysql.connect(host='rm-2ze5vz4174qj2epm7so.mysql.rds.aliyuncs.com', port=3306, user='yzkj',
-                           password='yzkj2020@', database='sophia_manager', charset='utf8')
+def get_dataframe_from_mysql(sql_sentence, host='rm-2ze5vz4174qj2epm7so.mysql.rds.aliyuncs.com', port=None, user='yzkj',
+                             password='yzkj2020@', database='sophia_manager', charset='utf8'):
+    conn = pymysql.connect(host=host, port=3306, user=user, password=password, database=database, charset=charset)
     try:
         df = pd.read_sql(sql_sentence, conn)
         return df
@@ -200,8 +206,6 @@ def exec_select_sql(sql):
         conn.rollback()
     conn.close()
     return res
-
-
 
 
 # 将自变量在多列的表格转成自变量在一列，因变量在一列
