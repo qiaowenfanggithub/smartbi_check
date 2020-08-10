@@ -265,7 +265,7 @@ class linerRegression(BaseAlgorithm):
                     # 显示纵轴标签
                     plt.ylabel("frequency")
                     # 显示图标题
-                    plt.title("自变量{} - frequency distribution histogram".format(x))
+                    plt.title("{} - frequency distribution histogram".format(x))
                     res.append({
                         "title": "{} 分布直方图".format(x),
                         "base64": "{}".format(self.plot_and_output_base64_png(plt))
@@ -277,7 +277,7 @@ class linerRegression(BaseAlgorithm):
                 # 显示纵轴标签
                 plt.ylabel("frequency")
                 # 显示图标题
-                plt.title("因变量y frequency distribution histogram")
+                plt.title("y frequency distribution histogram")
                 res.append({
                     "title": "{} 分布直方图".format(self.config["Y"][0]),
                     "base64": "{}".format(self.plot_and_output_base64_png(plt))
@@ -288,12 +288,12 @@ class linerRegression(BaseAlgorithm):
                     # 显示图标题
                     plt.title("{} - Box distribution to check outliers".format(x))
                     res.append({
-                        "title": "自变量{} 箱型图".format(x),
+                        "title": "{} 箱型图".format(x),
                         "base64": "{}".format(self.plot_and_output_base64_png(plt))
                     })
             if "pairs" in self.config["show_options"]:
                 sns.pairplot(self.table_data)
-                plt.title("变量Variable relation in pairs")
+                plt.title("Variable relation in pairs")
                 res.append({
                     "title": "变量两两关系图",
                     "base64": "{}".format(self.plot_and_output_base64_png(plt))
@@ -314,11 +314,6 @@ class linerRegression(BaseAlgorithm):
                     "title": "因变量和各自变量的相关系数图",
                     "base64": "{}".format(self.plot_and_output_base64_png(plt))
                 })
-
-            # check base64 png
-            for data in res:
-                if "base64" in data:
-                    base64_to_img(data["base64"])
             response_data = {"res": res,
                              "code": "200",
                              "msg": "ok!"}

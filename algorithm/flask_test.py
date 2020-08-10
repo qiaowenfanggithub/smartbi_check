@@ -156,15 +156,15 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/predict', json=kwargs, timeout=30)
 
     # ======================= 线性回归-训练 =============================
-    # kwargs = {
-    #     "tableName": "liner_regression",  # str,数据库表名
-    #     "X": ["year"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-    #     "Y": ["salary"],  # list,因变量,当表格方向为v是使用
-    #     "param": {"fit_intercept": True},  # bool,True或者False，是否有截距项
-    #     "show_options": ["r2", "coff", "Independence", "resid_normal",
-    #                      "pp", "qq", "var", "vif", "outliers", "pred_y_contrast"]
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/train', json=kwargs, timeout=30)
+    kwargs = {
+        "tableName": "liner_regression",  # str,数据库表名
+        "X": ["year"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["salary"],  # list,因变量,当表格方向为v是使用
+        "param": {"fit_intercept": True},  # bool,True或者False，是否有截距项
+        "show_options": ["r2", "coff", "Independence", "resid_normal",
+                         "pp", "qq", "var", "vif", "outliers", "pred_y_contrast"]
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/train', json=kwargs, timeout=30)
 
     # ======================= 线性回归-预测 =============================
     # kwargs = {
@@ -178,15 +178,15 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/predict', json=kwargs, timeout=30)
 
     # ======================= 线性回归-可视化 =============================
-    kwargs = {
-        "tableName": "advertising",  # str,数据库表名
-        "X": ["TV", "radio", "newspaper"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-        "Y": ["sales"],  # list,因变量,当表格方向为v是使用
-        "show_options": ["y_count", "pairs", "corr", "y_corr"],
-        "x_count": ["TV", "radio", "newspaper"],
-        "box": ["TV", "radio", "newspaper"]
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/visualization', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "tableName": "advertising",  # str,数据库表名
+    #     "X": ["TV", "radio", "newspaper"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     "Y": ["sales"],  # list,因变量,当表格方向为v是使用
+    #     "show_options": ["y_count", "pairs", "corr", "y_corr"],
+    #     "x_count": ["TV", "radio", "newspaper"],
+    #     "box": ["TV", "radio", "newspaper"]
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/visualization', json=kwargs, timeout=30)
 
     # ======================= 多项回归-训练 =============================
     # kwargs = {

@@ -20,6 +20,7 @@ from flask.json import JSONEncoder as _JSONEncoder
 from flask_cors import *
 from utils import *
 from flask import request
+from base64_to_png import base64_to_img
 
 log = logging.getLogger(__name__)
 
@@ -84,6 +85,11 @@ def main(algorithm, method):
             raise e
         liner_regression_alg = linerRegression(method)
         response_data = exec(method, liner_regression_alg)
+
+        # check base64 png
+        for data in response_data["res"]:
+            if "base64" in data:
+                base64_to_img(data["base64"])
         return jsonify(response_data)
     # 多项式回归（qwf）--》训练、预测
     elif algorithm == "polyLinerRegression":

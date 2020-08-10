@@ -222,8 +222,8 @@ class BaseAlgorithm(object):
         :param options: 可选参数，控制输出结果["report", "matrix", "roc"]
         :return: 给前端的结果
         """
-        plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
-        plt.rcParams['axes.unicode_minus'] = False
+        # plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
+        # plt.rcParams['axes.unicode_minus'] = False
         res = []
         try:
             # 输出结果展示
@@ -278,8 +278,8 @@ class BaseAlgorithm(object):
         :param options: 可选参数，控制输出结果["coff", "independence", "resid_normal"]
         :return: 给前端的结果
         """
-        plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
-        plt.rcParams['axes.unicode_minus'] = False
+        # plt.rcParams['font.sans-serif'] = ['Arial Unicode MS']
+        # plt.rcParams['axes.unicode_minus'] = False
         res = []
         # 拟合优度
         if "r2" in options:
@@ -327,7 +327,6 @@ class BaseAlgorithm(object):
         if "pp" in options:
             pp_qq_plot = sm.ProbPlot(model.resid)
             pp_qq_plot.ppplot(line='45')
-            plt.title("残差pp图")
             res.append({
                 "is_test": True,
                 "title": "残差pp图",
@@ -338,7 +337,6 @@ class BaseAlgorithm(object):
         if "qq" in options:
             pp_qq_plot = sm.ProbPlot(model.resid)
             pp_qq_plot.qqplot(line='q')
-            plt.title("残差qq图")
             res.append({
                 "is_test": True,
                 "title": "残差qq图",
