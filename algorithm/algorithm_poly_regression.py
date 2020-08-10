@@ -61,7 +61,7 @@ class polyRegression(BaseAlgorithm):
             self.config['param']["fit_intercept"] = self.config['param'].get("fit_intercept", True)
             self.config['show_options'] = self.web_data.get("show_options", [])
         except Exception as e:
-            log.info(e)
+            log.exception("Exception Logged")
             raise e
 
     def get_evaluate_config_from_web(self):
@@ -83,7 +83,7 @@ class polyRegression(BaseAlgorithm):
             self.config['Y'] = self.web_data.get('Y')
             self.config['show_options'] = self.web_data.get("show_options", [])
         except Exception as e:
-            log.info(e)
+            log.exception("Exception Logged")
             raise e
 
     def get_predict_config_from_web(self):
@@ -105,7 +105,7 @@ class polyRegression(BaseAlgorithm):
             self.config['Y'] = self.web_data.get('Y')
             self.config['show_options'] = self.web_data.get("show_options", [])
         except Exception as e:
-            log.info(e)
+            log.exception("Exception Logged")
             raise e
 
     def train(self):
@@ -146,7 +146,7 @@ class polyRegression(BaseAlgorithm):
             return response_data
         except Exception as e:
             # raise e
-            log.error(e)
+            log.exception("Exception Logged")
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def evaluate(self):
@@ -165,7 +165,7 @@ class polyRegression(BaseAlgorithm):
                              "msg": "ok!"}
             return response_data
         except Exception as e:
-            log.error(e)
+            log.exception("Exception Logged")
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def predict(self):
@@ -213,7 +213,7 @@ class polyRegression(BaseAlgorithm):
                              "msg": "ok!"}
             return response_data
         except Exception as e:
-            log.error(e)
+            log.exception("Exception Logged")
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     # 预测的时候从模型拿到每个自变量对于的最高阶数

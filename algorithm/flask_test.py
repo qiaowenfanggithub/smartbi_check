@@ -30,10 +30,10 @@ if __name__ == '__main__':
     #     "cv": "2",  # str,几折交叉验证
     #     "param": {
     #         "criterion": ["gini"],  # 不纯度指标gini、entropy
-    #         "max_features": [1],
-    #         "max_depth": [2],  # 指定树的最大深度
-    #         "min_samples_split": [2],  # :int, float, optional (default=2)。表示分裂一个内部节点需要的最少样本数。
-    #         "min_samples_leaf": [1],  # int, float, optional (default=1)。指定每个叶子节点需要的最少样本数。
+    #         "max_features": ["3", "4"],
+    #         "max_depth": ["2", "3"],  # 指定树的最大深度
+    #         "min_samples_split": ["2"],  # :int, float, optional (default=2)。表示分裂一个内部节点需要的最少样本数。
+    #         "min_samples_leaf": ["1", "2"],  # int, float, optional (default=1)。指定每个叶子节点需要的最少样本数。
     #     },
     #     "show_options": [
     #             "report",
@@ -177,12 +177,23 @@ if __name__ == '__main__':
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/predict', json=kwargs, timeout=30)
 
+    # ======================= 线性回归-可视化 =============================
+    kwargs = {
+        "tableName": "advertising",  # str,数据库表名
+        "X": ["TV", "radio", "newspaper"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["sales"],  # list,因变量,当表格方向为v是使用
+        "show_options": ["y_count", "pairs", "corr", "y_corr"],
+        "x_count": ["TV", "radio", "newspaper"],
+        "box": ["TV", "radio", "newspaper"]
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/visualization', json=kwargs, timeout=30)
+
     # ======================= 多项回归-训练 =============================
     # kwargs = {
     #     "tableName": "poly_reg",  # str,数据库表名
     #     "X": ["x1", 'x2', 'x3'],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
     #     "Y": ["y"],  # list,因变量,当表格方向为v是使用
-    #     "M": [{'x1': 2, 'x2': 2, 'x3': 2}],
+    #     "M": [{'x1': "2", 'x2': "2", 'x3': "2"}],
     #     "param": {"fit_intercept": True},  # bool,True或者False，是否有截距项
     #     "show_options": ["r2", "coff", "Independence", "resid_normal",
     #                      "pp", "qq", "var", "vif", "outliers", "pred_y_contrast"]
@@ -232,12 +243,12 @@ if __name__ == '__main__':
     #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
     #     "cv": "3",  # str,几折交叉验证
     #     "param": {
-    #         "n_estimators": [100, 200],  # list,树的个数
+    #         "n_estimators": ["100", "200"],  # list,树的个数
     #         "criterion": ["gini"],  # list,树划分准则
-    #         "max_features": [2, 3],  # list，用于训练的最大特征数量
-    #         "max_depth": [5, 6],  # list，树的最大深度列表
-    #         "min_samples_split": [2, 3],  # list， 内部节点再划分所需最小样本数
-    #         "min_samples_leaf": [1, 2],  # list，叶子节点最少样本数
+    #         "max_features": ["2", "3"],  # list，用于训练的最大特征数量
+    #         "max_depth": ["5", "6"],  # list，树的最大深度列表
+    #         "min_samples_split": ["2", "3"],  # list， 内部节点再划分所需最小样本数
+    #         "min_samples_leaf": ["1", "2"],  # list，叶子节点最少样本数
     #     },
     #     "show_options": ["report", "matrix", "roc"]
     # }
@@ -292,12 +303,31 @@ if __name__ == '__main__':
     # res = my_session.get(url='http://127.0.0.1:5000/algorithm/selectModel/logisticRegression', timeout=50)
 
     # ======================= 模型特征查看接口 =============================
-    kwargs = {
-        "algorithm": "logisticRegression",
-        "model": "logisticRegression-2020-08-06-15-58-29",
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/checkModelFeatures', json=kwargs, timeout=50)
+    # kwargs = {
+    #     "algorithm": "logisticRegression",
+    #     "model": "logisticRegression-2020-08-06-15-58-29",
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/checkModelFeatures', json=kwargs, timeout=50)
 
+    # ======================= 数据预处理-编码 =============================
+    # kwargs = {
+    #     "tableName": "buy-computer",  # str,数据库表名
+    #     "encoder": {
+    #         "oneHot": ["年龄", "收入层次"],  # list,需要使用onehot编码的特征列
+    #         "factorize": ["是否单身", "信用等级", "是否购买电脑"]  # list,需要使用序列编码的特征列
+    #     }
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/encoder', json=kwargs, timeout=50)
+
+    # ======================= 数据预处理-归一化 =============================
+    # kwargs = {
+    #     "tableName": "advertising",  # str,数据库表名
+    #     "normalize": {
+    #         "minMaxScale": [],  # list,需要使用normal标准化的特征列
+    #         "standard": ["TV", "radio", "newspaper"]  # list,需要使用归一化的特征列
+    #     }
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/normalize', json=kwargs, timeout=50)
 
     """
     =====================================================================

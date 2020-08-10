@@ -150,7 +150,7 @@ class decisionTree(BaseAlgorithm):
             return response_data
         except Exception as e:
             # raise e
-            log.error(e)
+            log.exception("Exception Logged")
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def evaluate(self):
@@ -172,7 +172,7 @@ class decisionTree(BaseAlgorithm):
             return response_data
         except Exception as e:
             # raise e
-            log.error(e)
+            log.exception("Exception Logged")
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def predict(self):
@@ -210,7 +210,7 @@ class decisionTree(BaseAlgorithm):
             return response_data
         except Exception as e:
             # raise e
-            log.error(e)
+            log.exception("Exception Logged")
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def __str__(self):

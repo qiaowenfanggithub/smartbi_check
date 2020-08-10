@@ -391,6 +391,8 @@ def gen_poly_col(data, conf):
     :return:
     """
     for x in conf:
+        if not isinstance(conf[x], int):
+            conf[x] = int(conf[x])
         for i in range(2, conf[x] + 1):
             data["{}**{}".format(x, i)] = data[x] ** i
     return data

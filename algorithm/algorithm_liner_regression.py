@@ -20,6 +20,7 @@ from utils import transform_table_data_to_html
 import statsmodels.api as sm
 import seaborn as sns
 import matplotlib.pyplot as plt
+from base64_to_png import base64_to_img
 
 log = logging.getLogger(__name__)
 
@@ -169,7 +170,7 @@ class linerRegression(BaseAlgorithm):
             return response_data
         except Exception as e:
             # raise e
-            log.error(e)
+            log.exception("Exception Logged")
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def evaluate(self):
@@ -188,7 +189,7 @@ class linerRegression(BaseAlgorithm):
                              "msg": "ok!"}
             return response_data
         except Exception as e:
-            log.error(e)
+            log.exception("Exception Logged")
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def predict(self):
@@ -234,7 +235,7 @@ class linerRegression(BaseAlgorithm):
                              "msg": "ok!"}
             return response_data
         except Exception as e:
-            log.error(e)
+            log.exception("Exception Logged")
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def visualization(self):
@@ -264,7 +265,7 @@ class linerRegression(BaseAlgorithm):
                     # 显示纵轴标签
                     plt.ylabel("frequency")
                     # 显示图标题
-                    plt.title("{} - frequency distribution histogram".format(x))
+                    plt.title("自变量{} - frequency distribution histogram".format(x))
                     res.append({
                         "title": "{} 分布直方图".format(x),
                         "base64": "{}".format(self.plot_and_output_base64_png(plt))
@@ -276,7 +277,7 @@ class linerRegression(BaseAlgorithm):
                 # 显示纵轴标签
                 plt.ylabel("frequency")
                 # 显示图标题
-                plt.title("y frequency distribution histogram")
+                plt.title("因变量y frequency distribution histogram")
                 res.append({
                     "title": "{} 分布直方图".format(self.config["Y"][0]),
                     "base64": "{}".format(self.plot_and_output_base64_png(plt))
@@ -287,12 +288,12 @@ class linerRegression(BaseAlgorithm):
                     # 显示图标题
                     plt.title("{} - Box distribution to check outliers".format(x))
                     res.append({
-                        "title": "{} 箱型图".format(x),
+                        "title": "自变量{} 箱型图".format(x),
                         "base64": "{}".format(self.plot_and_output_base64_png(plt))
                     })
             if "pairs" in self.config["show_options"]:
                 sns.pairplot(self.table_data)
-                plt.title("Variable relation in pairs")
+                plt.title("变量Variable relation in pairs")
                 res.append({
                     "title": "变量两两关系图",
                     "base64": "{}".format(self.plot_and_output_base64_png(plt))
@@ -313,6 +314,11 @@ class linerRegression(BaseAlgorithm):
                     "title": "因变量和各自变量的相关系数图",
                     "base64": "{}".format(self.plot_and_output_base64_png(plt))
                 })
+
+            # check base64 png
+            for data in res:
+                if "base64" in data:
+                    base64_to_img(data["base64"])
             response_data = {"res": res,
                              "code": "200",
                              "msg": "ok!"}

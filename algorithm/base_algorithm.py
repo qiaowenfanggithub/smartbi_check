@@ -36,6 +36,7 @@ from base64_to_png import base64_to_img
 import random
 import datetime
 import json
+import uuid
 
 log = logging.getLogger(__name__)
 
@@ -192,15 +193,23 @@ class BaseAlgorithm(object):
     # matplotlib作图写入内存并输出base64格式供前端调用
     @staticmethod
     def plot_and_output_base64_png(plot):
+        plot.rcParams["font.sans-serif"] = ["Arial Unicode MS"]
+        plot.rcParams["axes.unicode_minus"] = False
         # 写入内存
         save_file = BytesIO()
         plot.savefig(save_file, format='png')
-
         # 转换base64并以utf8格式输出
         save_file_base64 = base64.b64encode(save_file.getvalue()).decode('utf8')
         # debug
         # base64_to_img(save_file_base64)
         plot.close("all")
+
+        # 写入文件
+        # tmp_file_name = uuid.uuid4()
+        # plot.savefig("./img/{}.png".format(tmp_file_name))
+        # with open("./img/{}.png".format(tmp_file_name), "rb") as f:
+        #     save_file_base64 = base64.b64encode(f.read()).decode('utf8')
+
         return save_file_base64
 
     # 机器学习模型分类效果展示
@@ -307,6 +316,7 @@ class BaseAlgorithm(object):
                          fit_kws={'color': 'red', 'linestyle': ':', 'label': 'normal density curve'}
                          )
             plt.legend()
+            plt.title("残差正态性检验")
             res.append({
                 "is_test": True,
                 "title": "残差正态性检验",
@@ -317,6 +327,7 @@ class BaseAlgorithm(object):
         if "pp" in options:
             pp_qq_plot = sm.ProbPlot(model.resid)
             pp_qq_plot.ppplot(line='45')
+            plt.title("残差pp图")
             res.append({
                 "is_test": True,
                 "title": "残差pp图",
@@ -327,6 +338,7 @@ class BaseAlgorithm(object):
         if "qq" in options:
             pp_qq_plot = sm.ProbPlot(model.resid)
             pp_qq_plot.qqplot(line='q')
+            plt.title("残差qq图")
             res.append({
                 "is_test": True,
                 "title": "残差qq图",
