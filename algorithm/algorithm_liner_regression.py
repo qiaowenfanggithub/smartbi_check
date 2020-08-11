@@ -265,9 +265,9 @@ class linerRegression(BaseAlgorithm):
                     # 显示纵轴标签
                     plt.ylabel("frequency")
                     # 显示图标题
-                    plt.title("{} - frequency distribution histogram".format(x))
+                    # plt.title("{} - frequency distribution histogram".format(x))
                     res.append({
-                        "title": "{} 分布直方图".format(x),
+                        "title": "{} - 频率分布".format(x),
                         "base64": "{}".format(self.plot_and_output_base64_png(plt))
                     })
             if "y_count" in self.config["show_options"]:
@@ -277,23 +277,23 @@ class linerRegression(BaseAlgorithm):
                 # 显示纵轴标签
                 plt.ylabel("frequency")
                 # 显示图标题
-                plt.title("y frequency distribution histogram")
+                # plt.title("y frequency distribution histogram")
                 res.append({
-                    "title": "{} 分布直方图".format(self.config["Y"][0]),
+                    "title": "{} - 频率分布".format(self.config["Y"][0]),
                     "base64": "{}".format(self.plot_and_output_base64_png(plt))
                 })
             if self.config.get("box") and self.config.get("box")[0]:
                 for x in self.config["box"]:
                     sns.boxplot(self.table_data[x], palette="Set2", orient="v")
                     # 显示图标题
-                    plt.title("{} - Box distribution to check outliers".format(x))
+                    # plt.title("{} - Box distribution to check outliers".format(x))
                     res.append({
-                        "title": "{} 箱型图".format(x),
+                        "title": "{} - 箱型图".format(x),
                         "base64": "{}".format(self.plot_and_output_base64_png(plt))
                     })
             if "pairs" in self.config["show_options"]:
                 sns.pairplot(self.table_data)
-                plt.title("Variable relation in pairs")
+                # plt.title("Variable relation in pairs")
                 res.append({
                     "title": "变量两两关系图",
                     "base64": "{}".format(self.plot_and_output_base64_png(plt))
@@ -302,14 +302,14 @@ class linerRegression(BaseAlgorithm):
                 corr = self.table_data.corr()
                 sns.heatmap(corr, xticklabels=corr.columns, yticklabels=corr.columns,
                             linewidths=0.2, cmap="YlGnBu", annot=True)
-                plt.title("Correlation between variables")
+                # plt.title("Correlation between variables")
                 res.append({
                     "title": "相关系数图",
                     "base64": "{}".format(self.plot_and_output_base64_png(plt))
                 })
             if "y_corr" in self.config["show_options"]:
                 self.table_data.corr()[self.config["Y"][0]].sort_values(ascending=False).plot(kind='bar')
-                plt.title("Correlations between y and x")
+                # plt.title("Correlations between y and x")
                 res.append({
                     "title": "因变量和各自变量的相关系数图",
                     "base64": "{}".format(self.plot_and_output_base64_png(plt))

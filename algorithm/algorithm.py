@@ -87,9 +87,9 @@ def main(algorithm, method):
         response_data = exec(method, liner_regression_alg)
 
         # check base64 png
-        for data in response_data["res"]:
-            if "base64" in data:
-                base64_to_img(data["base64"])
+        # for data in response_data["res"]:
+        #     if "base64" in data:
+        #         base64_to_img(data["base64"])
         return jsonify(response_data)
     # 多项式回归（qwf）--》训练、预测
     elif algorithm == "polyLinerRegression":
