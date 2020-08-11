@@ -178,15 +178,15 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/predict', json=kwargs, timeout=30)
 
     # ======================= 线性回归-可视化 =============================
-    kwargs = {
-        "tableName": "advertising",  # str,数据库表名
-        "X": ["TV", "radio", "newspaper"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-        "Y": ["sales"],  # list,因变量,当表格方向为v是使用
-        "show_options": ["y_count", "pairs", "corr", "y_corr"],
-        "x_count": ["TV", "radio", "newspaper"],
-        "box": ["TV", "radio", "newspaper"]
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/visualization', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "tableName": "advertising",  # str,数据库表名
+    #     "X": ["TV", "radio", "newspaper"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     "Y": ["sales"],  # list,因变量,当表格方向为v是使用
+    #     "show_options": ["y_count", "pairs", "corr", "y_corr"],
+    #     "x_count": ["TV", "radio", "newspaper"],
+    #     "box": ["TV", "radio", "newspaper"]
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/linerRegression/visualization', json=kwargs, timeout=30)
 
     # ======================= 多项回归-训练 =============================
     # kwargs = {
@@ -276,25 +276,47 @@ if __name__ == '__main__':
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/predict', json=kwargs, timeout=50)
 
+    # ======================= 支持向量机-训练 =============================
+    # kwargs = {
+    #     "tableName": "buy_computer_new",  # str,数据库表名
+    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
+    #     "rate": "0.3",  # str,测试集训练集分割比例
+    #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
+    #     "cv": "3",  # str,几折交叉验证
+    #     "param": {
+    #         "kernel": ["linear", "poly", "rbf", "sigmoid"],  # str,惩罚项，‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’
+    #         "C": ["2"],  # str,惩罚项系数
+    #         "degree": ["3"],  # 多项式核函数的维度
+    #         "gamma": ["auto"],  # ‘rbf’,‘poly’ 和‘sigmoid’的核函数参数。默认是’auto’，则会选择1/n_features
+    #         "coef0": ["0"],  # 核函数的常数项
+    #         "tol": ["0.001"],  # 停止训练的误差值大小，默认为1e-3
+    #         "max_iter": ["-1"],  # 最大迭代次数。-1为无限制。
+    #         "decision_function_shape": ["ovr", "ovo"],  # 最大迭代次数。-1为无限制。
+    #     },
+    #     "show_options": ["report", "matrix", "roc"]
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/svmClassifier/train', json=kwargs, timeout=50)
+
     # ======================= 评估-总入口 =============================
     # kwargs = {
-    #     "algorithm": "logisticRegression",
-    #     "model": "logisticRegression-2020-08-06-15-58-29",
+    #     "algorithm": "svmClassifier",
+    #     "model": "svmClassifier-2020-08-11-17-13-11",
     #     "tableName": "buy_computer_new",
     #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],
     #     "Y": ["是否购买电脑"],
-    #     "show_options": ["report", "matrix", "roc", "r2", "coff", "independence"]
+    #     "show_options": ["report", "matrix", "roc"]
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/evaluate', json=kwargs, timeout=50)
 
     # ======================= 预测-总入口 =============================
     # kwargs = {
-    #     "algorithm": "randomForest",
-    #     "model": "randomForest-2020-08-04-23-03-45",
+    #     "algorithm": "svmClassifier",
+    #     "model": "svmClassifier-2020-08-11-17-11-48",
     #     "oneSample": False,
-    #     "tableName": "buy_computer_new",
-    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],
-    #     # "X": [0, 1, 1, 1]
+    #     "tableName": "iris",
+    #     "X": ["0", "1", "2", "3"],
+    #     # "X": [5.1, 3.5, 1.4, 0.2]
     #
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/predict', json=kwargs, timeout=50)
@@ -310,21 +332,21 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/checkModelFeatures', json=kwargs, timeout=50)
 
     # ======================= 数据预处理-编码 =============================
-    # kwargs = {
-    #     "tableName": "buy-computer",  # str,数据库表名
-    #     "encoder": {
-    #         "oneHot": ["年龄", "收入层次"],  # list,需要使用onehot编码的特征列
-    #         "factorize": ["是否单身", "信用等级", "是否购买电脑"]  # list,需要使用序列编码的特征列
-    #     }
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/encoder', json=kwargs, timeout=50)
+    kwargs = {
+        "tableId": "buy-computer",  # str,数据库表名
+        "encoder": {
+            "oneHot": ["年龄", "收入层次"],  # list,需要使用onehot编码的特征列
+            "factorize": ["是否单身", "信用等级", "是否购买电脑"]  # list,需要使用序列编码的特征列
+        }
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/encoder', json=kwargs, timeout=50)
 
     # ======================= 数据预处理-归一化 =============================
     # kwargs = {
-    #     "tableName": "advertising",  # str,数据库表名
+    #     "tableId": "advertising",  # str,数据库表名
     #     "normalize": {
-    #         "minMaxScale": [],  # list,需要使用normal标准化的特征列
-    #         "standard": ["TV", "radio", "newspaper"]  # list,需要使用归一化的特征列
+    #         "minMaxScale": ["TV", "radio"],  # list,需要使用normal标准化的特征列
+    #         "standard": ["newspaper"]  # list,需要使用归一化的特征列
     #     }
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/normalize', json=kwargs, timeout=50)

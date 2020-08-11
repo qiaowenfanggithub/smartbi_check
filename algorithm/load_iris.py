@@ -29,19 +29,20 @@ iris = load_iris()
 iris_data = pd.DataFrame(iris["data"], columns=["sepal length", "sepal width", "petal length", "petal width"])
 # iris_data.to_csv("./data/iris_kmeans.csv")
 
-iris_data_2 = iris_data[["sepal length", "sepal width"]]
+# iris_data_2 = iris_data[["sepal length", "sepal width"]]
 # iris_data_2.to_csv("./data/iris_kmeans_2.csv")
 
-x_with_label = pd.DataFrame(np.hstack((iris_data_2, iris["target"].reshape(-1, 1))), columns=["0", "1", "2"])
-group_data = x_with_label.groupby(["2"])
-
-color = ["r", "g", "b", "c", "k", "m", "w", "y"]
-marker = ["+", "o", "*", ".", ",", "^", "1", "v", "<", ">", "2", "3", "4", "s", "p", "h", "H", "D", "d", "|", ""]
-legend_c = []
-legend_name = []
-for name, data in group_data:
-    c = plt.scatter(data["0"], data["1"], c=np.random.choice(color, 1, replace=False)[0], marker=np.random.choice(marker, 1, replace=False)[0])
-    legend_c.append(c)
-    legend_name.append(str(int(name)))
-plt.legend(legend_c, legend_name)
-plt.show()
+x_with_label = pd.DataFrame(np.hstack((iris_data, iris["target"].reshape(-1, 1))), columns=["0", "1", "2", "3", "label"])
+x_with_label.to_csv("./data/iris.csv")
+# group_data = x_with_label.groupby(["2"])
+#
+# color = ["r", "g", "b", "c", "k", "m", "w", "y"]
+# marker = ["+", "o", "*", ".", ",", "^", "1", "v", "<", ">", "2", "3", "4", "s", "p", "h", "H", "D", "d", "|", ""]
+# legend_c = []
+# legend_name = []
+# for name, data in group_data:
+#     c = plt.scatter(data["0"], data["1"], c=np.random.choice(color, 1, replace=False)[0], marker=np.random.choice(marker, 1, replace=False)[0])
+#     legend_c.append(c)
+#     legend_name.append(str(int(name)))
+# plt.legend(legend_c, legend_name)
+# plt.show()

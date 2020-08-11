@@ -102,7 +102,13 @@ def main(algorithm, method):
         return jsonify(response_data)
     # 支持向量机（hyj）--》训练、评估、预测
     elif algorithm == "svmClassifier":
-        pass
+        try:
+            from algorithm_svm_classifier import svmClassifier
+        except NotImplementedError as e:
+            raise e
+        svm_classifier_alg = svmClassifier(method)
+        response_data = exec(method, svm_classifier_alg)
+        return jsonify(response_data)
     # 决策树（qwf）--》训练、评估、预测
     elif algorithm == "decisionTree":
         try:
@@ -252,7 +258,7 @@ def data_preprocess(method):
     """
     request_data = request.json
     try:
-        table_name = request_data["tableName"]
+        table_name = request_data["tableId"]
         # 获取数据从数据表
         sql = "select * from {};".format("`" + table_name + "`")
         table_data = get_dataframe_from_mysql(sql, database='sophia_data')
