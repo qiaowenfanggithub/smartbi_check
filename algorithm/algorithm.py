@@ -155,6 +155,10 @@ def main(algorithm, method):
 # ================================ 算法模型查询接口 ==============================
 @app.route('/algorithm/selectModel/<algorithm>', methods=['POST', 'GET'])
 def select_model(algorithm):
+    log_file = "algorithm.log"
+    logging.basicConfig(filename=log_file,
+                        format="%(asctime)s [ %(levelname)-6s ] %(message)s",
+                        level='INFO')
     try:
         # todo:需要筛选出同一用户的编号下的
         sql = "SELECT name FROM algorithm_model WHERE type='{}';".format(algorithm)
@@ -187,6 +191,10 @@ def evaluate():
     }
     :return:
     """
+    log_file = "algorithm.log"
+    logging.basicConfig(filename=log_file,
+                        format="%(asctime)s [ %(levelname)-6s ] %(message)s",
+                        level='INFO')
     try:
         from evaluate import evaluateModel
     except NotImplementedError as e:
@@ -209,6 +217,10 @@ def predict():
     }
     :return:
     """
+    log_file = "algorithm.log"
+    logging.basicConfig(filename=log_file,
+                        format="%(asctime)s [ %(levelname)-6s ] %(message)s",
+                        level='INFO')
     try:
         from predict import predictModel
     except NotImplementedError as e:
@@ -220,6 +232,10 @@ def predict():
 # ================================ 模型查看特征接口 ==============================
 @app.route('/algorithm/checkModelFeatures', methods=['POST', 'GET'])
 def check_model_features():
+    log_file = "algorithm.log"
+    logging.basicConfig(filename=log_file,
+                        format="%(asctime)s [ %(levelname)-6s ] %(message)s",
+                        level='INFO')
     request_data = request.json
     try:
         algorithm = request_data["algorithm"]
@@ -256,6 +272,10 @@ def data_preprocess(method):
     :param method:
     :return:
     """
+    log_file = "algorithm.log"
+    logging.basicConfig(filename=log_file,
+                        format="%(asctime)s [ %(levelname)-6s ] %(message)s",
+                        level='INFO')
     request_data = request.json
     try:
         table_name = request_data["tableId"]
