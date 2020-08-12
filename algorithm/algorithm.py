@@ -291,6 +291,7 @@ def data_preprocess(method):
                          "msg": "ok!"}
         return jsonify(response_data)
     except Exception as e:
+        log.exception("Exception Logged")
         response_data = {"data": "", "code": "500", "msg": "{}".format(e.args)}
         # raise e
         return jsonify(response_data)
