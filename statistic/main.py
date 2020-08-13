@@ -649,6 +649,31 @@ def results_crosstable():
         raise e
 
 
+# ================================ 关联规则Apriori ==============================
+@app.route('/statistic/apriori', methods=['POST', 'GET'])
+def apriori():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1"], # list,自变量，行
+        "Y": ["y"], # list,因变量，列
+
+    }
+    :return:
+    """
+    log.info('crosstable_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        Y = request_data['Y']
+        # table_direction = request_data['table_direction']
+        # alpha = float(request_data['alpha'])
+    except Exception as e:
+        log.info(e)
+        raise e
+
+
 if __name__ == '__main__':
     app.json_encoder = JSONEncoder
     app.config['JSON_AS_ASCII'] = False

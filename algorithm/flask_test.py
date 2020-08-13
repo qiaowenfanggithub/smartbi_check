@@ -234,6 +234,30 @@ if __name__ == '__main__':
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/kMeans/predict', json=kwargs, timeout=30)
 
+    # ======================= 层次聚类-训练 =============================
+    # kwargs = {
+    #     "tableName": "iris_hie",  # str,数据库表名
+    #     "X": ["x1", "x2"],  # list,自变量，每个元素是浮点类型
+    #     "param": {
+    #         "n_clusters": "3",  # list,聚类中心数量，默认3个,如果是多个画图展示每个聚类的效果
+    #         "linkage": "ward",  # 下拉框单选，"ward"，"average"， "complete"; "ward"时只能选"euclidean"
+    #         "affinity": "euclidean",  # 下拉框单选，"euclidean", "manhattan", "cosine"
+    #     }
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/hierarchicalCluster/train', json=kwargs, timeout=30)
+
+    # ======================= 层次聚类-预测 =============================
+    # kwargs = {
+    #     "algorithm": "kmeans",  # str,数据库表名
+    #     "model": "kmeans-2020-08-04-23-01-42",  # str,数据库表名
+    #     "oneSample": False,  # 是否批量上传数据进行预测
+    #     "tableName": "iris_kmeans",  # str,数据库表名
+    #     # "X": ["sl", "sw"],  # list,自变量，每个元素是浮点类型
+    #     "X": ["sl", "sw", "pl", "pw"],  # list,自变量，每个元素是浮点类型
+    #     # "X": ["5.1", "3.5", "1.4", "0.2"],  # list,自变量，每个元素是浮点类型
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/kMeans/predict', json=kwargs, timeout=30)
+
     # ======================= 随机森林-训练 =============================
     # kwargs = {
     #     "tableName": "buy_computer_new",  # str,数据库表名
@@ -335,8 +359,8 @@ if __name__ == '__main__':
     kwargs = {
         "tableId": "buy-computer",  # str,数据库表名
         "encoder": {
-            "oneHot": ["年龄", "收入层次"],  # list,需要使用onehot编码的特征列
-            "factorize": ["是否单身", "信用等级", "是否购买电脑"]  # list,需要使用序列编码的特征列
+            "oneHot": ["年龄"],  # list,需要使用onehot编码的特征列
+            "factorize": ["收入层次"]  # list,需要使用序列编码的特征列
         }
     }
     res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/encoder', json=kwargs, timeout=50)

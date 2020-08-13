@@ -147,8 +147,15 @@ def main(algorithm, method):
         return jsonify(response_data)
     # 层次聚类（hyj）--》训练、预测
     elif algorithm == "hierarchicalCluster":
-        pass
+        try:
+            from algorithm_hierarchical_cluster import hierarchicalCluster
+        except NotImplementedError as e:
+            raise e
+        hie_cluster = hierarchicalCluster(method)
+        response_data = exec(method, hie_cluster)
+        return jsonify(response_data)
     else:
+        log.exception("Exception Logged")
         raise ValueError("输入算法参数错误:{}".format(algorithm))
 
 
@@ -287,15 +294,15 @@ def data_preprocess(method):
         if method not in ["encoder", "normalize"]:
             raise ValueError("input dataProcess method:{} is not support".format(method))
         if method == "encoder":
-            if not any([i in ["oneHot", "factorize"] for i in encoder_config]):
-                raise ValueError("input encoder config:{} is not correct".format(encoder_config))
+            if set(encoder_config.get("oneHot")).intersection(set(encoder_config.get("factorize"))):
+                raise ValueError("数据处理字段重复:{}".format(set(encoder_config.get("oneHot")).intersection(set(encoder_config.get("factorize")))))
             if encoder_config.get("oneHot") and encoder_config["oneHot"][0] != "":
                 table_data = data_encoder(table_data, encoder_config.get("oneHot"), use_onehot=True)
             if encoder_config.get("factorize") and encoder_config["factorize"][0] != "":
                 table_data = data_encoder(table_data, encoder_config.get("factorize"))
         if method == "normalize":
-            if not any([i in ["minMaxScale", "standard"] for i in normalize_config]):
-                raise ValueError("input encoder config:{} is not correct".format(normalize_config))
+            if set(encoder_config.get("minMaxScale")).intersection(set(encoder_config.get("standard"))):
+                raise ValueError("数据处理字段重复:{}".format(set(encoder_config.get("oneHot")).intersection(set(encoder_config.get("factorize")))))
             if normalize_config.get("minMaxScale") and normalize_config["minMaxScale"][0] != "":
                 table_data = data_standard(table_data, normalize_config.get("minMaxScale"), method="minMaxScale")
             if normalize_config.get("standard") and normalize_config["standard"][0] != "":

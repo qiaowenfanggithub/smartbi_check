@@ -95,7 +95,7 @@ class BaseAlgorithm(object):
             name = "{}-{}".format(model_name, current_time.strftime("%Y-%m-%d-%H-%M-%S"))
             type = "{}".format(model_name)
             characteristic_column = ",".join(self.config['X'])
-            label_column = self.config['Y'][0] if self.config['Y'] else ""
+            label_column = self.config['Y'][0] if self.config.get('Y') else ""
             data_set = self.config['tableName']
             parameter_config = json.dumps(self.config, ensure_ascii=False)
             save_path = "./model/{}/{}.pkl".format(model_name, name)
