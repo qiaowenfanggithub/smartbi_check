@@ -57,6 +57,7 @@ class hierarchicalCluster(BaseAlgorithm):
             self.config['n_clusters'] = int(self.web_data['param']['n_clusters'])
             self.config['linkage'] = self.web_data['param']['linkage']
             self.config['affinity'] = self.web_data['param']['affinity']
+            self.config['show_options'] = self.web_data.get("show_options", [])
         except Exception as e:
             log.info(e)
             raise e
@@ -91,7 +92,7 @@ class hierarchicalCluster(BaseAlgorithm):
 
             # 聚类结果可视化
             res = self.algorithm_show_result(self.model, self.table_data, None,
-                                             options=None,
+                                             options=self.config['show_options'],
                                              method="cluster")
 
             response_data = {"res": res,

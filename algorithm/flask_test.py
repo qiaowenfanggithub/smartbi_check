@@ -218,7 +218,8 @@ if __name__ == '__main__':
     #     "X": ["sl", "sw", "pl", "pw"],  # list,自变量，每个元素是浮点类型
     #     "param": {
     #         "n_clusters": "3",  # list,聚类中心数量，默认2个,如果是多个画图展示每个聚类的效果
-    #     }
+    #     },
+    #     "show_options": ["cluster"]  # cluster: 聚类结果，默认是【"cluster"】
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/kMeans/train', json=kwargs, timeout=30)
 
@@ -242,7 +243,8 @@ if __name__ == '__main__':
     #         "n_clusters": "3",  # list,聚类中心数量，默认3个,如果是多个画图展示每个聚类的效果
     #         "linkage": "ward",  # 下拉框单选，"ward"，"average"， "complete"; "ward"时只能选"euclidean"
     #         "affinity": "euclidean",  # 下拉框单选，"euclidean", "manhattan", "cosine"
-    #     }
+    #     },
+    #     "show_options": [""]  # cluster: 聚类结果，默认是【"cluster"】
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/hierarchicalCluster/train', json=kwargs, timeout=30)
 
@@ -364,14 +366,14 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/encoder', json=kwargs, timeout=50)
 
     # ======================= 数据预处理-归一化 =============================
-    kwargs = {
-        "tableId": "advertising",  # str,数据库表名
-        "normalize": {
-            "minMaxScale": ["TV", "radio"],  # list,需要使用normal标准化的特征列
-            "standard": ["newspaper"]  # list,需要使用归一化的特征列
-        }
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/normalize', json=kwargs, timeout=50)
+    # kwargs = {
+    #     "tableId": "advertising",  # str,数据库表名
+    #     "normalize": {
+    #         "minMaxScale": ["TV", "radio"],  # list,需要使用normal标准化的特征列
+    #         "standard": ["newspaper"]  # list,需要使用归一化的特征列
+    #     }
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/normalize', json=kwargs, timeout=50)
 
     """
     =====================================================================

@@ -57,6 +57,7 @@ class kMeans(BaseAlgorithm):
             self.config['Y'] = self.web_data.get('Y')
             self.config['param'] = self.web_data['param']
             self.config["param"]["n_clusters"] = int(self.config["param"]["n_clusters"])
+            self.config['show_options'] = self.web_data.get("show_options", [])
         except Exception as e:
             log.info(e)
             raise e
@@ -89,7 +90,7 @@ class kMeans(BaseAlgorithm):
 
             # 聚类结果可视化
             res = self.algorithm_show_result(self.model, self.table_data, None,
-                                             options=None,
+                                             options=self.config['show_options'],
                                              method="cluster")
 
             response_data = {"res": res,

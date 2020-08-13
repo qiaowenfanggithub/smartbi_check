@@ -98,11 +98,11 @@ class BaseAlgorithm(object):
             label_column = self.config['Y'][0] if self.config.get('Y') else ""
             data_set = self.config['tableName']
             parameter_config = json.dumps(self.config, ensure_ascii=False)
-            save_path = "./model/{}/{}.pkl".format(model_name, name)
+            save_path = "./model_tmp/{}/{}.pkl".format(model_name, name)
             result_report = ""
             updatetime = current_time.strftime("%Y-%m-%d %H:%M:%S")
-            if not os.path.exists("./model/{}".format(model_name)):
-                os.makedirs("./model/{}".format(model_name))
+            if not os.path.exists("./model_tmp/{}".format(model_name)):
+                os.makedirs("./model_tmp/{}".format(model_name))
             joblib.dump(self.model, save_path)
             key_list = [["userid", "name", "type", "characteristic_column", "label_column",
                          "data_set", "parameter_config", "save_path", "result_report", "updatetime"]]
@@ -427,39 +427,40 @@ class BaseAlgorithm(object):
         return res
 
     # 聚类结果可视化
-    def show_cluster_result(self, x, model):
+    def show_cluster_result(self, x, model, options=[]):
         res = []
-        if len(x.columns) == 2:
-            x_new = x.values
-        elif len(x.columns) > 2:
-            try:
-                from sklearn.decomposition import PCA
-            except:
-                raise NotImplementedError("cannot import sklearn PCA")
-            pca = PCA(n_components=2).fit(x)
-            x_new = pca.transform(x)
-        else:
-            raise ValueError("input feature's count must >= 2 ")
+        if "cluster" in options:
+            if len(x.columns) == 2:
+                x_new = x.values
+            elif len(x.columns) > 2:
+                try:
+                    from sklearn.decomposition import PCA
+                except:
+                    raise NotImplementedError("cannot import sklearn PCA")
+                pca = PCA(n_components=2).fit(x)
+                x_new = pca.transform(x)
+            else:
+                raise ValueError("input feature's count must >= 2 ")
 
-        x_with_label = pd.DataFrame(np.hstack((x_new, model.labels_.reshape(-1, 1))), columns=["0", "1", "2"])
-        group_data = x_with_label.groupby(["2"])
-        # 每个类绘制不同的颜色和marker
-        color = ["r", "g", "b", "c", "k", "m", "y"]
-        marker = ["+", "o", "*", ".", ",", "^", "1", "v", "<", ">",
-                  "2", "3", "4", "s", "p", "h", "H", "D", "d", "|", "_"]
-        legend_c = []
-        legend_name = []
-        for name, data in group_data:
-            c = plt.scatter(data["0"], data["1"], c=random.sample(color, 1)[0], marker=random.sample(marker, 1)[0])
-            legend_c.append(c)
-            legend_name.append(str(int(name)))
-        plt.legend(legend_c, legend_name)
-        # 可视化结果转base64输出
-        res.append({
-            "is_test": False,
-            "title": "聚类结果可视化",
-            "base64": "{}".format(self.plot_and_output_base64_png(plt))
-        })
+            x_with_label = pd.DataFrame(np.hstack((x_new, model.labels_.reshape(-1, 1))), columns=["0", "1", "2"])
+            group_data = x_with_label.groupby(["2"])
+            # 每个类绘制不同的颜色和marker
+            color = ["r", "g", "b", "c", "k", "m", "y"]
+            marker = ["+", "o", "*", ".", ",", "^", "1", "v", "<", ">",
+                      "2", "3", "4", "s", "p", "h", "H", "D", "d", "|", "_"]
+            legend_c = []
+            legend_name = []
+            for name, data in group_data:
+                c = plt.scatter(data["0"], data["1"], c=random.sample(color, 1)[0], marker=random.sample(marker, 1)[0])
+                legend_c.append(c)
+                legend_name.append(str(int(name)))
+            plt.legend(legend_c, legend_name)
+            # 可视化结果转base64输出
+            res.append({
+                "is_test": False,
+                "title": "聚类结果可视化",
+                "base64": "{}".format(self.plot_and_output_base64_png(plt))
+            })
         return res
 
     # 算法输出结果
@@ -472,7 +473,7 @@ class BaseAlgorithm(object):
             if method == "regression":
                 res.extend(self.show_regression_result(x, y, model, options=options))
             if method == "cluster":
-                res.extend(self.show_cluster_result(x, model))
+                res.extend(self.show_cluster_result(x, model, options=options))
         except Exception as e:
             log.error(e)
             raise e

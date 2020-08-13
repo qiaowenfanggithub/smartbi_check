@@ -329,6 +329,30 @@ def data_preprocess(method):
         # raise e
         return jsonify(response_data)
 
+# ================================ 保存模型数据接口 ==============================
+# @app.route('/algorithm/saveModel/<method>', methods=['POST', 'GET'])
+# def data_preprocess(method):
+#     """
+#     数据预处理请求参数{
+#         "tableName": "",  # str,数据库表名
+#         "encoder":{
+#             "oneHot": [],  # list,需要使用onehot编码的特征列
+#             "factorize": [] # list,需要使用序列编码的特征列
+#         },
+#         "normalize":{
+#             "normal": [],  # list,需要使用normal标准化的特征列
+#             "standard": [] # list,需要使用归一化的特征列
+#         }
+#     }
+#     :param method:
+#     :return:
+#     """
+#     log_file = "algorithm.log"
+#     logging.basicConfig(filename=log_file,
+#                         format="%(asctime)s [ %(levelname)-6s ] %(message)s",
+#                         level='INFO')
+#     request_data = request.json
+
 
 if __name__ == '__main__':
     app.json_encoder = JSONEncoder
