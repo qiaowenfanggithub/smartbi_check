@@ -52,7 +52,7 @@ def data_encoder(data: pd.DataFrame, column_name_list, use_onehot=False, default
 # 归一化
 def data_standard(data: pd.DataFrame, column_name_list, method="normal"):
     try:
-        data = data[column_name_list].astype("float")
+        data[column_name_list] = data[column_name_list].astype("float")
     except ValueError as e:
         log.exception("data_standard_error")
         raise e
