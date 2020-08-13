@@ -248,15 +248,13 @@ if __name__ == '__main__':
 
     # ======================= 层次聚类-预测 =============================
     # kwargs = {
-    #     "algorithm": "kmeans",  # str,数据库表名
-    #     "model": "kmeans-2020-08-04-23-01-42",  # str,数据库表名
-    #     "oneSample": False,  # 是否批量上传数据进行预测
-    #     "tableName": "iris_kmeans",  # str,数据库表名
-    #     # "X": ["sl", "sw"],  # list,自变量，每个元素是浮点类型
-    #     "X": ["sl", "sw", "pl", "pw"],  # list,自变量，每个元素是浮点类型
-    #     # "X": ["5.1", "3.5", "1.4", "0.2"],  # list,自变量，每个元素是浮点类型
+    #     "algorithm": "hierarchicalCluster",  # str,数据库表名
+    #     "model": "hierarchicalCluster-2020-08-13-11-14-21",  # str,数据库表名
+    #     # 只支持批量上传数据进行预测，因为层级聚类预测最小需要3个样本
+    #     "tableName": "iris_hie",  # str,数据库表名
+    #     "X": ["x1", "x2"],  # list,自变量，每个元素是浮点类型
     # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/kMeans/predict', json=kwargs, timeout=30)
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/hierarchicalCluster/predict', json=kwargs, timeout=30)
 
     # ======================= 随机森林-训练 =============================
     # kwargs = {
@@ -356,24 +354,24 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/checkModelFeatures', json=kwargs, timeout=50)
 
     # ======================= 数据预处理-编码 =============================
-    kwargs = {
-        "tableId": "buy-computer",  # str,数据库表名
-        "encoder": {
-            "oneHot": ["年龄"],  # list,需要使用onehot编码的特征列
-            "factorize": ["收入层次"]  # list,需要使用序列编码的特征列
-        }
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/encoder', json=kwargs, timeout=50)
-
-    # ======================= 数据预处理-归一化 =============================
     # kwargs = {
-    #     "tableId": "advertising",  # str,数据库表名
-    #     "normalize": {
-    #         "minMaxScale": ["TV", "radio"],  # list,需要使用normal标准化的特征列
-    #         "standard": ["newspaper"]  # list,需要使用归一化的特征列
+    #     "tableId": "buy-computer",  # str,数据库表名
+    #     "encoder": {
+    #         "oneHot": ["年龄"],  # list,需要使用onehot编码的特征列
+    #         "factorize": ["收入层次"]  # list,需要使用序列编码的特征列
     #     }
     # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/normalize', json=kwargs, timeout=50)
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/encoder', json=kwargs, timeout=50)
+
+    # ======================= 数据预处理-归一化 =============================
+    kwargs = {
+        "tableId": "advertising",  # str,数据库表名
+        "normalize": {
+            "minMaxScale": ["TV", "radio"],  # list,需要使用normal标准化的特征列
+            "standard": ["newspaper"]  # list,需要使用归一化的特征列
+        }
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/normalize', json=kwargs, timeout=50)
 
     """
     =====================================================================

@@ -289,24 +289,30 @@ def data_preprocess(method):
         # 获取数据从数据表
         sql = "select * from {};".format("`" + table_name + "`")
         table_data = get_dataframe_from_mysql(sql, database='sophia_data')
-        encoder_config = request_data.get("encoder")
-        normalize_config = request_data.get("normalize")
         if method not in ["encoder", "normalize"]:
             raise ValueError("input dataProcess method:{} is not support".format(method))
         if method == "encoder":
-            if set(encoder_config.get("oneHot")).intersection(set(encoder_config.get("factorize"))):
-                raise ValueError("数据处理字段重复:{}".format(set(encoder_config.get("oneHot")).intersection(set(encoder_config.get("factorize")))))
-            if encoder_config.get("oneHot") and encoder_config["oneHot"][0] != "":
-                table_data = data_encoder(table_data, encoder_config.get("oneHot"), use_onehot=True)
-            if encoder_config.get("factorize") and encoder_config["factorize"][0] != "":
-                table_data = data_encoder(table_data, encoder_config.get("factorize"))
+            encoder_config = request_data.get("encoder")
+            one_hot_config = encoder_config.get("oneHot")
+            factorize_config = encoder_config.get("factorize")
+            if set(one_hot_config).intersection(set(factorize_config)):
+                raise ValueError("数据处理字段重复:{}".format(set(one_hot_config).intersection(set(factorize_config))))
+            if one_hot_config and one_hot_config[0] != "":
+                table_data = data_encoder(table_data, one_hot_config, use_onehot=True)
+            if factorize_config and factorize_config[0] != "":
+                table_data = data_encoder(table_data, factorize_config)
         if method == "normalize":
-            if set(encoder_config.get("minMaxScale")).intersection(set(encoder_config.get("standard"))):
-                raise ValueError("数据处理字段重复:{}".format(set(encoder_config.get("oneHot")).intersection(set(encoder_config.get("factorize")))))
-            if normalize_config.get("minMaxScale") and normalize_config["minMaxScale"][0] != "":
-                table_data = data_standard(table_data, normalize_config.get("minMaxScale"), method="minMaxScale")
-            if normalize_config.get("standard") and normalize_config["standard"][0] != "":
-                table_data = data_standard(table_data, normalize_config.get("standard"), method="standard")
+            normalize_config = request_data.get("normalize")
+            min_max_scale_config = normalize_config.get("minMaxScale")
+            standard_config = normalize_config.get("standard")
+            if set(min_max_scale_config).intersection(set(standard_config)):
+                raise ValueError("数据处理字段重复:{}".format(set(min_max_scale_config).intersection(set(standard_config))))
+            if min_max_scale_config and min_max_scale_config[0] != "":
+                table_data = data_standard(table_data, min_max_scale_config, method="minMaxScale")
+                table_data = format_dataframe(table_data, {k: ".4f" for k in min_max_scale_config})
+            if standard_config and standard_config[0] != "":
+                table_data = data_standard(table_data, standard_config, method="standard")
+                table_data = format_dataframe(table_data, {k: ".4f" for k in standard_config})
         res = {
             "title": "数据预处理后的数据",
             "row": table_data.index.values.tolist(),

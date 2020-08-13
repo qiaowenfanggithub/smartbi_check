@@ -69,7 +69,7 @@ class hierarchicalCluster(BaseAlgorithm):
         try:
             self.config['algorithm'] = self.web_data['algorithm']
             self.config['model'] = self.web_data['model']
-            self.config['oneSample'] = self.web_data['oneSample']
+            self.config['oneSample'] = self.web_data.get('oneSample', False)
             self.config['tableName'] = self.web_data.get('tableName')
             self.config['X'] = self.web_data.get('X')
         except Exception as e:
@@ -116,8 +116,8 @@ class hierarchicalCluster(BaseAlgorithm):
                 if not self.config['X']:
                     raise ValueError("feature must not be empty when one-sample")
                 X = [[float(x) for x in self.config['X']]]
-                predict = model.predict(X)[0] if isinstance(model.predict(X)[0], str) else "{:.0f}".format(
-                    model.predict(X)[0])
+                predict = model.fit_predict(X)[0] if isinstance(model.fit_predict(X)[0], str) else "{:.0f}".format(
+                    model.fit_predict(X)[0])
                 res.update({
                     "data": [[",".join([str(s) for s in self.config['X']]), predict]],
                     "title": "单样本预测结果",
@@ -130,7 +130,7 @@ class hierarchicalCluster(BaseAlgorithm):
                 data = self.table_data
                 log.info("输入数据大小:{}".format(len(data)))
                 data = data.astype(float)
-                data["predict"] = model.predict(data.values)
+                data["predict"] = model.fit_predict(data.values)
                 data = format_dataframe(data, {"predict": ".0f"})
                 res.update(transform_table_data_to_html({
                     "data": data.values.tolist(),

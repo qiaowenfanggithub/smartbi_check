@@ -52,9 +52,10 @@ def data_encoder(data: pd.DataFrame, column_name_list, use_onehot=False, default
 # 归一化
 def data_standard(data: pd.DataFrame, column_name_list, method="normal"):
     try:
-        data = data.astype("float")
-    except ValueError:
-        raise ValueError("data types;{} cannot convert to float, may be need encoder".format(data.dtypes[0]))
+        data = data[column_name_list].astype("float")
+    except ValueError as e:
+        log.exception("data_standard_error")
+        raise e
     for column_name in column_name_list:
         if method == "minMaxScale":
             data[column_name] = (data[column_name] - data[column_name].min()) / (
