@@ -53,6 +53,8 @@ class JSONEncoder(_JSONEncoder):
             return float(obj)
         elif isinstance(obj, np.ndarray):
             return obj.tolist()
+        elif isinstance(obj, frozenset):
+            return list(obj)
         else:
             return super(JSONEncoder, self).default(obj)
 
@@ -654,24 +656,66 @@ def results_crosstable():
 def apriori():
     """
     接口请求参数:{
-        "table_name": "" # str,数据库表名
-        "X": ["x1"], # list,自变量，行
-        "Y": ["y"], # list,因变量，列
-
+        "table_name": "apriori_test",  # str,数据库表名
+        "X": ["x0", "x1", "x2", "x3", "x4", "x5"],  # list,自变量
+        "dataconvert": True,  # bool,是否需要数据转换 ==》【默认值：True】
+        "minSupport": "0.05",  # str,最小支持度 ==》【默认值："0.05"】
+        "max_len": "2",  # 频繁项集最大长度 ==》【默认值：None】
+        "metrics": "confidence",  # 关联规则评价指标["support", "confidence", "lift", "leverage", "conviction"] ==》【默认值：confidence】
+        "min_threshold": "0.8",  # 关联规则评价指标最小值 ==》【默认值："0.8"】
     }
     :return:
     """
-    log.info('crosstable_get_results_init...')
+    log.info('Apriori_init...')
     request_data = init_route()
+    try:
+        from mlxtend.preprocessing import TransactionEncoder
+        from mlxtend.frequent_patterns import apriori
+        from mlxtend.frequent_patterns import association_rules
+    except:
+        raise ImportError("cannot import mlxtend")
     try:
         table_name = request_data['table_name']
         X = request_data['X']
-        Y = request_data['Y']
-        # table_direction = request_data['table_direction']
-        # alpha = float(request_data['alpha'])
+        dataconvert = request_data['dataconvert']
+        min_support = float(request_data['minSupport'])
+        max_len = float(request_data['max_len'])
+        metrics = request_data['metrics']
+        min_threshold = float(request_data['min_threshold'])
     except Exception as e:
         log.info(e)
         raise e
+    try:
+        table_data = exec_sql(table_name, X)
+        data = table_data.values.tolist()
+        if dataconvert:
+            trans = TransactionEncoder()
+            data = trans.fit(data).transform(data)
+            data = pd.DataFrame(data, columns=trans.columns_)
+            data.drop([""], axis=1, inplace=True)
+        frequent_itemsets = apriori(data, min_support=min_support, max_len=max_len, use_colnames=True)
+        rules = association_rules(frequent_itemsets, metric=metrics, min_threshold=min_threshold)
+        res = [
+            transform_table_data_to_html({
+                "title": "频繁项集结果",
+                "row": frequent_itemsets.index.tolist(),
+                "col": frequent_itemsets.columns.tolist(),
+                "data": frequent_itemsets.values.tolist(),
+            }),
+            transform_table_data_to_html({
+                "title": "关联规则结果",
+                "row": rules.index.tolist(),
+                "col": rules.columns.tolist(),
+                "data": rules.values.tolist(),
+            })
+        ]
+        response_data = {"res": res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.exception(e)
+        return jsonify({"code": "500", "res": "", "msg": "{}".format(e.args)})
 
 
 if __name__ == '__main__':

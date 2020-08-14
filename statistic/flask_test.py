@@ -108,14 +108,26 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/statistic/crosstable', json=kwargs, timeout=30)
 
     # ======================= 多个独立样本非参数检验-结果 =============================
+    # kwargs = {
+    #     "table_name": "more_independent_feican",  # str,数据库表名
+    #     "X": ["fam"],  # list,自变量
+    #     "Y": ["creative"],  # list,因变量
+    #     # "alpha": "0.05",  # str,置信区间百分比
+    #     "table_direction": "v",  # 表格方向，一般为竖向，即有一列是分类变量
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/statistic/nonparametricMultiIndependent', json=kwargs, timeout=30)
+
+    # ======================= 关联规则分析 =============================
     kwargs = {
-        "table_name": "more_independent_feican",  # str,数据库表名
-        "X": ["fam"],  # list,自变量
-        "Y": ["creative"],  # list,因变量
-        # "alpha": "0.05",  # str,置信区间百分比
-        "table_direction": "v",  # 表格方向，一般为竖向，即有一列是分类变量
+        "table_name": "apriori_test",  # str,数据库表名
+        "X": ["x0", "x1", "x2", "x3", "x4", "x5"],  # list,自变量
+        "dataconvert": True,  # bool,是否需要数据转换 ==》【默认值：True】
+        "minSupport": "0.05",  # str,最小支持度 ==》【默认值："0.05"】
+        "max_len": "2",  # 频繁项集最大长度 ==》【默认值：None】
+        "metrics": "confidence",  # 关联规则评价指标["support", "confidence", "lift", "leverage", "conviction"] ==》【默认值：confidence】
+        "min_threshold": "0.8",  # 关联规则评价指标最小值 ==》【默认值："0.8"】
     }
-    res = my_session.post(url='http://127.0.0.1:5000/statistic/nonparametricMultiIndependent', json=kwargs, timeout=30)
+    res = my_session.post(url='http://127.0.0.1:5000/statistic/apriori', json=kwargs, timeout=30)
 
     # # print(json.loads(res.text, encoding="utf-8"))
     print(res.text)
