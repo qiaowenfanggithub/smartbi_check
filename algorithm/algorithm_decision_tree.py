@@ -136,7 +136,7 @@ class decisionTree(BaseAlgorithm):
 
             # 保存模型
             # self.save_model(self.model, "decisionTree")
-            self.save_model_into_database("decisionTree")
+            model_info = self.save_model_into_database("decisionTree")
 
             # 分类结果可视化
             res = self.algorithm_show_result(self.model, x_test, y_test,
@@ -144,6 +144,7 @@ class decisionTree(BaseAlgorithm):
                                              method="classifier")
 
             response_data = {"res": res,
+                             "model_info": model_info,
                              "code": "200",
                              "msg": "ok!",
                              }

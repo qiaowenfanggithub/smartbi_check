@@ -16,27 +16,22 @@ Date : 2020/7/25 12:24 下午
 """
 import base64
 from io import BytesIO
-import logging
 import pymysql
 from sklearn import metrics
-import numpy as np
 import pandas as pd
 from flask import request
 from sklearn.model_selection import train_test_split
-import os
 import joblib
-import time
 import seaborn as sns
 import scipy.stats as stats
 from pylab import *
 import statsmodels.api as sm
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from utils import format_dataframe
-from base64_to_png import base64_to_img
 import random
 import datetime
 import json
-import uuid
+import os
 
 log = logging.getLogger(__name__)
 
@@ -85,7 +80,7 @@ class BaseAlgorithm(object):
         except Exception as e:
             raise e
 
-    # 模型信心入库
+    # 模型信息入库（这里先不入库，先保存在临时目录，返回模型参数）入库在保存模型接口
     def save_model_into_database(self, model_name, current_time=None):
         try:
             # 模型入库
@@ -104,12 +99,16 @@ class BaseAlgorithm(object):
             if not os.path.exists("./model_tmp/{}".format(model_name)):
                 os.makedirs("./model_tmp/{}".format(model_name))
             joblib.dump(self.model, save_path)
-            key_list = [["userid", "name", "type", "characteristic_column", "label_column",
-                         "data_set", "parameter_config", "save_path", "result_report", "updatetime"]]
-            value_list = [[userid, name, type, characteristic_column, label_column,
-                           data_set, parameter_config, save_path, result_report, updatetime]]
-            sql_list = self.exec_insert_sql("algorithm_model", key_list, value_list)
-            log.info("exec sql:{} finish".format(sql_list[0]))
+            key_list = ["userid", "name", "type", "characteristic_column", "label_column",
+                         "data_set", "parameter_config", "save_path", "result_report", "updatetime"]
+            value_list = [userid, name, type, characteristic_column, label_column,
+                           data_set, parameter_config, save_path, result_report, updatetime]
+            # save_path_sql = "./model_tmp/{}/{}_sql.pkl".format(model_name, name)
+            # sql_config = {"key": key_list, "value": value_list, "table": "algorithm_model"}
+            # joblib.dump(save_path_sql, sql_config)
+            # sql_list = self.exec_insert_sql("algorithm_model", key_list, value_list)
+            # log.info("exec sql:{} finish".format(sql_list[0]))
+            return {"key": key_list, "value": value_list, "table": "algorithm_model"}
         except Exception as e:
             raise e
 
@@ -503,29 +502,6 @@ class BaseAlgorithm(object):
         except Exception as e:
             log.info(e.args)
             raise e
-
-    # 执行插入sql数据
-    @staticmethod
-    def exec_insert_sql(table, key_list, value_list):
-        conn = pymysql.connect(host='rm-2ze5vz4174qj2epm7so.mysql.rds.aliyuncs.com', port=3306, user='yzkj',
-                               password='yzkj2020@', database='sophia_manager', charset='utf8')
-        cursor = conn.cursor()
-        sql_list = []
-        for key in key_list:
-            for value in value_list:
-                sql = "INSERT INTO {}({}) VALUES ('{}')".format(table, ",".join(key), "','".join(value))
-                sql_list.append(sql)
-                try:
-                    # Execute the SQL command
-                    cursor.execute(sql)
-                    # Commit your changes in the database
-                    conn.commit()
-                except Exception as e:
-                    log.error(e)
-                    # Rollback in case there is any error
-                    conn.rollback()
-        conn.close()
-        return sql_list
 
     # 获取从前端传来的参数
     @staticmethod

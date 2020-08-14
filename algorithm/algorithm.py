@@ -20,7 +20,7 @@ from flask.json import JSONEncoder as _JSONEncoder
 from flask_cors import *
 from utils import *
 from flask import request
-from base64_to_png import base64_to_img
+import os
 
 log = logging.getLogger(__name__)
 
@@ -329,29 +329,50 @@ def data_preprocess(method):
         # raise e
         return jsonify(response_data)
 
+
 # ================================ 保存模型数据接口 ==============================
-# @app.route('/algorithm/saveModel/<method>', methods=['POST', 'GET'])
-# def data_preprocess(method):
-#     """
-#     数据预处理请求参数{
-#         "tableName": "",  # str,数据库表名
-#         "encoder":{
-#             "oneHot": [],  # list,需要使用onehot编码的特征列
-#             "factorize": [] # list,需要使用序列编码的特征列
-#         },
-#         "normalize":{
-#             "normal": [],  # list,需要使用normal标准化的特征列
-#             "standard": [] # list,需要使用归一化的特征列
-#         }
-#     }
-#     :param method:
-#     :return:
-#     """
-#     log_file = "algorithm.log"
-#     logging.basicConfig(filename=log_file,
-#                         format="%(asctime)s [ %(levelname)-6s ] %(message)s",
-#                         level='INFO')
-#     request_data = request.json
+@app.route('/algorithm/saveModel', methods=['POST', 'GET'])
+def save_model():
+    """
+    保存模型信息到数据库
+    数据预处理请求参数{
+        "key": [], # sql数据表的字段名
+        "value": [], # sql数据表的value值
+        "table": [], # # sql数据表
+    }
+    :param method:
+    :return:
+    """
+    log_file = "algorithm.log"
+    logging.basicConfig(filename=log_file,
+                        format="%(asctime)s [ %(levelname)-6s ] %(message)s",
+                        level='INFO')
+    logging.getLogger().addFilter(logging.StreamHandler())
+    logging.getLogger().setLevel(logging.WARNING)
+    request_data = request.json
+    try:
+        table = request_data.get("table", "algorithm_model")
+        key = request_data["key"]
+        value = request_data["value"]
+        # 将模型信息入库
+        exec_insert_sql(table, key, value)
+        # 将临时文件model_tmp里的模型文件转移到正式文件model
+        algorithm_name = value[2]
+        model_name = value[1]
+        if not os.path.exists("./model/{}".format(algorithm_name)):
+            os.makedirs("./model/{}/".format(algorithm_name))
+        a = os.system("cp ./model_tmp/{0}/{1}.pkl ./model/{0}".format(algorithm_name, model_name))
+        if a != 0:
+            raise FileNotFoundError("execute file copy failed")
+        response_data = {"res": "",
+                         "code": "200",
+                         "msg": "exec sql successful"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.exception("Exception Logged")
+        response_data = {"data": "", "code": "500", "msg": "{}".format(e.args)}
+        # raise e
+        return jsonify(response_data)
 
 
 if __name__ == '__main__':

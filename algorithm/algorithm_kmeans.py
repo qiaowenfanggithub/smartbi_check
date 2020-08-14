@@ -86,7 +86,7 @@ class kMeans(BaseAlgorithm):
 
             # 保存模型
             # self.save_model(self.model, "kMeans")
-            self.save_model_into_database("kMeans")
+            model_info = self.save_model_into_database("kMeans")
 
             # 聚类结果可视化
             res = self.algorithm_show_result(self.model, self.table_data, None,
@@ -94,6 +94,7 @@ class kMeans(BaseAlgorithm):
                                              method="cluster")
 
             response_data = {"res": res,
+                             "model_info": model_info,
                              "code": "200",
                              "msg": "ok!",
                              }

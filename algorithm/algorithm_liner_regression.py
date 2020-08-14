@@ -154,7 +154,7 @@ class linerRegression(BaseAlgorithm):
 
             # 保存模型
             # self.save_model(self.model, "linerRegression")
-            self.save_model_into_database("linerRegression")
+            model_info = self.save_model_into_database("linerRegression")
 
             # 结果可视化
             x_train = x_train.astype(float)
@@ -164,6 +164,7 @@ class linerRegression(BaseAlgorithm):
                                              method="regression")
 
             response_data = {"res": res,
+                             "model_info": model_info,
                              "code": "200",
                              "msg": "ok!",
                              }

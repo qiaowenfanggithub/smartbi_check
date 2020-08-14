@@ -150,7 +150,7 @@ class logistic(BaseAlgorithm):
             # 保存模型
             # self.save_model(self.model, "logisticRegression")
             current_time = datetime.datetime.now()
-            self.save_model_into_database("logisticRegression", current_time=current_time)
+            model_info = self.save_model_into_database("logisticRegression", current_time=current_time)
 
             # 分类结果可视化
             res = self.algorithm_show_result(self.model, x_test, y_test,
@@ -171,13 +171,15 @@ class logistic(BaseAlgorithm):
 
             # 保存模型
             # self.save_model(self.model, "logisticRegression2")
-            self.save_model_into_database("logisticRegression2", current_time=current_time)
+            model_info2 = self.save_model_into_database("logisticRegression2", current_time=current_time)
 
             res.extend(self.algorithm_show_result(self.model, x_train, y_train,
                                                   options=self.config['show_options'],
                                                   method="regression"))
 
             response_data = {"res": res,
+                             "model_info": model_info,
+                             "model_info2": model_info2,
                              "code": "200",
                              "msg": "ok!",
                              }

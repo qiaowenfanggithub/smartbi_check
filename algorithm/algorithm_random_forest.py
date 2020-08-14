@@ -132,11 +132,11 @@ class randomForest(BaseAlgorithm):
             model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'], scoring="roc_auc")
             model.fit(x_train, y_train)
             best_param = model.best_params_
-            self.model = RandomForestClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
+            model_info = self.model = RandomForestClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
 
             # 保存模型
             # self.save_model(self.model, "randomForest")
-            self.save_model_into_database("randomForest")
+            model_info = self.save_model_into_database("randomForest")
 
             # 分类结果可视化
             res = self.algorithm_show_result(self.model, x_test, y_test,
@@ -144,6 +144,7 @@ class randomForest(BaseAlgorithm):
                                              method="classifier")
 
             response_data = {"res": res,
+                             "model_info": model_info,
                              "code": "200",
                              "msg": "ok!",
                              }

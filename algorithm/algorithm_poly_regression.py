@@ -130,7 +130,7 @@ class polyRegression(BaseAlgorithm):
 
             # 保存模型
             # self.save_model(self.model, "polyLinerRegression")
-            self.save_model_into_database("polyLinerRegression")
+            model_info = self.save_model_into_database("polyLinerRegression")
 
             # 结果可视化
             x_train = x_train.astype(float)
@@ -140,6 +140,7 @@ class polyRegression(BaseAlgorithm):
                                              method="regression")
 
             response_data = {"res": res,
+                             "model_info": model_info,
                              "code": "200",
                              "msg": "ok!",
                              }

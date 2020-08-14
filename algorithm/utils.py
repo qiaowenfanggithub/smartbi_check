@@ -164,9 +164,10 @@ def data_scatter_plot(data, col_name_X, col_name_Y):
     plt.savefig("scatter_plot_{}_by_{}.png".format(col_name_Y, col_name_X))
 
 
-def get_dataframe_from_mysql(sql_sentence, host='rm-2ze5vz4174qj2epm7so.mysql.rds.aliyuncs.com', port=None, user='yzkj',
-                             password='yzkj2020@', database='sophia_manager', charset='utf8'):
-    conn = pymysql.connect(host=host, port=3306, user=user, password=password, database=database, charset=charset)
+def get_dataframe_from_mysql(sql_sentence, host='rm-2ze5vz4174qj2epm7so.mysql.rds.aliyuncs.com',
+                             port=3306, user='yzkj', password='yzkj2020@',
+                             database='sophia_manager', charset='utf8'):
+    conn = pymysql.connect(host=host, port=port, user=user, password=password, database=database, charset=charset)
     try:
         df = pd.read_sql(sql_sentence, conn)
         return df
@@ -190,9 +191,11 @@ def exec_sql(table_name, X=None, Y=None):
 
 
 # 根据算法查询模型
-def exec_select_sql(sql):
-    conn = pymysql.connect(host='rm-2ze5vz4174qj2epm7so.mysql.rds.aliyuncs.com', port=3306, user='yzkj',
-                           password='yzkj2020@', database='sophia_manager', charset='utf8')
+def exec_select_sql(sql, host='rm-2ze5vz4174qj2epm7so.mysql.rds.aliyuncs.com',
+                    port=3306, user='yzkj', password='yzkj2020@',
+                    database='sophia_manager', charset='utf8'):
+    conn = pymysql.connect(host=host, port=port, user=user,
+                           password=password, database=database, charset=charset)
     cursor = conn.cursor()
     res = []
     try:
@@ -397,3 +400,26 @@ def gen_poly_col(data, conf):
         for i in range(2, conf[x] + 1):
             data["{}**{}".format(x, i)] = data[x] ** i
     return data
+
+
+# 保存模型接口，实行插入sql语句
+def exec_insert_sql(table, key_list, value_list, host='rm-2ze5vz4174qj2epm7so.mysql.rds.aliyuncs.com',
+                    port=3306, user='yzkj', password='yzkj2020@',
+                    database='sophia_manager', charset='utf8'):
+    conn = pymysql.connect(host=host, port=port, user=user,
+                           password=password, database=database, charset=charset)
+    cursor = conn.cursor()
+    sql_list = []
+    sql = "INSERT INTO {}({}) VALUES ('{}')".format(table, ",".join(key_list), "','".join(value_list))
+    sql_list.append(sql)
+    try:
+        # Execute the SQL command
+        cursor.execute(sql)
+        # Commit your changes in the database
+        conn.commit()
+    except Exception as e:
+        log.error(e)
+        # Rollback in case there is any error
+        conn.rollback()
+    conn.close()
+    return sql_list
