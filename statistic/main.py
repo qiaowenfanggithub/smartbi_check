@@ -23,7 +23,7 @@ import numpy as np
 import pandas as pd
 from flask_cors import *
 from util import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, \
-    exec_sql, format_data, transform_v_table_data_to_h
+    exec_sql, format_data, transform_v_table_data_to_h, format_dataframe
 from flask.json import JSONEncoder as _JSONEncoder
 from anova_one_way import normal_test, levene_test, anova_analysis, multiple_test, anova_one_way_describe_info
 from anova_all_way import anova_all_way_describe_info, normal_test_all, levene_test_all, anova_analysis_multivariate, \
@@ -706,6 +706,8 @@ def apriori():
         else:
             raise ValueError("input Association rules:{} is not support".format(alg))
         rules = association_rules(frequent_itemsets, metric=metrics, min_threshold=min_threshold)
+        rules = rules.replace([np.inf, -np.inf], "")
+        rules = format_dataframe(rules, {"lift": ".4f"})
         res = [
             transform_table_data_to_html({
                 "title": "频繁项集结果",
