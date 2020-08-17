@@ -707,7 +707,7 @@ def apriori():
             raise ValueError("input Association rules:{} is not support".format(alg))
         rules = association_rules(frequent_itemsets, metric=metrics, min_threshold=min_threshold)
         rules = rules.replace([np.inf, -np.inf], "")
-        rules = format_dataframe(rules, {"lift": ".4f"})
+        rules = format_dataframe(rules, {"lift": ".4f", "leverage": ".4f"})
         res = [
             transform_table_data_to_html({
                 "title": "频繁项集结果",
