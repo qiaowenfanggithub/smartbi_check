@@ -695,7 +695,7 @@ def apriori():
             trans = TransactionEncoder()
             data = trans.fit(data).transform(data)
             data = pd.DataFrame(data, columns=trans.columns_)
-            data.drop([""], axis=1, inplace=True)
+            data.drop(columns="", axis=1, inplace=True)
         if alg == "apriori":
             frequent_itemsets = apriori(data, min_support=min_support, max_len=max_len, use_colnames=True)
         elif alg == "fpgrowth":
