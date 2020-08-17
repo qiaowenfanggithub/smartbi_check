@@ -5,7 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/algorithm" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/statistic" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.7 (python-bert)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.6 (qwf)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="paper_popularity_predict" />
     <orderEntry type="module" module-name="logistic_analysis" />

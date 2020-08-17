@@ -38,7 +38,8 @@ from two_independent_MWU import Mann_Whitney_U_describe, Mann_Whitney_U_test
 from more_independent_KWH import Kruskal_Wallis_H_describe, Kruskal_Wallis_H_test
 from nonparametric_two_pair import Wilcoxon_test, Wilcoxon_describe
 from crosstable_chi import cross_chi2
-
+from describe import description
+from frequency import data_frequency
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -615,7 +616,6 @@ def results_crosstable():
         "table_name": "" # str,数据库表名
         "X": ["x1"], # list,自变量，行
         "Y": ["y"], # list,因变量，列
-
     }
     :return:
     """
@@ -650,6 +650,67 @@ def results_crosstable():
         log.error(e)
         raise e
 
+# ================================ 描述性统计 ==============================
+@app.route('/statistic/describe', methods=['POST', 'GET'])
+def results_describe():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1"], # list,自变量，行
+    }
+    :return:
+    """
+    log.info('describe_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X], list)
+    # 从数据库拿数据
+    data = exec_sql(table_name, X)
+    log.info("输入数据大小:{}".format(len(data)))
+
+    try:
+        describe_result = transform_table_data_to_html(description(data,X),col0='指标名称')
+        log.info("调用描述性统计函数成功")
+        return jsonify(describe_result)
+    except Exception as e:
+        log.error(e)
+        raise e
+
+# ================================ 频数分布表 ==============================
+@app.route('/statistic/frequency', methods=['POST', 'GET'])
+def results_frequency():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1"], # list,自变量，行
+    }
+    :return:
+    """
+    log.info('frequency_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X], list)
+    # 从数据库拿数据
+    data = exec_sql(table_name, X)
+    log.info("输入数据大小:{}".format(len(data)))
+
+    try:
+        frequency_result = data_frequency(data,X)
+        log.info("调用频数分布函数成功")
+        return jsonify(frequency_result)
+    except Exception as e:
+        log.error(e)
+        raise e
 
 # ================================ 关联规则Apriori/fpgrowth ==============================
 @app.route('/statistic/apriori', methods=['POST', 'GET'])
