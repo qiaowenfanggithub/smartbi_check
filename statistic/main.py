@@ -651,13 +651,14 @@ def results_crosstable():
         raise e
 
 
-# ================================ 关联规则Apriori ==============================
+# ================================ 关联规则Apriori/fpgrowth ==============================
 @app.route('/statistic/apriori', methods=['POST', 'GET'])
 def apriori():
     """
     接口请求参数:{
         "table_name": "apriori_test",  # str,数据库表名
         "X": ["x0", "x1", "x2", "x3", "x4", "x5"],  # list,自变量
+        "alg": "fpgrowth',  # str,关联规则算法选择["apriori", "fpgrowth"] ==》【默认值：fpgrowth】
         "dataconvert": True,  # bool,是否需要数据转换 ==》【默认值：True】
         "minSupport": "0.05",  # str,最小支持度 ==》【默认值："0.05"】
         "max_len": "2",  # 频繁项集最大长度 ==》【默认值：None】
@@ -671,15 +672,17 @@ def apriori():
     try:
         from mlxtend.preprocessing import TransactionEncoder
         from mlxtend.frequent_patterns import apriori
+        from mlxtend.frequent_patterns import fpgrowth
         from mlxtend.frequent_patterns import association_rules
     except:
         raise ImportError("cannot import mlxtend")
     try:
         table_name = request_data['table_name']
         X = request_data['X']
+        alg = request_data['alg']
         dataconvert = request_data['dataconvert']
         min_support = float(request_data['minSupport'])
-        max_len = float(request_data['max_len'])
+        max_len = int(request_data['max_len'])
         metrics = request_data['metrics']
         min_threshold = float(request_data['min_threshold'])
     except Exception as e:
@@ -693,7 +696,12 @@ def apriori():
             data = trans.fit(data).transform(data)
             data = pd.DataFrame(data, columns=trans.columns_)
             data.drop([""], axis=1, inplace=True)
-        frequent_itemsets = apriori(data, min_support=min_support, max_len=max_len, use_colnames=True)
+        if alg == "apriori":
+            frequent_itemsets = apriori(data, min_support=min_support, max_len=max_len, use_colnames=True)
+        elif alg == "fpgrowth":
+            frequent_itemsets = fpgrowth(data, min_support=min_support, max_len=max_len, use_colnames=True)
+        else:
+            raise ValueError("input Association rules:{} is not support".format(alg))
         rules = association_rules(frequent_itemsets, metric=metrics, min_threshold=min_threshold)
         res = [
             transform_table_data_to_html({
