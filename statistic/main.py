@@ -690,12 +690,15 @@ def apriori():
         raise e
     try:
         table_data = exec_sql(table_name, X)
+        table_data.fillna("", inplace=True)
         data = table_data.values.tolist()
         if dataconvert:
             trans = TransactionEncoder()
             data = trans.fit(data).transform(data)
             data = pd.DataFrame(data, columns=trans.columns_)
-            data.drop(columns="", axis=1, inplace=True)
+            log.info("data columns:{}".format(data.columns.values))
+            if "" in data.columns:
+                data.drop(columns="", axis=1, inplace=True)
         if alg == "apriori":
             frequent_itemsets = apriori(data, min_support=min_support, max_len=max_len, use_colnames=True)
         elif alg == "fpgrowth":
