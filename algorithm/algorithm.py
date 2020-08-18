@@ -375,6 +375,163 @@ def save_model():
         return jsonify(response_data)
 
 
+# ================================ 数据探索 ==============================
+@app.route('/algorithm/dataAnalysis', methods=['POST', 'GET'])
+def data_analysis():
+    """
+    数据探索接口参数
+    {
+        "tableName": "" # str,数据库表名
+        "dataInfo": [] # 字段列表 list
+        "count": [] # 字段列表 list
+        "count_hue": "" # 频率图参数 str
+        "box": [] # 字段列表 list
+        "pie": [] # 字段列表 list
+        "pairPlot": [] # 字段列表 list
+        "heatMap": [] # 字段列表 list
+        "yCorr": [] # 字段列表 list
+    }
+    :return:
+    """
+    log_file = "algorithm.log"
+    logging.basicConfig(filename=log_file,
+                        format="%(asctime)s [ %(levelname)-6s ] %(message)s",
+                        level='INFO')
+    logging.getLogger().addFilter(logging.StreamHandler())
+    logging.getLogger().setLevel(logging.WARNING)
+    request_data = request.json
+    CLASSIFIER = {"svmClassifier", "decisionTree", "randomForest", "logisticRegression"}
+    REGRESSION = {"linerRegression", "polyLinerRegression"}
+    CLUSTER = {"kMeans", "hierarchicalCluster"}
+    res = []
+    try:
+        table_name = request_data["tableName"]
+        count = request_data.get("count", [""])
+        count_hue = request_data.get("count_hue")
+        dist = request_data.get("dist", [""])
+        box = request_data.get("box", [""])
+        pie = request_data.get("pie", [""])
+        pairPlot = request_data.get("pairPlot", [""])
+        heatMap = request_data.get("heatMap", [""])
+        yCorr = request_data.get("yCorr", [""])
+
+        # 获取数据从数据表
+        sql = "select * from {};".format("`" + table_name + "`")
+        table_data = get_dataframe_from_mysql(sql, database='sophia_data')
+
+        # 基本统计信息
+        table_data = table_data.astype("float")
+        data = table_data.describe()
+        data = format_dataframe(data, {k: ".4f" for k in data.columns})
+        res.append(transform_table_data_to_html({
+            "data": data.values.tolist(),
+            "title": "描述性统计分析",
+            "col": data.columns.tolist(),
+            "row": data.index.tolist()
+        }))
+
+        # 频率分布直方图
+        if count[0]:
+            for x in count:
+                if not count_hue:
+                    sns.countplot(table_data[x])
+                    # 显示纵轴标签
+                    plt.ylabel("count")
+                    plt.xlabel("{}".format(x))
+                    # 显示图标题
+                    # plt.title("{} - frequency distribution histogram".format(x))
+                    res.append({
+                        "title": "{} - 频率柱形图".format(x),
+                        "base64": "{}".format(plot_and_output_base64_png(plt))
+                    })
+                else:
+                    sns.countplot(x=x, hue=count_hue, data=table_data)
+                    # 显示纵轴标签
+                    plt.ylabel("count")
+                    plt.xlabel("{}".format(x))
+                    # 显示图标题
+                    # plt.title("{} - frequency distribution histogram".format(x))
+                    res.append({
+                        "title": "{} - 频率柱形图".format(x),
+                        "base64": "{}".format(plot_and_output_base64_png(plt))
+                    })
+        # 数据分布图
+        if dist[0]:
+            for x in dist:
+                sns.distplot(table_data[x], kde=False)
+                # 显示纵轴标签
+                plt.xlabel("区间")
+                plt.ylabel("{}".format(x))
+                # 显示图标题
+                # plt.title("{} - frequency distribution histogram".format(x))
+                res.append({
+                    "title": "{} - 数据分布图".format(x),
+                    "base64": "{}".format(plot_and_output_base64_png(plt))
+                })
+        # 箱型图
+        if box[0]:
+            for x in box:
+                sns.boxplot(table_data[x], palette="Set2", orient="v")
+                # 显示纵轴标签
+                # plt.ylabel("frequency")
+                plt.xlabel("{}".format(x))
+                # 显示图标题
+                # plt.title("{} - frequency distribution histogram".format(x))
+                res.append({
+                    "title": "{} - 箱型图".format(x),
+                    "base64": "{}".format(plot_and_output_base64_png(plt))
+                })
+        # 饼图
+        if pie[0]:
+            for x in pie:
+                plt.pie(table_data[x].value_counts(), labels=table_data[x].value_counts().index, autopct="%1.1f%%", shadow=True)
+                # 显示纵轴标签
+                # plt.ylabel("frequency")
+                plt.xlabel("{}".format(x))
+                # 显示图标题
+                # plt.title("{} - frequency distribution histogram".format(x))
+                res.append({
+                    "title": "{} - 饼图".format(x),
+                    "base64": "{}".format(plot_and_output_base64_png(plt))
+                })
+        # 矩形图
+        if pairPlot[0]:
+            sns.pairplot(table_data[pairPlot])
+            res.append({
+                "title": "特征两两散点图",
+                "base64": "{}".format(plot_and_output_base64_png(plt))
+            })
+        # 相关系数表
+        if heatMap[0]:
+            corr = table_data[heatMap].corr()
+            sns.heatmap(corr, xticklabels=corr.columns, yticklabels=corr.columns,
+                        linewidths=0.2, cmap="YlGnBu", annot=True)
+            # plt.title("Correlation between variables")
+            res.append({
+                "title": "相关系数热度图",
+                "base64": "{}".format(plot_and_output_base64_png(plt))
+            })
+        # 因变量和自变量的相关系数图
+        if yCorr["X"][0] and yCorr["Y"][0]:
+            corr = table_data[yCorr["X"] + yCorr["Y"]].corr()
+            corr[yCorr["Y"][0]].sort_values(ascending=False)[1:].plot(kind='bar')
+            plt.ylabel("{}".format(yCorr["Y"][0]))
+            # plt.title("Correlations between y and x")
+            res.append({
+                "title": "因变量和各自变量的相关系数图",
+                "base64": "{}".format(plot_and_output_base64_png(plt))
+            })
+        response_data = {"res": res,
+                         "code": "200",
+                         "msg": "ok"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.exception("Exception Logged")
+        response_data = {"data": "", "code": "500", "msg": "{}".format(e.args)}
+        # raise e
+        return jsonify(response_data)
+
+
 if __name__ == '__main__':
     app.json_encoder = JSONEncoder
     app.config['JSON_AS_ASCII'] = False

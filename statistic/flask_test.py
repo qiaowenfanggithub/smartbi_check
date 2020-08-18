@@ -121,7 +121,7 @@ if __name__ == '__main__':
     kwargs = {
         "table_name": "apriori_test",  # str,数据库表名
         "X": ["x0", "x1", "x2", "x3", "x4", "x5"],  # list,自变量
-        "alg": "apriori",  # str,关联规则算法选择["apriori", "fpgrowth"] ==》【默认值：fpgrowth】
+        "alg": "fpgrowth",  # str,关联规则算法选择["apriori", "fpgrowth"] ==》【默认值：fpgrowth】
         "dataconvert": True,  # bool,是否需要数据转换 ==》【默认值：True】
         "minSupport": "0.05",  # str,最小支持度 ==》【默认值："0.05"】
         "max_len": "2",  # 频繁项集最大长度 ==》【默认值：None】

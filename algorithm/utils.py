@@ -26,6 +26,7 @@ from sklearn.tree import export_graphviz
 import pydotplus
 import base64
 from io import BytesIO
+from base64_to_png import base64_to_img
 
 log = logging.getLogger(__name__)
 
@@ -341,12 +342,16 @@ def generate_tree_graph(model, feature_names, class_names):
 
 # matplotlib作图写入内存并输出base64格式供前端调用
 def plot_and_output_base64_png(plot):
+    plot.rcParams["font.sans-serif"] = ["Arial Unicode MS"]
+    plot.rcParams["axes.unicode_minus"] = False
     # 写入内存
     save_file = BytesIO()
     plot.savefig(save_file, format='png')
 
     # 转换base64并以utf8格式输出
     save_file_base64 = base64.b64encode(save_file.getvalue()).decode('utf8')
+    base64_to_img(save_file_base64)
+    plot.close("all")
     return save_file_base64
 
 
