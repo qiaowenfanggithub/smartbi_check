@@ -25,6 +25,10 @@ log = logging.getLogger(__name__)
 class hierarchicalCluster(BaseAlgorithm):
     def __init__(self, method):
         BaseAlgorithm.__init__(self)
+        self.one_type = "Cluster"
+        self.one_type_name = "聚类"
+        self.second_type = "hierarchicalCluster"
+        self.second_type_name = "层次聚类"
         # super(logisticAlgorithm, self).__init__()
         if method == "train":
             self.get_train_config_from_web()

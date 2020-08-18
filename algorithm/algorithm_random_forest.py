@@ -26,6 +26,10 @@ log = logging.getLogger(__name__)
 class randomForest(BaseAlgorithm):
     def __init__(self, method):
         BaseAlgorithm.__init__(self)
+        self.one_type = "Classifier"
+        self.one_type_name = "分类"
+        self.second_type = "randomForest"
+        self.second_type_name = "随机森林"
         # super(logisticAlgorithm, self).__init__()
         if method == "train":
             self.get_train_config_from_web()

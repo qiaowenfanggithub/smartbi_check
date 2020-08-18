@@ -100,9 +100,11 @@ class BaseAlgorithm(object):
                 os.makedirs("./model_tmp/{}".format(model_name))
             joblib.dump(self.model, save_path)
             key_list = ["userid", "name", "type", "characteristic_column", "label_column",
-                         "data_set", "parameter_config", "save_path", "result_report", "updatetime"]
+                         "data_set", "parameter_config", "save_path", "result_report", "updatetime",
+                        "onetype", "onetype_name", "secondtype", "secondtype_name"]
             value_list = [userid, name, type, characteristic_column, label_column,
-                           data_set, parameter_config, save_path, result_report, updatetime]
+                           data_set, parameter_config, save_path, result_report, updatetime,
+                          self.one_type, self.one_type_name, self.second_type, self.second_type_name]
             # save_path_sql = "./model_tmp/{}/{}_sql.pkl".format(model_name, name)
             # sql_config = {"key": key_list, "value": value_list, "table": "algorithm_model"}
             # joblib.dump(save_path_sql, sql_config)

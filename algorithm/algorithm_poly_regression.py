@@ -25,6 +25,10 @@ log = logging.getLogger(__name__)
 class polyRegression(BaseAlgorithm):
     def __init__(self, method):
         BaseAlgorithm.__init__(self)
+        self.one_type = "Regression"
+        self.one_type_name = "回归"
+        self.second_type = "polyLinerRegression"
+        self.second_type_name = "多项式回归"
         # super(logisticAlgorithm, self).__init__()
         if method == "train":
             self.get_train_config_from_web()

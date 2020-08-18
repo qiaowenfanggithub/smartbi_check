@@ -26,6 +26,10 @@ log = logging.getLogger(__name__)
 class svmClassifier(BaseAlgorithm):
     def __init__(self, method):
         BaseAlgorithm.__init__(self)
+        self.one_type = "Classifier"
+        self.one_type_name = "分类"
+        self.second_type = "svmClassifier"
+        self.second_type_name = "支持向量机"
         # super(logisticAlgorithm, self).__init__()
         if method == "train":
             self.get_train_config_from_web()

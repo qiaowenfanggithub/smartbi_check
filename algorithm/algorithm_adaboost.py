@@ -26,6 +26,10 @@ log = logging.getLogger(__name__)
 class adaboostClassifier(BaseAlgorithm):
     def __init__(self, method):
         BaseAlgorithm.__init__(self)
+        self.one_type = "Classifier"
+        self.one_type_name = "分类"
+        self.secone_type = "adaboost"
+        self.secone_type_name = "adaboost分类"
         # super(logisticAlgorithm, self).__init__()
         if method == "train":
             self.get_train_config_from_web()
