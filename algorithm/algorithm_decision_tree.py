@@ -135,6 +135,7 @@ class decisionTree(BaseAlgorithm):
             self.model = tree.DecisionTreeClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
 
             # 保存模型
+            self.config["param"] = best_param
             # self.save_model(self.model, "decisionTree")
             model_info = self.save_model_into_database("decisionTree")
 

@@ -355,7 +355,7 @@ if __name__ == '__main__':
     #         "coef0": ["0"],  # 核函数的常数项
     #         "tol": ["0.001"],  # 停止训练的误差值大小，默认为1e-3
     #         "max_iter": ["-1"],  # 最大迭代次数。-1为无限制。
-    #         "decision_function_shape": ["ovr", "ovo"],  # 最大迭代次数。-1为无限制。
+    #         "decision_function_shape": [""],  # 最大迭代次数。-1为无限制。
     #     },
     #     "show_options": ["report", "matrix", "roc"]
     # }

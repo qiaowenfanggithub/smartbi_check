@@ -3,9 +3,9 @@
 
 --------------------------------------------------------
 
-File Name : algorithm_random_forest
+File Name : algorithm_adaboost
 
-Description : 
+Description : adaboost分类算法实现
 
 Author : leiliang
 
@@ -23,7 +23,7 @@ from utils import transform_table_data_to_html, format_dataframe
 log = logging.getLogger(__name__)
 
 
-class randomForest(BaseAlgorithm):
+class adaboostClassifier(BaseAlgorithm):
     def __init__(self, method):
         BaseAlgorithm.__init__(self)
         # super(logisticAlgorithm, self).__init__()
@@ -132,10 +132,10 @@ class randomForest(BaseAlgorithm):
             model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'], scoring="roc_auc")
             model.fit(x_train, y_train)
             best_param = model.best_params_
-            self.model = RandomForestClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
+            model_info = self.model = RandomForestClassifier(**best_param, random_state=self.config["randomState"]).fit(
+                x_test, y_test)
 
             # 保存模型
-            self.config["param"] = best_param
             # self.save_model(self.model, "randomForest")
             model_info = self.save_model_into_database("randomForest")
 
@@ -186,7 +186,8 @@ class randomForest(BaseAlgorithm):
                 if not self.config['X']:
                     raise ValueError("feature must not be empty when one-sample")
                 X = [[float(x) for x in self.config['X']]]
-                predict = model.predict(X)[0] if isinstance(model.predict(X)[0], str) else "{:.0f}".format(model.predict(X)[0])
+                predict = model.predict(X)[0] if isinstance(model.predict(X)[0], str) else "{:.0f}".format(
+                    model.predict(X)[0])
                 res.update({
                     "data": [[",".join([str(s) for s in self.config['X']]), predict]],
                     "title": "单样本预测结果",

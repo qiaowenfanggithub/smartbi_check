@@ -148,6 +148,7 @@ class logistic(BaseAlgorithm):
             self.model = LogisticRegression(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
 
             # 保存模型
+            self.config["param"] = best_param
             # self.save_model(self.model, "logisticRegression")
             current_time = datetime.datetime.now()
             model_info = self.save_model_into_database("logisticRegression", current_time=current_time)
