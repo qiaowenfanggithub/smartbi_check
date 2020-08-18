@@ -136,10 +136,11 @@ class adaboostClassifier(BaseAlgorithm):
             model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'], scoring="roc_auc")
             model.fit(x_train, y_train)
             best_param = model.best_params_
-            model_info = self.model = RandomForestClassifier(**best_param, random_state=self.config["randomState"]).fit(
+            self.model = RandomForestClassifier(**best_param, random_state=self.config["randomState"]).fit(
                 x_test, y_test)
 
             # 保存模型
+            self.config["param"] = {k: [best_param[k]] for k in best_param}
             # self.save_model(self.model, "randomForest")
             model_info = self.save_model_into_database("randomForest")
 

@@ -139,7 +139,7 @@ class randomForest(BaseAlgorithm):
             self.model = RandomForestClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
 
             # 保存模型
-            self.config["param"] = best_param
+            self.config["param"] = {k: [best_param[k]] for k in best_param}
             # self.save_model(self.model, "randomForest")
             model_info = self.save_model_into_database("randomForest")
 

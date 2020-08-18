@@ -339,34 +339,34 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/predict', json=kwargs, timeout=50)
 
     # ======================= 支持向量机-训练 =============================
-    # kwargs = {
-    #     "tableName": "buy_computer_new",  # str,数据库表名
-    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-    #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
-    #     # "tableName": "iris",  # str,数据库表名
-    #     # "X": ["x0", "x1", "x2", "x3"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-    #     # "Y": ["label"],  # list,因变量,当表格方向为v是使用
-    #     "rate": "0.3",  # str,测试集训练集分割比例
-    #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
-    #     "cv": "3",  # str,几折交叉验证
-    #     "param": {
-    #         "kernel": ["linear", "poly", "rbf", "sigmoid"],  # str,惩罚项，‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’
-    #         "C": ["2"],  # str,惩罚项系数
-    #         "degree": ["3"],  # 多项式核函数的维度
-    #         "gamma": ["auto"],  # ‘rbf’,‘poly’ 和‘sigmoid’的核函数参数。默认是’auto’，则会选择1/n_features
-    #         "coef0": ["0"],  # 核函数的常数项
-    #         "tol": ["0.001"],  # 停止训练的误差值大小，默认为1e-3
-    #         "max_iter": ["-1"],  # 最大迭代次数。-1为无限制。
-    #         "decision_function_shape": ["ovo", "ovr", ""],  # 最大迭代次数。-1为无限制。
-    #     },
-    #     "show_options": ["report", "matrix", "roc"]
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/svmClassifier/train', json=kwargs, timeout=50)
-    # if res.json()["code"] == "200":
-    #     model_info = res.json()["model_info"]
-    #     res = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info, timeout=30)
-    # else:
-    #     raise ValueError(res.json()["msg"])
+    kwargs = {
+        "tableName": "buy_computer_new",  # str,数据库表名
+        "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
+        # "tableName": "iris",  # str,数据库表名
+        # "X": ["x0", "x1", "x2", "x3"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        # "Y": ["label"],  # list,因变量,当表格方向为v是使用
+        "rate": "0.3",  # str,测试集训练集分割比例
+        "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
+        "cv": "3",  # str,几折交叉验证
+        "param": {
+            "kernel": ["linear", "poly", "rbf", "sigmoid"],  # str,惩罚项，‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’
+            "C": ["2"],  # str,惩罚项系数
+            "degree": ["3"],  # 多项式核函数的维度
+            "gamma": ["auto"],  # ‘rbf’,‘poly’ 和‘sigmoid’的核函数参数。默认是’auto’，则会选择1/n_features
+            "coef0": ["0"],  # 核函数的常数项
+            "tol": ["0.001"],  # 停止训练的误差值大小，默认为1e-3
+            "max_iter": ["-1"],  # 最大迭代次数。-1为无限制。
+            "decision_function_shape": ["ovo", "ovr", ""],  # 最大迭代次数。-1为无限制。
+        },
+        "show_options": ["report", "matrix", "roc"]
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/svmClassifier/train', json=kwargs, timeout=50)
+    if res.json()["code"] == "200":
+        model_info = res.json()["model_info"]
+        res = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info, timeout=30)
+    else:
+        raise ValueError(res.json()["msg"])
 
     # ======================= 评估-总入口 =============================
     # kwargs = {
