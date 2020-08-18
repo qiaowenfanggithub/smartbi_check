@@ -107,7 +107,7 @@ def data_extreme(data, col_name=None):
 def data_cv(data, col_name=None):
     if col_name:
         data = data[col_name]
-    return data.mean() / data.std()
+    return data.std() / data.mean()
 
 
 # 频数分布

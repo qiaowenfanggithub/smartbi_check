@@ -117,6 +117,7 @@ if __name__ == '__main__':
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/statistic/nonparametricMultiIndependent', json=kwargs, timeout=30)
 
+<<<<<<< Updated upstream
     # ======================= 关联规则分析 =============================
     kwargs = {
         "table_name": "apriori_test",  # str,数据库表名
@@ -129,6 +130,21 @@ if __name__ == '__main__':
         "min_threshold": "0.8",  # 关联规则评价指标最小值 ==》【默认值："0.8"】
     }
     res = my_session.post(url='http://127.0.0.1:5000/statistic/apriori', json=kwargs, timeout=30)
+=======
+    # ======================= 描述性统计 =============================
+    # kwargs = {
+    #     "table_name": "describe_data",  # str,数据库表名
+    #     "X": ["x1","x2"],  # list,自变量
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/statistic/describe', json=kwargs, timeout=30)
+
+    # ======================= 频数分布表 =============================
+    kwargs = {
+        "table_name": "describe_data",  # str,数据库表名
+        "X": ["x1","x2"],  # list,自变量
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/statistic/frequency', json=kwargs, timeout=30)
+>>>>>>> Stashed changes
 
     # # print(json.loads(res.text, encoding="utf-8"))
     print(res.text)
