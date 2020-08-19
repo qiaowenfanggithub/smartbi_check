@@ -14,8 +14,8 @@ def data_frequency(data, X):
         result.columns = ['频数','百分比%','累计百分比%']
         # result = format_dataframe(result, {"频数": ".0f", "百分比%": ".2f%", "累计百分比%": ".2f%"})
         result['频数'] = result['频数'].map(lambda x: format(x,".0f" ))
-        result['百分比%'] = result['百分比%'].map(lambda x: "%.1f%%" % (x * 100))
-        result['累计百分比%'] = result['累计百分比%'].map(lambda x: "%.1f%%" % (x * 100))
+        result['百分比%'] = result['百分比%'].map(lambda x: "%.2f%%" % (x * 100))
+        result['累计百分比%'] = result['累计百分比%'].map(lambda x: "%.2f%%" % (x * 100))
         row = result.index.values.tolist()
         da = result.values.tolist()
         res.append({

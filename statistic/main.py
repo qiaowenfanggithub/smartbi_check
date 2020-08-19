@@ -22,6 +22,8 @@ import json
 import numpy as np
 import pandas as pd
 from flask_cors import *
+
+
 from util import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, \
     exec_sql, format_data, transform_v_table_data_to_h, format_dataframe
 from flask.json import JSONEncoder as _JSONEncoder
@@ -40,6 +42,7 @@ from nonparametric_two_pair import Wilcoxon_test, Wilcoxon_describe
 from crosstable_chi import cross_chi2
 from describe import description
 from frequency import data_frequency
+from principal_components import correlation_matrix,kmo_Bartlett,PCA
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -676,7 +679,10 @@ def results_describe():
     try:
         describe_result = transform_table_data_to_html(description(data,X),col0='指标名称')
         log.info("调用描述性统计函数成功")
-        return jsonify(describe_result)
+        response_data = {"res": describe_result,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
     except Exception as e:
         log.error(e)
         raise e
@@ -707,7 +713,10 @@ def results_frequency():
     try:
         frequency_result = data_frequency(data,X)
         log.info("调用频数分布函数成功")
-        return jsonify(frequency_result)
+        response_data = {"res": frequency_result,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
     except Exception as e:
         log.error(e)
         raise e
@@ -791,6 +800,49 @@ def apriori():
         log.exception(e)
         return jsonify({"code": "500", "res": "", "msg": "{}".format(e.args)})
 
+# ================================ 主成分分析 ==============================
+@app.route('/statistic/principal_components', methods=['POST', 'GET'])
+def results_principal_components():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1"], # list,自变量，行
+        "components": 2 # 主成分个数
+    }
+    :return:
+    """
+    log.info('principal_components_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        components = request_data['components']
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X], list)
+    # 从数据库拿数据
+    data = exec_sql(table_name, X)
+    log.info("输入数据大小:{}".format(len(data)))
+
+    try:
+        res = []
+        correlation_matrix_result = correlation_matrix(data)
+        log.info("调用相关系数矩阵函数成功")
+        res.append(correlation_matrix_result)
+        kmo_Bartlett_result = kmo_Bartlett(data)
+        log.info("调用相关性检验函数成功")
+        res.append(kmo_Bartlett_result)
+        PCA_result = PCA(data,components=components)
+        log.info("调用PCA函数成功")
+        res.append(PCA_result)
+        response_data = {"res": res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
 
 if __name__ == '__main__':
     app.json_encoder = JSONEncoder

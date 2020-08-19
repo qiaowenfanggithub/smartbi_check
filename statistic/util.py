@@ -14,6 +14,9 @@ Date : 2020/7/9 3:54 下午
 --------------------------------------------------------
 
 """
+import base64
+from io import BytesIO
+
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
@@ -230,3 +233,32 @@ def format_data(data):
     for i in range(length):
         data[i] = data[i].apply(lambda x: "{:.0f}".format(x))
     return data
+
+# 对有列名的dataframe，将数据全转成4位小数
+def format_data_col(data):
+    data = data.astype(float)
+    length = data.shape[1]
+    for i in range(length):
+        data.iloc[0:,i] = data.iloc[0:,i].apply(lambda x: "{:.4f}".format(x))
+    return data
+
+#  matplotlib作图写入内存并输出base64格式供前端调用
+def plot_and_output_base64_png(plot):
+    plot.rcParams["font.sans-serif"] = ["Arial Unicode MS"]
+    plot.rcParams["axes.unicode_minus"] = False
+    # 写入内存
+    save_file = BytesIO()
+    plot.savefig(save_file, format='png')
+    # 转换base64并以utf8格式输出
+    save_file_base64 = base64.b64encode(save_file.getvalue()).decode('utf8')
+    # debug
+    # base64_to_img(save_file_base64)
+    plot.close("all")
+
+    # 写入文件
+    # tmp_file_name = uuid.uuid4()
+    # plot.savefig("./img/{}.png".format(tmp_file_name))
+    # with open("./img/{}.png".format(tmp_file_name), "rb") as f:
+    #     save_file_base64 = base64.b64encode(f.read()).decode('utf8')
+
+    return save_file_base64
