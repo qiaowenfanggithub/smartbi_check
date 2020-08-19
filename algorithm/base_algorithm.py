@@ -257,7 +257,7 @@ class BaseAlgorithm(object):
                 })
 
             # 输出roc、auc图片
-            if "roc" in options:
+            if "roc" in options and len(model.classes_) == 2:
                 metrics.plot_roc_curve(model, x, y)
                 plt.title("roc curve")
                 res.append({
@@ -267,7 +267,7 @@ class BaseAlgorithm(object):
                 })
         except Exception as e:
             log.error(e)
-            res = []
+            raise e
         return res
 
     def show_regression_result(self, x, y, model, options=[]):
