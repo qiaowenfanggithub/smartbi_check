@@ -450,7 +450,7 @@ def data_analysis():
                     # 显示图标题
                     # plt.title("{} - frequency distribution histogram".format(x))
                     res.append({
-                        "title": "{} - 频率柱形图".format(x),
+                        "title": "{} - 频率分布直方图".format(x),
                         "base64": "{}".format(plot_and_output_base64_png(plt))
                     })
                 else:
@@ -461,7 +461,7 @@ def data_analysis():
                     # 显示图标题
                     # plt.title("{} - frequency distribution histogram".format(x))
                     res.append({
-                        "title": "{} - 频率柱形图".format(x),
+                        "title": "{} - 频率分布直方图".format(x),
                         "base64": "{}".format(plot_and_output_base64_png(plt))
                     })
         # 数据分布图
