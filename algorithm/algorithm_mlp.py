@@ -17,7 +17,7 @@ Date : 2020/7/30 11:15 下午
 import logging
 from base_algorithm import BaseAlgorithm
 from sklearn.model_selection import GridSearchCV
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.neural_network import MLPClassifier
 from utils import transform_table_data_to_html, format_dataframe
 
 log = logging.getLogger(__name__)
@@ -55,11 +55,14 @@ class mlpClassifier(BaseAlgorithm):
             "randomState": "2020", # str,测试集训练集分割比例时的随机种子数
             "cv": "10", # str,几折交叉验证
             "param":{
-                "penalty": "l2", # str,惩罚项
-                "C": "2", # str,惩罚项系数
-                "solver": "saga", # str，优化算法
-                "max_ter": "1000", # str，最大迭代步数
-                "fit_intercept": True
+                "hidden_layer_sizes": "(10, 10)", # str（tuple）,隐藏层个数和每个隐藏层节点数
+                "activation": "relu", # str,激活函数["identity", "logistic", "tanh", "relu"]
+                "solver": "adam", # str，优化算法["lbfgs", "sgd", "adam"]
+                "alpha": "0.0001", # str(float)，惩罚项系数["0.0001", "0.00001"]
+                "batch_size": "auto", # str(int)，随机优化的minibatches的大小，默认auto，手动输入整数
+                "learning_rate_int": "0.001", # str(float)，初始学习率
+                "tol": "0.0001", # str(float)优化的容忍度
+                "max_iter": "200", # str(int)最大迭代次数
             }
             "show_options": ["matrix", "roc", "r2", "coff"]
         :return:
@@ -72,14 +75,15 @@ class mlpClassifier(BaseAlgorithm):
             self.config['param'] = self.web_data['param']
             self.config['randomState'] = int(self.web_data.get('randomState', 666))
             self.config['rate'] = float(self.web_data.get('rate', 0.3))
-            self.config['cv'] = int(self.web_data.get('cv', 0))
             self.config['show_options'] = self.web_data.get("show_options", [])
-            self.config["param"]["n_estimators"] = [int(d) for d in self.config["param"]["n_estimators"]]
-            self.config["param"]["criterion"] = self.config["param"]["criterion"]
-            self.config["param"]["max_features"] = [int(d) for d in self.config["param"]["max_features"]]
-            self.config["param"]["max_depth"] = [int(d) for d in self.config["param"]["max_depth"]]
-            self.config["param"]["min_samples_split"] = [int(d) for d in self.config["param"]["min_samples_split"]]
-            self.config["param"]["min_samples_leaf"] = [int(d) for d in self.config["param"]["min_samples_leaf"]]
+            self.config["param"]["hidden_layer_sizes"] = (100, ) if not self.config["param"]["hidden_layer_sizes"] else tuple(self.config["param"]["hidden_layer_sizes"])
+            self.config["param"]["activation"] = "relu" if not self.config["param"]["activation"] else self.config["param"]["activation"]
+            self.config["param"]["solver"] = "adam" if not self.config["param"]["solver"] else self.config["param"]["solver"]
+            self.config["param"]["alpha"] = 0.0001 if not self.config["param"]["alpha"] else float(self.config["param"]["alpha"])
+            self.config["param"]["batch_size"] = "auto" if not self.config["param"]["batch_size"] or self.config["param"]["batch_size"] == "auto" else int(self.config["param"]["batch_size"])
+            self.config["param"]["learning_rate_init"] = 0.001 if not self.config["param"]["learning_rate_init"] else float(self.config["param"]["learning_rate_init"])
+            self.config["param"]["tol"] = 0.0001 if not self.config["param"]["tol"] else float(self.config["param"]["tol"])
+            self.config["param"]["max_iter"] = 200 if not self.config["param"]["max_iter"] else int(self.config["param"]["max_iter"])
         except Exception as e:
             log.info(e)
             raise e
@@ -132,16 +136,12 @@ class mlpClassifier(BaseAlgorithm):
             x_train, x_test, y_train, y_test = self.split_data(self.table_data, self.config)
 
             # 模型训练和网格搜索
-            clf = RandomForestClassifier(random_state=self.config["randomState"])
-            model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'], scoring="roc_auc")
-            model.fit(x_train, y_train)
-            best_param = model.best_params_
-            self.model = RandomForestClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
+            clf = MLPClassifier(**self.config["param"], random_state=self.config["randomState"])
+            self.model = clf.fit(x_train, y_train)
 
             # 保存模型
-            self.config["param"] = {k: [best_param[k]] for k in best_param}
             # self.save_model(self.model, "randomForest")
-            model_info = self.save_model_into_database("randomForest")
+            model_info = self.save_model_into_database("mlpClassifier")
 
             # 分类结果可视化
             res = self.algorithm_show_result(self.model, x_test, y_test,

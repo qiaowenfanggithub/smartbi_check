@@ -127,6 +127,15 @@ def main(algorithm, method):
         random_forest_alg = randomForest(method)
         response_data = exec(method, random_forest_alg)
         return jsonify(response_data)
+    # 多层感知机（lei）
+    elif algorithm == "mlpClassifier":
+        try:
+            from algorithm_mlp import mlpClassifier
+        except NotImplementedError as e:
+            raise e
+        mlp_alg = mlpClassifier(method)
+        response_data = exec(method, mlp_alg)
+        return jsonify(response_data)
     # 逻辑回归（lei）--》训练、评估、预测
     elif algorithm == "logisticRegression":
         try:
