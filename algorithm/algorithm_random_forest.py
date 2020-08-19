@@ -76,7 +76,7 @@ class randomForest(BaseAlgorithm):
             self.config['show_options'] = self.web_data.get("show_options", [])
             self.config["param"]["n_estimators"] = [int(d) for d in self.config["param"]["n_estimators"]]
             self.config["param"]["criterion"] = self.config["param"]["criterion"]
-            if not self.config["param"]["max_features"]:
+            if not self.config["param"]["max_features"] or self.config["param"]["max_features"] == ["auto"]:
                 self.config["param"]["max_features"] = ["auto"]
             else:
                 self.config["param"]["max_features"] = [int(d) for d in self.config["param"]["max_features"]]
