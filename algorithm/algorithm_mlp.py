@@ -76,7 +76,7 @@ class mlpClassifier(BaseAlgorithm):
             self.config['randomState'] = int(self.web_data.get('randomState', 666))
             self.config['rate'] = float(self.web_data.get('rate', 0.3))
             self.config['show_options'] = self.web_data.get("show_options", [])
-            self.config["param"]["hidden_layer_sizes"] = (100, ) if not self.config["param"]["hidden_layer_sizes"] else tuple(self.config["param"]["hidden_layer_sizes"])
+            self.config["param"]["hidden_layer_sizes"] = (100, ) if not self.config["param"]["hidden_layer_sizes"] else tuple([int(c) for c in self.config["param"]["hidden_layer_sizes"]])
             self.config["param"]["activation"] = "relu" if not self.config["param"]["activation"] else self.config["param"]["activation"]
             self.config["param"]["solver"] = "adam" if not self.config["param"]["solver"] else self.config["param"]["solver"]
             self.config["param"]["alpha"] = 0.0001 if not self.config["param"]["alpha"] else float(self.config["param"]["alpha"])

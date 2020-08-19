@@ -17,7 +17,8 @@ Date : 2020/7/30 11:15 下午
 import logging
 from base_algorithm import BaseAlgorithm
 from sklearn.model_selection import GridSearchCV
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 from utils import transform_table_data_to_html, format_dataframe
 
 log = logging.getLogger(__name__)
@@ -54,6 +55,8 @@ class adaboostClassifier(BaseAlgorithm):
             "rate": "0.3", # str,测试集训练集分割比例
             "randomState": "2020", # str,测试集训练集分割比例时的随机种子数
             "cv": "10", # str,几折交叉验证
+            "n_estimators": "200", # str,弱学习器个数【默认值："200"】
+            "learning_rate": "0.8", # str,学习率【默认值："1"，0-1之间的小数】
             "param":{
                 "penalty": "l2", # str,惩罚项
                 "C": "2", # str,惩罚项系数
@@ -132,17 +135,12 @@ class adaboostClassifier(BaseAlgorithm):
             x_train, x_test, y_train, y_test = self.split_data(self.table_data, self.config)
 
             # 模型训练和网格搜索
-            clf = RandomForestClassifier(random_state=self.config["randomState"])
-            model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'], scoring="roc_auc")
-            model.fit(x_train, y_train)
-            best_param = model.best_params_
-            self.model = RandomForestClassifier(**best_param, random_state=self.config["randomState"]).fit(
-                x_test, y_test)
+            model = AdaBoostClassifier(DecisionTreeClassifier(), random_state=self.config["randomState"])
+            self.model = model.fit(x_train, y_train)
 
             # 保存模型
-            self.config["param"] = {k: [best_param[k]] for k in best_param}
             # self.save_model(self.model, "randomForest")
-            model_info = self.save_model_into_database("randomForest")
+            model_info = self.save_model_into_database("adaboostClassifier")
 
             # 分类结果可视化
             res = self.algorithm_show_result(self.model, x_test, y_test,
