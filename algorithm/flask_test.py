@@ -32,8 +32,10 @@ if __name__ == '__main__':
     #     "cv": "2",  # str,几折交叉验证
     #     "param": {
     #         "criterion": ["gini"],  # 不纯度指标gini、entropy
-    #         "max_features": ["3", "4"],
-    #         "max_depth": ["2", "3"],  # 指定树的最大深度
+    #         "max_features": None,
+    #         # "max_features": ["3", "4"],
+    #         "max_depth": None,  # 指定树的最大深度
+    #         # "max_depth": ["2", "3"],  # 指定树的最大深度
     #         "min_samples_split": ["2"],  # :int, float, optional (default=2)。表示分裂一个内部节点需要的最少样本数。
     #         "min_samples_leaf": ["1", "2"],  # int, float, optional (default=1)。指定每个叶子节点需要的最少样本数。
     #     },
@@ -274,24 +276,26 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/hierarchicalCluster/predict', json=kwargs, timeout=30)
 
     # ======================= 随机森林-训练 =============================
-    # kwargs = {
-    #     "tableName": "buy_computer_new",  # str,数据库表名
-    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-    #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
-    #     "rate": "0.3",  # str,测试集训练集分割比例
-    #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
-    #     "cv": "3",  # str,几折交叉验证
-    #     "param": {
-    #         "n_estimators": ["10", "20"],  # list,树的个数
-    #         "criterion": ["gini"],  # list,树划分准则
-    #         "max_features": ["2", "3"],  # list，用于训练的最大特征数量
-    #         "max_depth": ["5", "6"],  # list，树的最大深度列表
-    #         "min_samples_split": ["2", "3"],  # list， 内部节点再划分所需最小样本数
-    #         "min_samples_leaf": ["1", "2"],  # list，叶子节点最少样本数
-    #     },
-    #     "show_options": ["report", "matrix", "roc"]
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/train', json=kwargs, timeout=50)
+    kwargs = {
+        "tableName": "buy_computer_new",  # str,数据库表名
+        "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
+        "rate": "0.3",  # str,测试集训练集分割比例
+        "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
+        "cv": "3",  # str,几折交叉验证
+        "param": {
+            "n_estimators": ["10", "20"],  # list,树的个数
+            "criterion": ["gini"],  # list,树划分准则
+            "max_features": None,  # list，用于训练的最大特征数量
+            # "max_features": ["2", "3"],  # list，用于训练的最大特征数量
+            "max_depth": None,  # list，树的最大深度列表
+            # "max_depth": ["5", "6"],  # list，树的最大深度列表
+            "min_samples_split": ["2", "3"],  # list， 内部节点再划分所需最小样本数
+            "min_samples_leaf": ["1", "2"],  # list，叶子节点最少样本数
+        },
+        "show_options": ["report", "matrix", "roc"]
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/train', json=kwargs, timeout=50)
     # if res.json()["code"] == "200":
     #     model_info = res.json()["model_info"]
     #     res = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info, timeout=30)
@@ -361,7 +365,7 @@ if __name__ == '__main__':
     #     "rate": "0.3",  # str,测试集训练集分割比例
     #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
     #     "param": {
-    #         "hidden_layer_sizes": [10,],  # str（tuple）,隐藏层个数和每个隐藏层节点数
+    #         "hidden_layer_sizes": ["10"],  # str（tuple）,隐藏层个数和每个隐藏层节点数
     #         "activation": "relu",  # str,激活函数["identity", "logistic", "tanh", "relu"]
     #         "solver": "adam",  # str，优化算法["lbfgs", "sgd", "adam"]
     #         "alpha": "0.0001",  # str(float)，惩罚项系数["0.0001", "0.00001"]
@@ -373,6 +377,36 @@ if __name__ == '__main__':
     #     "show_options": ["report", "matrix", "roc"]
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/mlpClassifier/train', json=kwargs, timeout=50)
+    # if res.json()["code"] == "200":
+    #     model_info = res.json()["model_info"]
+    #     res = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info, timeout=30)
+    # else:
+    #     raise ValueError(res.json()["msg"])
+
+    # ======================= adaboost-训练 =============================
+    # kwargs = {
+    #     "tableName": "buy_computer_new",  # str,数据库表名
+    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
+    #     # "tableName": "iris",  # str,数据库表名
+    #     # "X": ["x0", "x1", "x2", "x3"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     # "Y": ["label"],  # list,因变量,当表格方向为v是使用
+    #     "rate": "0.3",  # str,测试集训练集分割比例
+    #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
+    #     "cv": "10",  # str,几折交叉验证
+    #     "n_estimators": "200",  # str,弱学习器个数【默认值："200"】
+    #     "learning_rate": "0.8",  # str,学习率【默认值："1"，0-1之间的小数】
+    #     "param": {
+    #         "base_estimator__criterion": ["gini", "entropy"],  # list, 树划分准则【默认值：["gini"]】
+    #         "base_estimator__max_depth": ["3", "5"],  # list, 最大树深度【默认值：[none]】
+    #         "base_estimator__max_features": ["3", "4"],  # list, 最大特征数【默认值：[none]】
+    #         "base_estimator__min_sample_split": ["1", "2"],  # list, 节点划分最小样本数【默认值：["2"]】
+    #         "base_estimator__min_samples_leaf": ["1", "2"],  # list, 叶子节点最小数【默认值：["1"]】
+    #         "n_estimators": ["10", "30"],  # list,弱学习器个数【默认值：["20"]】
+    #     },
+    #     "show_options": ["report", "matrix", "roc"]
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/adaboostClassifier/train', json=kwargs, timeout=50)
     # if res.json()["code"] == "200":
     #     model_info = res.json()["model_info"]
     #     res = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info, timeout=30)
@@ -433,21 +467,21 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/normalize', json=kwargs, timeout=50)
 
     # ======================= 数据探索-可视化 =============================
-    kwargs = {
-        "tableName": "bankloan",  # str,数据库表名
-        "count": ["年龄", "教育"],  # list,频率直方图字段列表
-        "count_hue": "违约",  # str,频率直方图分类字段
-        "dist": ["收入"],  # list,数据分布图字段列表
-        "box": ["工龄", "负债率"],  # list,箱型图字段列表
-        "pie": ["违约"],  # list,饼图字段列表
-        "pairPlot": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,特征两两散点图字段列表
-        "heatMap": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,相关系数热度图
-        "yCorr": {
-            "X": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债"],
-            "Y": ["违约"]
-        },  # list,自变量和各因变量相关系数图 ==>【分类和聚类算法变灰】
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataAnalysis', json=kwargs, timeout=500)
+    # kwargs = {
+    #     "tableName": "bankloan",  # str,数据库表名
+    #     "count": ["年龄", "教育"],  # list,频率直方图字段列表
+    #     "count_hue": "违约",  # str,频率直方图分类字段
+    #     "dist": ["收入"],  # list,数据分布图字段列表
+    #     "box": ["工龄", "负债率"],  # list,箱型图字段列表
+    #     "pie": ["违约"],  # list,饼图字段列表
+    #     "pairPlot": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,特征两两散点图字段列表
+    #     "heatMap": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,相关系数热度图
+    #     "yCorr": {
+    #         "X": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债"],
+    #         "Y": ["违约"]
+    #     },  # list,自变量和各因变量相关系数图 ==>【分类和聚类算法变灰】
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataAnalysis', json=kwargs, timeout=500)
 
     """
     =====================================================================

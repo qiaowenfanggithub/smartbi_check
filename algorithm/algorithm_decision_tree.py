@@ -76,8 +76,14 @@ class decisionTree(BaseAlgorithm):
             self.config['cv'] = int(self.web_data.get('cv', 0))
             self.config['show_options'] = self.web_data.get("show_options", [])
             self.config["param"]["criterion"] = self.config["param"]["criterion"]
-            self.config["param"]["max_features"] = [int(d) for d in self.config["param"]["max_features"]]
-            self.config["param"]["max_depth"] = [int(d) for d in self.config["param"]["max_depth"]]
+            if not self.config["param"]["max_features"]:
+                self.config["param"]["max_features"] = [None]
+            else:
+                self.config["param"]["max_features"] = [int(d) for d in self.config["param"]["max_features"]]
+            if not self.config["param"]["max_depth"]:
+                self.config["param"]["max_depth"] = [None]
+            else:
+                self.config["param"]["max_depth"] = [int(d) for d in self.config["param"]["max_depth"]]
             self.config["param"]["min_samples_split"] = [int(d) for d in self.config["param"]["min_samples_split"]]
             self.config["param"]["min_samples_leaf"] = [int(d) for d in self.config["param"]["min_samples_leaf"]]
         except Exception as e:

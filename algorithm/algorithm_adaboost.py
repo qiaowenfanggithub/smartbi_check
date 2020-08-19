@@ -29,7 +29,7 @@ class adaboostClassifier(BaseAlgorithm):
         BaseAlgorithm.__init__(self)
         self.one_type = "Classifier"
         self.one_type_name = "分类"
-        self.secone_type = "adaboost"
+        self.secone_type = "adaboostClassifier"
         self.secone_type_name = "adaboost分类"
         # super(logisticAlgorithm, self).__init__()
         if method == "train":
@@ -58,11 +58,9 @@ class adaboostClassifier(BaseAlgorithm):
             "n_estimators": "200", # str,弱学习器个数【默认值："200"】
             "learning_rate": "0.8", # str,学习率【默认值："1"，0-1之间的小数】
             "param":{
-                "penalty": "l2", # str,惩罚项
-                "C": "2", # str,惩罚项系数
-                "solver": "saga", # str，优化算法
-                "max_ter": "1000", # str，最大迭代步数
-                "fit_intercept": True
+                    "max_depth": ["3", "4"], # 指定树的最大深度, default=None
+                    "min_samples_split": ["2"], # :int, float, optional (default=2)。表示分裂一个内部节点需要的最少样本数。
+                    "min_samples_leaf": ["1"], # int, float, optional (default=1)。指定每个叶子节点需要的最少样本数。
             }
             "show_options": ["matrix", "roc", "r2", "coff"]
         :return:
@@ -77,9 +75,8 @@ class adaboostClassifier(BaseAlgorithm):
             self.config['rate'] = float(self.web_data.get('rate', 0.3))
             self.config['cv'] = int(self.web_data.get('cv', 0))
             self.config['show_options'] = self.web_data.get("show_options", [])
-            self.config["param"]["n_estimators"] = [int(d) for d in self.config["param"]["n_estimators"]]
-            self.config["param"]["criterion"] = self.config["param"]["criterion"]
-            self.config["param"]["max_features"] = [int(d) for d in self.config["param"]["max_features"]]
+            self.config['n_estimators'] = self.web_data.get("n_estimators", 200)
+            self.config['learning_rate'] = self.web_data.get("learning_rate", 1)
             self.config["param"]["max_depth"] = [int(d) for d in self.config["param"]["max_depth"]]
             self.config["param"]["min_samples_split"] = [int(d) for d in self.config["param"]["min_samples_split"]]
             self.config["param"]["min_samples_leaf"] = [int(d) for d in self.config["param"]["min_samples_leaf"]]
@@ -135,8 +132,11 @@ class adaboostClassifier(BaseAlgorithm):
             x_train, x_test, y_train, y_test = self.split_data(self.table_data, self.config)
 
             # 模型训练和网格搜索
-            model = AdaBoostClassifier(DecisionTreeClassifier(), random_state=self.config["randomState"])
-            self.model = model.fit(x_train, y_train)
+            clf = AdaBoostClassifier(DecisionTreeClassifier(), random_state=self.config["randomState"])
+            model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'], scoring="roc_auc")
+            model.fit(x_train, y_train)
+            best_param = model.best_params_
+            self.model = AdaBoostClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
 
             # 保存模型
             # self.save_model(self.model, "randomForest")
@@ -222,4 +222,4 @@ class adaboostClassifier(BaseAlgorithm):
             return {"data": "", "code": "500", "msg": "{}".format(e.args)}
 
     def __str__(self):
-        return "random_forest"
+        return "adaboostClassifier"

@@ -136,6 +136,15 @@ def main(algorithm, method):
         mlp_alg = mlpClassifier(method)
         response_data = exec(method, mlp_alg)
         return jsonify(response_data)
+    # 多层感知机（lei）
+    elif algorithm == "adaboostClassifier":
+        try:
+            from algorithm_adaboost import adaboostClassifier
+        except NotImplementedError as e:
+            raise e
+        adaboost_alg = adaboostClassifier(method)
+        response_data = exec(method, adaboost_alg)
+        return jsonify(response_data)
     # 逻辑回归（lei）--》训练、评估、预测
     elif algorithm == "logisticRegression":
         try:
