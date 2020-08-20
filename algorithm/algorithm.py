@@ -431,7 +431,7 @@ def data_analysis():
         pie = request_data.get("pie", [""])
         pairPlot = request_data.get("pairPlot", [""])
         heatMap = request_data.get("heatMap", [""])
-        yCorr = request_data.get("yCorr", [""])
+        yCorr = request_data.get("yCorr")
 
         # 获取数据从数据表
         sql = "select * from {};".format("`" + table_name + "`")
@@ -530,7 +530,7 @@ def data_analysis():
                 "base64": "{}".format(plot_and_output_base64_png(plt))
             })
         # 因变量和自变量的相关系数图
-        if yCorr["X"][0] and yCorr["Y"][0]:
+        if yCorr and yCorr["X"][0] and yCorr["Y"][0]:
             corr = table_data[yCorr["X"] + yCorr["Y"]].corr()
             corr[yCorr["Y"][0]].sort_values(ascending=False)[1:].plot(kind='bar')
             plt.ylabel("{}".format(yCorr["Y"][0]))
