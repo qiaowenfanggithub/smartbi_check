@@ -99,8 +99,8 @@ def check_data():
     request_data = init_route()
     try:
         table_name = request_data['table_name']
-        X = request_data['X']
-        Y = request_data.get('Y', [])
+        X = request_data.get('X')
+        Y = request_data.get('Y')
     except Exception as e:
         log.info(e)
         raise e

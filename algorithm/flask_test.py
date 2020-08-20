@@ -93,42 +93,44 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/decisionTree/evaluate', json=kwargs, timeout=30)
 
     # ======================= 逻辑回归-训练 =============================
-    # kwargs = {
-    #     "tableName": "91ceb15911c0441e86eeb791a6d08720",
-    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],
-    #     "Y": ["是否购买电脑"],
-    #     "rate": "0.4",
-    #     "randomState": "2",
-    #     "cv": "2",
-    #     "param": {
-    #         "penalty": ["l1"],
-    #         "C": ["1"],
-    #         "solver": ["liblinear", "saga"],
-    #         "max_iter": ["100"],
-    #         "fit_intercept": [True]
-    #     },
-    #     "show_options": [
-    #         "report",
-    #         "matrix",
-    #         "roc",
-    #         "r2",
-    #         "coff",
-    #         "independence",
-    #         "resid_normal",
-    #         "pp",
-    #         "qq",
-    #         "var",
-    #         "vif",
-    #         "outliers",
-    #         "pred_y_contrast"
-    #     ]
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/train', json=kwargs, timeout=30)
-    # if res.json()["code"] == "200":
-    #     model_info = res.json()["model_info"]
-    #     res = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info, timeout=30)
-    # else:
-    #     raise ValueError(res.json()["msg"])
+    kwargs = {
+        "tableName": "91ceb15911c0441e86eeb791a6d08720",
+        "X": ["年龄", "收入层次", "是否单身", "信用等级"],
+        "Y": ["是否购买电脑"],
+        "rate": "0.4",
+        "randomState": "2",
+        "cv": "2",
+        "param": {
+            "penalty": ["l1"],
+            "C": ["1"],
+            "solver": ["liblinear", "saga"],
+            "max_iter": ["100"],
+            "fit_intercept": [True]
+        },
+        "show_options": [
+            "report",
+            "matrix",
+            "roc",
+            "r2",
+            "coff",
+            "independence",
+            "resid_normal",
+            "pp",
+            "qq",
+            "var",
+            "vif",
+            "outliers",
+            "pred_y_contrast"
+        ]
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/train', json=kwargs, timeout=30)
+    if res.json()["code"] == "200":
+        model_info = res.json()["model_info"]
+        res1 = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info, timeout=30)
+        model_info2 = res.json()["model_info2"]
+        res2 = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info2, timeout=30)
+    else:
+        raise ValueError(res.json()["msg"])
 
     # ======================= 逻辑回归-评估 =============================
     # kwargs = {
@@ -276,26 +278,26 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/hierarchicalCluster/predict', json=kwargs, timeout=30)
 
     # ======================= 随机森林-训练 =============================
-    kwargs = {
-        "tableName": "buy_computer_new",  # str,数据库表名
-        "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-        "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
-        "rate": "0.3",  # str,测试集训练集分割比例
-        "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
-        "cv": "3",  # str,几折交叉验证
-        "param": {
-            "n_estimators": ["10", "20"],  # list,树的个数
-            "criterion": ["gini"],  # list,树划分准则
-            "max_features": None,  # list，用于训练的最大特征数量
-            # "max_features": ["2", "3"],  # list，用于训练的最大特征数量
-            "max_depth": None,  # list，树的最大深度列表
-            # "max_depth": ["5", "6"],  # list，树的最大深度列表
-            "min_samples_split": ["2", "3"],  # list， 内部节点再划分所需最小样本数
-            "min_samples_leaf": ["1", "2"],  # list，叶子节点最少样本数
-        },
-        "show_options": ["report", "matrix", "roc"]
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/train', json=kwargs, timeout=50)
+    # kwargs = {
+    #     "tableName": "buy_computer_new",  # str,数据库表名
+    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
+    #     "rate": "0.3",  # str,测试集训练集分割比例
+    #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
+    #     "cv": "3",  # str,几折交叉验证
+    #     "param": {
+    #         "n_estimators": ["10", "20"],  # list,树的个数
+    #         "criterion": ["gini"],  # list,树划分准则
+    #         "max_features": None,  # list，用于训练的最大特征数量
+    #         # "max_features": ["2", "3"],  # list，用于训练的最大特征数量
+    #         "max_depth": None,  # list，树的最大深度列表
+    #         # "max_depth": ["5", "6"],  # list，树的最大深度列表
+    #         "min_samples_split": ["2", "3"],  # list， 内部节点再划分所需最小样本数
+    #         "min_samples_leaf": ["1", "2"],  # list，叶子节点最少样本数
+    #     },
+    #     "show_options": ["report", "matrix", "roc"]
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/train', json=kwargs, timeout=50)
     # if res.json()["code"] == "200":
     #     model_info = res.json()["model_info"]
     #     res = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info, timeout=30)
@@ -476,10 +478,10 @@ if __name__ == '__main__':
     #     "pie": ["违约"],  # list,饼图字段列表
     #     "pairPlot": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,特征两两散点图字段列表
     #     "heatMap": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,相关系数热度图
-    #     "yCorr": {
-    #         "X": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债"],
-    #         "Y": ["违约"]
-    #     },  # list,自变量和各因变量相关系数图 ==>【分类和聚类算法变灰】
+    #     # "yCorr": {
+    #     #     "X": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债"],
+    #     #     "Y": ["违约"]
+    #     # },  # list,自变量和各因变量相关系数图 ==>【分类和聚类算法变灰】
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataAnalysis', json=kwargs, timeout=500)
 

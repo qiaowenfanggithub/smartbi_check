@@ -169,7 +169,9 @@ def get_dataframe_from_mysql(sql_sentence, host=None, port=None, user=None, pass
 def exec_sql(table_name, X=None, Y=None):
     # 从数据库拿数据
     try:
-        if not Y or Y[0] == "":
+        if not X and not Y:
+            sql_sentence = "select * from {};".format("`" + table_name + "`")
+        elif not Y or Y[0] == "":
             sql_sentence = "select {} from {};".format(",".join(X), "`" + table_name + "`")
         else:
             sql_sentence = "select {} from {};".format(",".join(X + Y), "`" + table_name + "`")

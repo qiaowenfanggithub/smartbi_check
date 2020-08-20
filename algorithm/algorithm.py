@@ -372,8 +372,7 @@ def save_model():
         table = request_data.get("table", "algorithm_model")
         key = request_data["key"]
         value = request_data["value"]
-        # 将模型信息入库
-        exec_insert_sql(table, key, value)
+
         # 将临时文件model_tmp里的模型文件转移到正式文件model
         algorithm_name = value[2]
         model_name = value[1]
@@ -382,6 +381,10 @@ def save_model():
         a = os.system("cp ./model_tmp/{0}/{1}.pkl ./model/{0}".format(algorithm_name, model_name))
         if a != 0:
             raise FileNotFoundError("execute file copy failed")
+
+        # 将模型信息入库
+        if not model_name.startswith("logisticRegression2"):
+            exec_insert_sql(table, key, value)
         response_data = {"res": "",
                          "code": "200",
                          "msg": "exec sql successful"}
