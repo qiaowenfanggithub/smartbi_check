@@ -452,7 +452,7 @@ def data_analysis():
         }))
 
         # 频率分布直方图
-        if count[0]:
+        if count and count[0]:
             for x in count:
                 if not count_hue:
                     sns.countplot(table_data[x])
@@ -477,7 +477,7 @@ def data_analysis():
                         "base64": "{}".format(plot_and_output_base64_png(plt))
                     })
         # 数据分布图
-        if dist[0]:
+        if dist and dist[0]:
             for x in dist:
                 sns.distplot(table_data[x], kde=False)
                 # 显示纵轴标签
@@ -490,7 +490,7 @@ def data_analysis():
                     "base64": "{}".format(plot_and_output_base64_png(plt))
                 })
         # 箱型图
-        if box[0]:
+        if box and box[0]:
             for x in box:
                 sns.boxplot(table_data[x], palette="Set2", orient="v")
                 # 显示纵轴标签
@@ -503,7 +503,7 @@ def data_analysis():
                     "base64": "{}".format(plot_and_output_base64_png(plt))
                 })
         # 饼图
-        if pie[0]:
+        if pie and pie[0]:
             for x in pie:
                 plt.pie(table_data[x].value_counts(), labels=table_data[x].value_counts().index, autopct="%1.1f%%", shadow=True)
                 # 显示纵轴标签
@@ -516,14 +516,14 @@ def data_analysis():
                     "base64": "{}".format(plot_and_output_base64_png(plt))
                 })
         # 矩形图
-        if pairPlot[0]:
+        if pairPlot and pairPlot[0]:
             sns.pairplot(table_data[pairPlot])
             res.append({
                 "title": "特征两两散点图",
                 "base64": "{}".format(plot_and_output_base64_png(plt))
             })
         # 相关系数表
-        if heatMap[0]:
+        if heatMap and heatMap[0]:
             corr = table_data[heatMap].corr()
             sns.heatmap(corr, xticklabels=corr.columns, yticklabels=corr.columns,
                         linewidths=0.2, cmap="YlGnBu", annot=True)
