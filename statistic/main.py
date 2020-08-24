@@ -23,7 +23,6 @@ import numpy as np
 import pandas as pd
 from flask_cors import *
 
-
 from util import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, \
     exec_sql, format_data, transform_v_table_data_to_h, format_dataframe
 from flask.json import JSONEncoder as _JSONEncoder
@@ -42,7 +41,8 @@ from nonparametric_two_pair import Wilcoxon_test, Wilcoxon_describe
 from crosstable_chi import cross_chi2
 from describe import description
 from frequency import data_frequency
-from principal_components import correlation_matrix,kmo_Bartlett,PCA
+from principal_components import correlation_matrix, kmo_Bartlett, PCA
+
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -653,6 +653,7 @@ def results_crosstable():
         log.error(e)
         raise e
 
+
 # ================================ 描述性统计 ==============================
 @app.route('/statistic/describe', methods=['POST', 'GET'])
 def results_describe():
@@ -677,7 +678,7 @@ def results_describe():
     log.info("输入数据大小:{}".format(len(data)))
 
     try:
-        describe_result = transform_table_data_to_html(description(data,X),col0='指标名称')
+        describe_result = transform_table_data_to_html(description(data, X), col0='指标名称')
         log.info("调用描述性统计函数成功")
         response_data = {"res": describe_result,
                          "code": "200",
@@ -686,6 +687,7 @@ def results_describe():
     except Exception as e:
         log.error(e)
         raise e
+
 
 # ================================ 频数分布表 ==============================
 @app.route('/statistic/frequency', methods=['POST', 'GET'])
@@ -711,7 +713,7 @@ def results_frequency():
     log.info("输入数据大小:{}".format(len(data)))
 
     try:
-        frequency_result = data_frequency(data,X)
+        frequency_result = data_frequency(data, X)
         log.info("调用频数分布函数成功")
         response_data = {"res": frequency_result,
                          "code": "200",
@@ -720,6 +722,7 @@ def results_frequency():
     except Exception as e:
         log.error(e)
         raise e
+
 
 # ================================ 关联规则Apriori/fpgrowth ==============================
 @app.route('/statistic/apriori', methods=['POST', 'GET'])
@@ -800,6 +803,7 @@ def apriori():
         log.exception(e)
         return jsonify({"code": "500", "res": "", "msg": "{}".format(e.args)})
 
+
 # ================================ 主成分分析 ==============================
 @app.route('/statistic/principal_components', methods=['POST', 'GET'])
 def results_principal_components():
@@ -833,7 +837,7 @@ def results_principal_components():
         kmo_Bartlett_result = kmo_Bartlett(data)
         log.info("调用相关性检验函数成功")
         res.append(kmo_Bartlett_result)
-        PCA_result = PCA(data,components=components)
+        PCA_result = PCA(data, components=components)
         log.info("调用PCA函数成功")
         res.append(PCA_result)
         response_data = {"res": res,
@@ -843,6 +847,7 @@ def results_principal_components():
     except Exception as e:
         log.error(e)
         raise e
+
 
 if __name__ == '__main__':
     app.json_encoder = JSONEncoder

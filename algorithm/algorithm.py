@@ -411,6 +411,8 @@ def data_analysis():
         "pairPlot": [] # 字段列表 list
         "heatMap": [] # 字段列表 list
         "yCorr": [] # 字段列表 list
+        "scatter": [""],  # list,散点图
+        "crosstab": [""]  # list,交叉表
     }
     :return:
     """
@@ -435,21 +437,25 @@ def data_analysis():
         pairPlot = request_data.get("pairPlot", [""])
         heatMap = request_data.get("heatMap", [""])
         yCorr = request_data.get("yCorr")
+        scatter = request_data.get("scatter")
+        crosstab = request_data.get("crosstab")
+        statistic = request_data.get("statistic")
 
         # 获取数据从数据表
         sql = "select * from {};".format("`" + table_name + "`")
         table_data = get_dataframe_from_mysql(sql, database='sophia_data')
 
         # 基本统计信息
-        table_data = table_data.astype("float")
-        data = table_data.describe()
-        data = format_dataframe(data, {k: ".4f" for k in data.columns})
-        res.append(transform_table_data_to_html({
-            "data": data.values.tolist(),
-            "title": "描述性统计分析",
-            "col": data.columns.tolist(),
-            "row": data.index.tolist()
-        }))
+        if not statistic:
+            data = table_data.astype("float")
+            data = data.describe()
+            data = format_dataframe(data, {k: ".4f" for k in data.columns})
+            res.append(transform_table_data_to_html({
+                "data": data.values.tolist(),
+                "title": "描述性统计分析",
+                "col": data.columns.tolist(),
+                "row": data.index.tolist()
+            }))
 
         # 频率分布直方图
         if count and count[0]:
@@ -479,7 +485,7 @@ def data_analysis():
         # 数据分布图
         if dist and dist[0]:
             for x in dist:
-                sns.distplot(table_data[x], kde=False)
+                sns.distplot(table_data[x].astype("float"), kde=False)
                 # 显示纵轴标签
                 plt.xlabel("区间")
                 plt.ylabel("{}".format(x))
@@ -492,10 +498,10 @@ def data_analysis():
         # 箱型图
         if box and box[0]:
             for x in box:
-                sns.boxplot(table_data[x], palette="Set2", orient="v")
+                sns.boxplot(table_data[x].astype("float"), palette="Set2", orient="v")
                 # 显示纵轴标签
                 # plt.ylabel("frequency")
-                plt.xlabel("{}".format(x))
+                # plt.xlabel("{}".format(x))
                 # 显示图标题
                 # plt.title("{} - frequency distribution histogram".format(x))
                 res.append({
@@ -517,14 +523,16 @@ def data_analysis():
                 })
         # 矩形图
         if pairPlot and pairPlot[0]:
-            sns.pairplot(table_data[pairPlot])
+            data = table_data[pairPlot].astype("float")
+            sns.pairplot(data)
             res.append({
                 "title": "特征两两散点图",
                 "base64": "{}".format(plot_and_output_base64_png(plt))
             })
         # 相关系数表
         if heatMap and heatMap[0]:
-            corr = table_data[heatMap].corr()
+            data = table_data[heatMap].astype("float")
+            corr = data.corr()
             sns.heatmap(corr, xticklabels=corr.columns, yticklabels=corr.columns,
                         linewidths=0.2, cmap="YlGnBu", annot=True)
             # plt.title("Correlation between variables")
@@ -534,7 +542,8 @@ def data_analysis():
             })
         # 因变量和自变量的相关系数图
         if yCorr and yCorr["X"][0] and yCorr["Y"][0]:
-            corr = table_data[yCorr["X"] + yCorr["Y"]].corr()
+            data = table_data[yCorr["X"] + yCorr["Y"]].astype("float")
+            corr = data.corr()
             corr[yCorr["Y"][0]].sort_values(ascending=False)[1:].plot(kind='bar')
             plt.ylabel("{}".format(yCorr["Y"][0]))
             # plt.title("Correlations between y and x")
@@ -542,6 +551,41 @@ def data_analysis():
                 "title": "因变量和各自变量的相关系数图",
                 "base64": "{}".format(plot_and_output_base64_png(plt))
             })
+        # 散点图
+        if scatter and scatter["X"][0] and scatter["Y"][0]:
+            data = table_data[scatter["X"] + scatter["Y"]].astype("float")
+            if len(scatter["X"]) == 1 and len(scatter["Y"]) == 1:
+                sns.scatterplot(x=scatter["X"][0], y=scatter["Y"][0], data=data)
+                res.append({
+                    "title": "{} by {} 散点图".format(scatter["Y"][0], scatter["X"][0]),
+                    "base64": "{}".format(plot_and_output_base64_png(plt))
+                })
+            else:
+                sns.pairplot(data[scatter["X"] + scatter["Y"]])
+                res.append({
+                    "title": "变量两两散点图",
+                    "base64": "{}".format(plot_and_output_base64_png(plt))
+                })
+        # 交叉表
+        if crosstab and crosstab["X"][0] and crosstab["Y"][0]:
+            if len(crosstab["X"]) == 1 and len(crosstab["Y"]) == 1:
+                cross_data = pd.crosstab(index=table_data[crosstab["X"]].values.reshape(-1,), columns=table_data[crosstab["Y"]].values.reshape(-1,), margins=True)
+                res.append(transform_table_data_to_html({
+                    "data": cross_data.values.tolist(),
+                    "title": "交叉表",
+                    "col": cross_data.columns.tolist(),
+                    "row": cross_data.index.tolist()
+                }))
+            else:
+                index_data = [table_data[x].values.reshape(-1,) for x in crosstab["X"]]
+                col_data = [table_data[y].values.reshape(-1,) for y in crosstab["Y"]]
+                cross_data = pd.crosstab(index=index_data, columns=col_data, margins=True)
+                res.append(transform_table_data_to_html({
+                    "data": cross_data.values.tolist(),
+                    "title": "交叉表",
+                    "col": ["/".join(["{}".format(d) for d in c]) for c in cross_data.columns],
+                    "row": ["/".join(["{}".format(d) for d in c]) for c in cross_data.index]
+                }))
         response_data = {"res": res,
                          "code": "200",
                          "msg": "ok"}

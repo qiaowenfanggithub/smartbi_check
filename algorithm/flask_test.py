@@ -93,44 +93,44 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/decisionTree/evaluate', json=kwargs, timeout=30)
 
     # ======================= 逻辑回归-训练 =============================
-    kwargs = {
-        "tableName": "91ceb15911c0441e86eeb791a6d08720",
-        "X": ["年龄", "收入层次", "是否单身", "信用等级"],
-        "Y": ["是否购买电脑"],
-        "rate": "0.4",
-        "randomState": "2",
-        "cv": "2",
-        "param": {
-            "penalty": ["l1"],
-            "C": ["1"],
-            "solver": ["liblinear", "saga"],
-            "max_iter": ["100"],
-            "fit_intercept": [True]
-        },
-        "show_options": [
-            "report",
-            "matrix",
-            "roc",
-            "r2",
-            "coff",
-            "independence",
-            "resid_normal",
-            "pp",
-            "qq",
-            "var",
-            "vif",
-            "outliers",
-            "pred_y_contrast"
-        ]
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/train', json=kwargs, timeout=30)
-    if res.json()["code"] == "200":
-        model_info = res.json()["model_info"]
-        res1 = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info, timeout=30)
-        model_info2 = res.json()["model_info2"]
-        res2 = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info2, timeout=30)
-    else:
-        raise ValueError(res.json()["msg"])
+    # kwargs = {
+    #     "tableName": "91ceb15911c0441e86eeb791a6d08720",
+    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],
+    #     "Y": ["是否购买电脑"],
+    #     "rate": "0.4",
+    #     "randomState": "2",
+    #     "cv": "2",
+    #     "param": {
+    #         "penalty": ["l1"],
+    #         "C": ["1"],
+    #         "solver": ["liblinear", "saga"],
+    #         "max_iter": ["100"],
+    #         "fit_intercept": [True]
+    #     },
+    #     "show_options": [
+    #         "report",
+    #         "matrix",
+    #         "roc",
+    #         "r2",
+    #         "coff",
+    #         "independence",
+    #         "resid_normal",
+    #         "pp",
+    #         "qq",
+    #         "var",
+    #         "vif",
+    #         "outliers",
+    #         "pred_y_contrast"
+    #     ]
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/logisticRegression/train', json=kwargs, timeout=30)
+    # if res.json()["code"] == "200":
+    #     model_info = res.json()["model_info"]
+    #     res1 = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info, timeout=30)
+    #     model_info2 = res.json()["model_info2"]
+    #     res2 = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info2, timeout=30)
+    # else:
+    #     raise ValueError(res.json()["msg"])
 
     # ======================= 逻辑回归-评估 =============================
     # kwargs = {
@@ -469,21 +469,38 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataProcess/normalize', json=kwargs, timeout=50)
 
     # ======================= 数据探索-可视化 =============================
-    # kwargs = {
-    #     "tableName": "bankloan",  # str,数据库表名
-    #     "count": ["年龄", "教育"],  # list,频率直方图字段列表
-    #     "count_hue": "违约",  # str,频率直方图分类字段
-    #     "dist": ["收入"],  # list,数据分布图字段列表
-    #     "box": ["工龄", "负债率"],  # list,箱型图字段列表
-    #     "pie": ["违约"],  # list,饼图字段列表
-    #     "pairPlot": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,特征两两散点图字段列表
-    #     "heatMap": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,相关系数热度图
-    #     # "yCorr": {
-    #     #     "X": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债"],
-    #     #     "Y": ["违约"]
-    #     # },  # list,自变量和各因变量相关系数图 ==>【分类和聚类算法变灰】
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataAnalysis', json=kwargs, timeout=500)
+    kwargs = {
+        # "tableName": "buy-computer",  # str,数据库表名
+        "tableName": "bankloan",  # str,数据库表名
+        "count": ["年龄", "教育"],  # list,频率直方图字段列表
+        # "count_hue": "违约",  # str,频率直方图分类字段
+        "dist": ["收入"],  # list,数据分布图字段列表
+        "box": ["工龄", "负债率"],  # list,箱型图字段列表
+        # "pie": ["违约"],  # list,饼图字段列表
+        # "pairPlot": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,特征两两散点图字段列表
+        "heatMap": ["年龄", "教育", "收入", "负债率"],  # list,相关系数热度图
+        # "heatMap": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,相关系数热度图
+        # "yCorr": {
+        #     "X": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债"],
+        #     "Y": ["违约"]
+        # },  # list,自变量和各因变量相关系数图 ==>【分类和聚类算法变灰】
+        "scatter": {
+            "X": ["收入"],
+            # "X": ["收入", "负债率", "信用卡负债"],
+            "Y": ["其他负债"]
+        },  # list,自变量和各因变量散点图
+        "crosstab": {
+            # "X": ["年龄", "收入层次"],
+            "X": ["教育"],
+            # "X": ["教育", "工龄"],
+            "Y": ["违约", "地址"]
+            # "Y": ["违约"],
+            # "Y": ["是否单身"]
+            # "Y": ["是否单身", "信用等级"]
+        },  # list,自变量和各因变量交叉表
+        "statistic": True
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/dataAnalysis', json=kwargs, timeout=500)
 
     """
     =====================================================================
