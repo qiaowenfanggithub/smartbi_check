@@ -69,7 +69,7 @@ if __name__ == '__main__':
     #     "table_name": "t_two_independent",  # str,数据库表名
     #     "X": ["level"],  # list,自变量
     #     "Y": ["value"],  # list,因变量
-    #     "alpha": "0.06",  # str,置信区间百分比
+    #     "alpha": "0.05",  # str,置信区间百分比
     #     "table_direction": "v",  # 表格方向，一般为竖向，即有一列是分类变量
     #     "analysis_options": ["normal", "variances"]
     # }
@@ -148,20 +148,48 @@ if __name__ == '__main__':
     # print(res.text)
 
     # ======================= 主成分分析 =============================
-    kwargs = {
-        "table_name": "principal",  # str,数据库表名
-        "X": ["x1","x2","x3","x4","x5","x6","x7","x8","x9"],  # list,自变量
-        "components":2
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/statistic/principal_components', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "table_name": "principal",  # str,数据库表名
+    #     "X": ["x1","x2","x3","x4","x5","x6","x7","x8","x9"],  # list,自变量
+    #     "components":2
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/statistic/principal_components', json=kwargs, timeout=30)
 
     # # print(json.loads(res.text, encoding="utf-8"))
+    # ======================= 因子分析 =============================
+    # kwargs = {
+    #     "table_name": "principal",  # str,数据库表名
+    #     "X": ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9"],  # list,自变量
+    #     "components": 3,
+    #     "standardize":True,
+    #     "transpose":True
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/statistic/factor_analysis', json=kwargs, timeout=30)
+    # ======================= 单样本卡方检验 =============================
+    # kwargs = {
+    #     "table_name": "one_sample_chi4",  # str,数据库表名
+    #     "X": ["test1"],  # list,自变量 , "test2"
+    #     "E": [],#"expect1","expect2"
+    #     "input_e": [], #[[16,16,16,18,18,8],[6,6,6,8,8,8]],
+    #     "button_type": ["null"] #, "select","input", "null"
+    #
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/statistic/one_sample_chi', json=kwargs, timeout=30)
+    # ======================= 单层交叉表卡方检验 =============================
+    # kwargs = {
+    #     "table_name": "crosstable",  # str,数据库表名
+    #     "X": ["c1"],  # 行
+    #     "Y": ["c2"] # 列
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/statistic/crosstable', json=kwargs, timeout=30)
+
+    # ======================= 分层交叉表卡方检验 =============================
+    # kwargs = {
+    #     "table_name": "crosstable",  # str,数据库表名
+    #     "hang": ["c1","c2"],  # 行
+    #     "lie": ["c4"], # 列
+    #     "fenceng": ["c3"] # 分层
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/statistic/fencen_crosstable', json=kwargs, timeout=30)
+    # # print(json.loads(res.text, encoding="utf-8"))
     print(res.text)
-
-
-
-
-
-
-
-

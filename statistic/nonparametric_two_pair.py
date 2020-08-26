@@ -32,17 +32,17 @@ def Wilcoxon_test(data: pd.DataFrame,X):
                 wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x, zero_method='wilcox', correction=False,
                                                                      alternative=i)
                 row.append(['双边检测'])
-                res.append([wilcoxon_statistic, wilcoxon_pvalue])
+                res.append(["{:.4f}".format(wilcoxon_statistic), "{:.4f}".format(wilcoxon_pvalue)])
             elif i == 'greater':
                 wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x, zero_method='wilcox', correction=False,
                                                                      alternative=i)
                 row.append(['单侧检测，备择假设为">"'])
-                res.append([wilcoxon_statistic, wilcoxon_pvalue])
+                res.append(["{:.4f}".format(wilcoxon_statistic), "{:.4f}".format(wilcoxon_pvalue)])
             elif i == 'less':
                 wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(x, zero_method='wilcox', correction=False,
                                                                      alternative=i)
                 row.append(['单侧检测，备择假设为"<"'])
-                res.append([wilcoxon_statistic, wilcoxon_pvalue])
+                res.append(["{:.4f}".format(wilcoxon_statistic), "{:.4f}".format(wilcoxon_pvalue)])
     if len(X) == 2:
         v1 = data[X[0]]
         v2 = data[X[1]]
@@ -51,17 +51,17 @@ def Wilcoxon_test(data: pd.DataFrame,X):
                 wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(v1, v2, zero_method='wilcox', correction=False,
                                                                      alternative=i)  # zero_method='wilcox' 丢弃所有零差
                 row.append(['双边检测'])
-                res.append([wilcoxon_statistic, wilcoxon_pvalue])
+                res.append(["{:.4f}".format(wilcoxon_statistic), "{:.4f}".format(wilcoxon_pvalue)])
             elif i == 'greater':
                 wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(v1, v2, zero_method='wilcox', correction=False,
                                                                      alternative=i)
                 row.append(['单侧检测，备择假设为">"'])
-                res.append([wilcoxon_statistic, wilcoxon_pvalue])
+                res.append(["{:.4f}".format(wilcoxon_statistic), "{:.4f}".format(wilcoxon_pvalue)])
             elif i == 'less':
                 wilcoxon_statistic, wilcoxon_pvalue = stats.wilcoxon(v1, v2, zero_method='wilcox', correction=False,
                                                                      alternative=i)
                 row.append(['单侧检测，备择假设为"<"'])
-                res.append([wilcoxon_statistic, wilcoxon_pvalue])
+                res.append(["{:.4f}".format(wilcoxon_statistic), "{:.4f}".format(wilcoxon_pvalue)])
     return {
         'title': 'Wilcoxon 符号秩检验',
         'row': ['双侧检验','单侧检验，备择假设为“>”','单侧检验，备择假设为“<”'],

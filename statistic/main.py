@@ -23,8 +23,9 @@ import numpy as np
 import pandas as pd
 from flask_cors import *
 
+from factor_analysis import FA
 from util import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, \
-    exec_sql, format_data, transform_v_table_data_to_h, format_dataframe
+    exec_sql, format_data, transform_v_table_data_to_h, format_dataframe, format_data_col
 from flask.json import JSONEncoder as _JSONEncoder
 from anova_one_way import normal_test, levene_test, anova_analysis, multiple_test, anova_one_way_describe_info
 from anova_all_way import anova_all_way_describe_info, normal_test_all, levene_test_all, anova_analysis_multivariate, \
@@ -41,8 +42,9 @@ from nonparametric_two_pair import Wilcoxon_test, Wilcoxon_describe
 from crosstable_chi import cross_chi2
 from describe import description
 from frequency import data_frequency
-from principal_components import correlation_matrix, kmo_Bartlett, PCA
 
+from principal_components import correlation_matrix,kmo_Bartlett,PCA
+import scipy.stats as stats
 log = logging.getLogger(__name__)
 
 app = Flask(__name__)
@@ -611,14 +613,14 @@ def results_nonparametric_two_independent():
         raise e
 
 
-# ================================ 交叉表 及卡方检验 ==============================
+# ================================ 单层交叉表及卡方检验 ==============================
 @app.route('/statistic/crosstable', methods=['POST', 'GET'])
 def results_crosstable():
     """
     接口请求参数:{
         "table_name": "" # str,数据库表名
-        "X": ["x1"], # list,自变量，行
-        "Y": ["y"], # list,因变量，列
+        "X": ["x1"], # list，行
+        "Y": ["y"], # list，列
     }
     :return:
     """
@@ -654,6 +656,49 @@ def results_crosstable():
         raise e
 
 
+# ================================ 分层交叉表及卡方检验 ==============================
+@app.route('/statistic/fencen_crosstable', methods=['POST', 'GET'])
+def results_fencen_crosstable():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "hang": ["n1"], # list，行
+        "lie": ["c1"], # list，列
+        "fenceng":['f'], # 分层变量
+    }
+    :return:
+    """
+    log.info('fencen_crosstable_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        hang = request_data['index']
+        lie = request_data['columns']
+        fenceng = request_data['fenceng']
+
+    except Exception as e:
+        log.info(e)
+        raise e
+    # assert isinstance([X, Y], list)
+    # assert isinstance([X], list)
+    # 从数据库拿数据
+    indexs = fenceng + hang
+    data = exec_sql(table_name, indexs, lie)
+    # data = exec_sql(table_name, X)
+    log.info("输入数据大小:{}".format(len(data)))
+
+    try:
+        index = [data[i] for i in range(len(indexs))]
+        columns = data[lie[0]]
+        res = cross_chis(index, columns)
+
+        response_data = {"res": res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
 # ================================ 描述性统计 ==============================
 @app.route('/statistic/describe', methods=['POST', 'GET'])
 def results_describe():
@@ -844,6 +889,272 @@ def results_principal_components():
                          "code": "200",
                          "msg": "ok!"}
         return jsonify(response_data)
+    except Exception as e:
+        log.error(e)
+        raise e
+
+# ================================ 因子分析 ==============================
+@app.route('/statistic/factor_analysis', methods=['POST', 'GET'])
+def results_factor_analysis():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1","x2"], # list,自变量，行
+        "components": 2 # 因子个数
+        "standardize": 默认 True 标准化，False 不标准化
+        "transpose": 默认 False 不转置，True 转置
+    }
+    :return:
+    """
+    log.info('factor_analysis_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        components = request_data['components']
+        standardize = request_data['standardize']
+        transpose = request_data['transpose']
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X], list)
+    # 从数据库拿数据
+    if transpose == False:
+        data = exec_sql(table_name, X)
+        log.info("输入数据大小:{}".format(len(data)))
+
+        try:
+            ic_fa = FA(component=components,standardize=standardize)
+            res = []
+            correlation_matrix_result = correlation_matrix(data)
+            log.info("调用相关系数矩阵函数成功")
+            res.append(correlation_matrix_result)
+            bar = ic_fa.kmo_Bartlett(data)
+            log.info("调用相关性检验函数成功")
+            res.append(bar)
+            contribution = ic_fa.var_contribution(data)  # 特征值及贡献率及碎石图
+            log.info("调用计算特征值、贡献率、碎石图成功")
+            res.append(contribution)
+            before_zaihe = ic_fa.loadings(data)  # 旋转前载荷矩阵
+            log.info("调用旋转前载荷矩阵函数成功")
+            res.append(before_zaihe)
+            after_zaihe = ic_fa.varimax_rotation(data)  # 旋转后载荷矩阵
+            log.info("调用旋转后载荷矩阵函数成功")
+            res.append(after_zaihe)
+            score_coef = ic_fa.score_coef(data)  # 因子得分系数
+            log.info("调用因子得分系数函数成功")
+            res.append(score_coef)
+            score = ic_fa.score(data)  # 因子得分
+            log.info("调用因子得分函数成功")
+            res.append(score)
+            response_data = {"res": res,
+                             "code": "200",
+                             "msg": "ok!"}
+            return jsonify(response_data)
+        except Exception as e:
+            log.error(e)
+            raise e
+    elif transpose == True:
+        da = exec_sql(table_name, X)
+        data = da.T
+        log.info("输入数据大小:{}".format(len(data)))
+
+
+        ic_fa = FA(component=components, standardize=standardize)
+        res = []
+        try:
+            correlation_matrix_result = correlation_matrix(data)
+            log.info("调用相关系数矩阵函数成功")
+            res.append(correlation_matrix_result)
+        except Exception as e:
+            log.error(e)
+        try:
+            bar = ic_fa.kmo_Bartlett(data)
+            log.info("调用相关性检验函数成功")
+            res.append(bar)
+        except Exception as e:
+            log.error(e)
+        try:
+            contribution = ic_fa.var_contribution(data)  # 特征值及贡献率及碎石图
+            log.info("调用计算特征值、贡献率、碎石图成功")
+            res.append(contribution)
+        except Exception as e:
+            log.error(e)
+        try:
+            before_zaihe = ic_fa.loadings(data)  # 旋转前载荷矩阵
+            log.info("调用旋转前载荷矩阵函数成功")
+            res.append(before_zaihe)
+        except Exception as e:
+            log.error(e)
+        try:
+            after_zaihe = ic_fa.varimax_rotation(data)  # 旋转后载荷矩阵
+            log.info("调用旋转后载荷矩阵函数成功")
+            res.append(after_zaihe)
+        except Exception as e:
+            log.error(e)
+        try:
+            score_coef = ic_fa.score_coef(data)  # 因子得分系数
+            log.info("调用因子得分系数函数成功")
+            res.append(score_coef)
+        except Exception as e:
+            log.error(e)
+        try:
+            score = ic_fa.score(data)  # 因子得分
+            log.info("调用因子得分函数成功")
+            res.append(score)
+        except Exception as e:
+            log.error(e)
+        response_data = {"res": res,
+                         "code": "200",
+                         "msg": "ok!"}
+        return jsonify(response_data)
+
+# ================================ 单样本卡方检验 ==============================
+@app.route('/statistic/one_sample_chi', methods=['POST', 'GET'])
+def result_one_sample_chi():
+    """
+    接口请求参数:{
+        "table_name": "" # str,数据库表名
+        "X": ["x1", "x2"], # list，检测变量
+        "E": ["e1","e2"], # list,期望频率变量
+        "input_e": [2,3,4], #用户具体输入的期望频率
+        "button_type": ["select","input","null"] #str 按钮的类型
+    }
+    :return:
+    """
+    log.info('result_one_sample_chi_get_results_init...')
+    request_data = init_route()
+    try:
+        table_name = request_data['table_name']
+        X = request_data['X']
+        E = request_data['E']
+        input_e = request_data['input_e']
+        button_type = request_data['button_type']
+
+    except Exception as e:
+        log.info(e)
+        raise e
+    assert isinstance([X], list)
+    try:
+        if button_type[0] == 'null':
+            da = exec_sql(table_name, X)
+            da = da.astype(float)
+            data = [da[i] for i in X]
+            log.info("输入数据大小:{}".format(len(data)))
+            if da.shape[1] == 1:
+                statistic, pvalue = stats.power_divergence(da[X[0]], axis=0)
+                title = '单样本卡方检验'
+                col = ['卡方', '显著性']
+                row = X
+                d = pd.DataFrame([statistic, pvalue]).T
+                d = d.astype(float)
+                d = format_data_col(d)
+                res = d.values.tolist()
+                return transform_table_data_to_html({
+                    'title': title,
+                    'col': col,
+                    'row': row,
+                    'data': res
+                })
+            elif da.shape[1] > 1:
+                statistic, pvalue = stats.power_divergence(data, axis=1)
+                title = '单样本卡方检验'
+                col = ['卡方', '显著性']
+                row = X
+                d = pd.DataFrame([statistic, pvalue]).T
+                d = d.astype(float)
+                d = format_data_col(d)
+                res = d.values.tolist()
+                return transform_table_data_to_html({
+                    'title': title,
+                    'col': col,
+                    'row': row,
+                    'data': res
+                })
+            log.info("无期望频率情况分析完成")
+
+        elif button_type[0] == 'select':
+            te = exec_sql(table_name, X)
+            te = te.astype(float)
+            test = [te[i] for i in X]
+            ex = exec_sql(table_name, E)
+            ex = ex.astype(float)
+            expect = [ex[j] for j in E]
+            log.info("输入数据大小:{}".format(len(test)))
+            if te.shape[1] == 1:
+                statistic, pvalue = stats.power_divergence(test,expect, axis=0)
+                title = '单样本卡方检验'
+                col = ['卡方', '显著性']
+                row = X
+                d = pd.DataFrame([statistic, pvalue]).T
+                d = d.astype(float)
+                d = format_data_col(d)
+                res = d.values.tolist()
+                return transform_table_data_to_html({
+                    'title': title,
+                    'col': col,
+                    'row': row,
+                    'data': res
+                })
+            elif te.shape[1] > 1:
+                statistic, pvalue = stats.power_divergence(test,expect, axis=1)
+                title = '单样本卡方检验'
+                col = ['卡方', '显著性']
+                row = X
+                d = pd.DataFrame([statistic, pvalue]).T
+                d = d.astype(float)
+                d = format_data_col(d)
+                res = d.values.tolist()
+                return transform_table_data_to_html({
+                    'title': title,
+                    'col': col,
+                    'row': row,
+                    'data': res
+                })
+            log.info("有期望频率情况分析完成")
+
+        elif button_type[0] == 'input':
+            te = exec_sql(table_name, X)
+            te = te.astype(float)
+            test = [te[i] for i in X]
+            expect = input_e
+            log.info("输入数据大小:{}".format(len(test)))
+
+            if te.shape[1] == 1:
+                statistic, pvalue = stats.power_divergence(test,expect, axis=0)
+                title = '单样本卡方检验'
+                col = ['卡方', '显著性']
+                row = X
+                d = pd.DataFrame([statistic, pvalue]).T
+                d = d.astype(float)
+                d = format_data_col(d)
+                res = d.values.tolist()
+                return transform_table_data_to_html({
+                    'title': title,
+                    'col': col,
+                    'row': row,
+                    'data': res
+                })
+            elif te.shape[1] > 1:
+                statistic, pvalue = stats.power_divergence(test,expect, axis=1)
+                title = '单样本卡方检验'
+                col = ['卡方', '显著性']
+                row = X
+                d = pd.DataFrame([statistic, pvalue]).T
+                d = d.astype(float)
+                d = format_data_col(d)
+                res = d.values.tolist()
+                return transform_table_data_to_html({
+                    'title': title,
+                    'col': col,
+                    'row': row,
+                    'data': res
+                })
+            log.info("用户输入的期望频率情况分析完成")
+            response_data = {
+                             "code": "200",
+                             "msg": "ok!"}
+            return jsonify(response_data)
     except Exception as e:
         log.error(e)
         raise e

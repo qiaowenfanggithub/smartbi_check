@@ -22,27 +22,56 @@ def t_two_independent_analysis(*args, alpha=0.05):
     lev, levp = stats.levene(*args)
     # 输出方差齐性检验的统计量和P值，后续再优化
     log.info("方差齐性检验的统计量:{}, P值:{}".format(lev, levp))
-    for b in [True, False]:
-        log.info('方差相等')  # 后续优化
-        tv, tp = stats.ttest_ind(*args, equal_var=b)
+    if levp > alpha:
+        log.info('方差相等')
+        tv, tp = stats.ttest_ind(*args, equal_var=True)
         if tp <= alpha:
             log.info('拒绝原假设，两个总体均值有显著差异')  # 后续优化
             data.append(
                 ["{:.4f}".format(lev), "{:.4f}".format(levp),
-                 str(b), "{:.4f}".format(tv), "{:.0f}".format(len(args[0]) - 1),
-                 "{:.4f}".format(tp), "False", "{:.4f}".format(mean_diff),
-                 "{:.4f}".format(std_diff), "{:.4f}".format(cha_lower),
-                 "{:.4f}".format(cha_upper)])
-        else:
-            log.info('不能拒绝原假设，两个总体均值无显著差异')  # 后续优化
-            data.append(
-                ["{:.4f}".format(lev), "{:.4f}".format(levp),
-                 str(b), "{:.4f}".format(tv), "{:.0f}".format(len(args[0]) - 1),
+                 "False", "{:.4f}".format(tv), "{:.0f}".format(len(args[0]) - 1),
                  "{:.4f}".format(tp), "True", "{:.4f}".format(mean_diff),
                  "{:.4f}".format(std_diff), "{:.4f}".format(cha_lower),
                  "{:.4f}".format(cha_upper)])
+        elif tp > alpha:
+            log.info('不能拒绝原假设，两个总体均值无显著差异')  # 后续优化
+            data.append(
+                ["{:.4f}".format(lev), "{:.4f}".format(levp),
+                 "False", "{:.4f}".format(tv), "{:.0f}".format(len(args[0]) - 1),
+                 "{:.4f}".format(tp), "False", "{:.4f}".format(mean_diff),
+                 "{:.4f}".format(std_diff), "{:.4f}".format(cha_lower),
+                 "{:.4f}".format(cha_upper)])
+        return {
+            "row": ["假定等方差"],#  , "不假定等方差"
+            "col": ["F", "显著性", "拒绝原假设", "t", "自由度",
+                    "sig.(双尾)", "拒绝原假设", "平均值差值", "标准误差差值",
+                    "差值{:.0%}置信区间下限".format(1 - alpha), "差值{:.0%}置信区间下限".format(1 - alpha)],
+            "data": data,
+            "title": "独立样本T检验",
+            "remarks": "注：拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
+        }
+
+    elif levp <= alpha:
+        log.info('方差不相等')
+        tv, tp = stats.ttest_ind(*args, equal_var=False)
+        if tp <= alpha:
+            log.info('拒绝原假设，两个总体均值有显著差异')  # 后续优化
+            data.append(
+                ["{:.4f}".format(lev), "{:.4f}".format(levp),
+                 "True", "{:.4f}".format(tv), "{:.0f}".format(len(args[0]) - 1),
+                 "{:.4f}".format(tp), "True", "{:.4f}".format(mean_diff),
+                 "{:.4f}".format(std_diff), "{:.4f}".format(cha_lower),
+                 "{:.4f}".format(cha_upper)])
+        elif tp > alpha:
+            log.info('不能拒绝原假设，两个总体均值无显著差异')  # 后续优化
+            data.append(
+                ["{:.4f}".format(lev), "{:.4f}".format(levp),
+                 "True", "{:.4f}".format(tv), "{:.0f}".format(len(args[0]) - 1),
+                 "{:.4f}".format(tp), "False", "{:.4f}".format(mean_diff),
+                 "{:.4f}".format(std_diff), "{:.4f}".format(cha_lower),
+                 "{:.4f}".format(cha_upper)])
     return {
-        "row": ["假定等方差", "不假定等方差"],
+        "row": ["不假定等方差"],
         "col": ["F", "显著性", "拒绝原假设", "t", "自由度",
                 "sig.(双尾)", "拒绝原假设", "平均值差值", "标准误差差值",
                 "差值{:.0%}置信区间下限".format(1 - alpha), "差值{:.0%}置信区间下限".format(1 - alpha)],

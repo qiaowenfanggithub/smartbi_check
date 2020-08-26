@@ -69,10 +69,10 @@ def t_two_pair_analysis(*args, index=None, alpha=0.05):
                 "差值{:.0%}置信区间下限".format(1 - alpha),
                 "差值{:.0%}置信区间上限".format(1 - alpha),
                 "t", "自由度", "P值(双尾)", "拒绝原假设"],
-        "data": [["{:.0f}".format(cha_mean), "{:.0f}".format(cha_std),
-                  "{:.0f}".format(cha_error_mean), "{:.0f}".format(cha_lower),
-                  "{:.0f}".format(cha_upper), "{:.0f}".format(ttest),
-                  "{:.0f}".format(cha_df), "{:.0f}".format(pval), str(bool(pval <= alpha))]],
+        "data": [["{:.4f}".format(cha_mean), "{:.4f}".format(cha_std),
+                  "{:.4f}".format(cha_error_mean), "{:.4f}".format(cha_lower),
+                  "{:.4f}".format(cha_upper), "{:.4f}".format(ttest),
+                  "{:.4f}".format(cha_df), "{:.4f}".format(pval), str(bool(pval <= alpha))]],
         "row": [" & ".join(index)],
         "title": "配对样本检验",
         "remarks": "注：拒绝原假设，False表示不拒绝原假设，True表示拒绝原假设。"
@@ -85,7 +85,7 @@ if __name__ == '__main__':
     x2 = data['value2']
     x_all = [x1, x2]
     #
-    alpha = 0.06
+    alpha = 0.05
 
     '''
     一、正态性检验

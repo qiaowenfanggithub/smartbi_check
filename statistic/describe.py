@@ -2,6 +2,21 @@
 # -*- coding: utf-8 -*-
 # !/usr/bin/python3
 # -*- coding: utf-8 -*-
+"""
+
+--------------------------------------------------------
+
+File Name : describe
+
+Description :
+
+Author : qiaowenfang
+
+Date : 2020/8/17 5:59 下午
+
+--------------------------------------------------------
+
+"""
 import pandas as pd
 
 # 描述性统计

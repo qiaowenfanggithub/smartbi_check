@@ -133,7 +133,7 @@ def anova_analysis(data, level, value, alpha=0.05):
         pd.DataFrame([[anova_result["自由度"].sum(), anova_result["平方和"].sum(), None, None, None]],
                      index=["总计"], columns=anova_result.columns))
     anova_result["自由度"] = anova_result["自由度"].astype("object")
-    anova_result["拒绝原假设"] = pd.Series([str(bool(anova_result["显著性"][0] - alpha)), "", ""], index=["组间", "组内", "总计"])
+    anova_result["拒绝原假设"] = pd.Series([str(bool(alpha - anova_result["显著性"][0] )), "", ""], index=["组间", "组内", "总计"])
     anova_result = anova_result.round({"平方和": 4, "均方": 4, "F": 4, "显著性": 4})
     anova_result.fillna("", inplace=True)
     return {
@@ -309,7 +309,7 @@ def anova_one_way_describe_info(data: pd.DataFrame, X, Y, alpha=0.05):
     }
     new_data[["个案数", "最大值", "最小值"]] = new_data[["个案数", "最大值", "最小值"]].astype("object")
     return {
-        "row": new_data.index.values[:-1].tolist(),
+        "row": new_data.index.values[:-1].tolist()+['总计'],
         "col": [col_map[c] for c in new_data.columns.values.tolist()],
         "data": new_data.values.tolist(),
         "title": "描述性统计分析"
@@ -341,11 +341,11 @@ if __name__ == '__main__':
     # print(levene_test(level1, level2, level3, alpha=0.05))
     #
     # # 三、F检验
-    # print(anova_analysis(data, "method", "score"))
+    print(anova_analysis(data, "method", "score"))
     #
     # # 四、两两比较
     # # Multiple_test(list_levels)
-    print(multiple_test(data, ["method"], ["score"], alpha=0.06))
+    # print(multiple_test(data, ["method"], ["score"], alpha=0.06))
 
     # 描述性统计分析
     # print(anova_one_way_describe_info(data, ["method"], ["score"], alpha=0.06))
