@@ -264,3 +264,9 @@ def plot_and_output_base64_png(plot):
     #     save_file_base64 = base64.b64encode(f.read()).decode('utf8')
 
     return save_file_base64
+# 将没有汇总列的dataframe 变成由汇总列的返回
+def sum_data(data:pd.DataFrame):
+    data['sum'] = data.sum(axis=1)
+    da = pd.DataFrame(data.sum()).T
+    newd = pd.concat([data, da], axis=0)
+    return newd

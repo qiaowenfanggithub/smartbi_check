@@ -1,5 +1,20 @@
 # !/usr/bin/python3
 # -*- coding: utf-8 -*-
+"""
+
+--------------------------------------------------------
+
+File Name : frequency
+
+Description :
+
+Author : qiaowenfang
+
+Date : 2020/8/19 3:26 下午
+
+--------------------------------------------------------
+
+"""
 import pandas as pd
 from util import format_dataframe
 
