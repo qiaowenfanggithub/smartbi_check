@@ -139,7 +139,7 @@ class decisionTree(BaseAlgorithm):
 
             # 模型训练和网格搜索
             clf = tree.DecisionTreeClassifier(random_state=self.config["randomState"])
-            model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'], scoring="roc_auc")
+            model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'])
             model.fit(x_train, y_train)
             best_param = model.best_params_
             self.model = tree.DecisionTreeClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)

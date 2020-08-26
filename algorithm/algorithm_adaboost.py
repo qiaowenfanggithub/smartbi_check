@@ -77,9 +77,12 @@ class adaboostClassifier(BaseAlgorithm):
             self.config['show_options'] = self.web_data.get("show_options", [])
             self.config['n_estimators'] = self.web_data.get("n_estimators", 200)
             self.config['learning_rate'] = self.web_data.get("learning_rate", 1)
-            self.config["param"]["max_depth"] = [int(d) for d in self.config["param"]["max_depth"]]
-            self.config["param"]["min_samples_split"] = [int(d) for d in self.config["param"]["min_samples_split"]]
-            self.config["param"]["min_samples_leaf"] = [int(d) for d in self.config["param"]["min_samples_leaf"]]
+            self.config["param"]["base_estimator__criterion"] = self.config["param"]["criterion"]
+            self.config["param"]["base_estimator__max_depth"] = [int(d) for d in self.config["param"]["max_depth"]]
+            self.config["param"]["base_estimator__max_features"] = [int(d) for d in self.config["param"]["max_features"]]
+            self.config["param"]["base_estimator__min_sample_split"] = [int(d) for d in self.config["param"]["min_sample_split"]]
+            self.config["param"]["base_estimator__min_samples_leaf"] = [int(d) for d in self.config["param"]["min_samples_leaf"]]
+            self.config["param"]["n_estimators"] = [int(d) for d in self.config["param"]["n_estimators"]]
         except Exception as e:
             log.info(e)
             raise e
@@ -133,7 +136,7 @@ class adaboostClassifier(BaseAlgorithm):
 
             # 模型训练和网格搜索
             clf = AdaBoostClassifier(DecisionTreeClassifier(), random_state=self.config["randomState"])
-            model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'], scoring="roc_auc")
+            model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'])
             model.fit(x_train, y_train)
             best_param = model.best_params_
             self.model = AdaBoostClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
