@@ -27,7 +27,7 @@ import scipy.stats as stats
 from pylab import *
 import statsmodels.api as sm
 from statsmodels.stats.outliers_influence import variance_inflation_factor
-from utils import format_dataframe
+from utils import format_dataframe, base64_to_img
 import random
 import datetime
 import json
@@ -202,7 +202,7 @@ class BaseAlgorithm(object):
         # 转换base64并以utf8格式输出
         save_file_base64 = base64.b64encode(save_file.getvalue()).decode('utf8')
         # debug
-        # base64_to_img(save_file_base64)
+        base64_to_img(save_file_base64)
         plot.close("all")
 
         # 写入文件

@@ -26,8 +26,8 @@ from sklearn import preprocessing
 iris = load_iris()
 # print(iris)
 
-# iris_data = pd.DataFrame(iris["data"], columns=["sepal length", "sepal width", "petal length", "petal width"])
-# iris_data.to_csv("./data/iris_kmeans.csv")
+iris_data = pd.DataFrame(iris["data"], columns=["sepal length", "sepal width", "petal length", "petal width"])
+iris_data.to_csv("./data/iris_kmeans.csv")
 
 # iris_data_2 = iris_data[["sepal length", "sepal width"]]
 # iris_data_2.to_csv("./data/iris_kmeans_2.csv")
@@ -49,10 +49,10 @@ iris = load_iris()
 
 
 #
-iris_data = iris.data
-data = np.array(iris_data[:50, 1:-1])
-min_max_scaler = preprocessing.MinMaxScaler()
-data_M = min_max_scaler.fit_transform(data)
-data_hiercrchical = pd.DataFrame(data_M, columns=["x1", "x2"])
-data_hiercrchical.to_csv("./data/iris_hie.csv")
-print(data_hiercrchical)
+# iris_data = iris.data
+# data = np.array(iris_data[:50, 1:-1])
+# min_max_scaler = preprocessing.MinMaxScaler()
+# data_M = min_max_scaler.fit_transform(data)
+# data_hiercrchical = pd.DataFrame(data_M, columns=["x1", "x2"])
+# data_hiercrchical.to_csv("./data/iris_hie.csv")
+# print(data_hiercrchical)

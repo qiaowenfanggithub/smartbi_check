@@ -138,16 +138,10 @@ class svmClassifier(BaseAlgorithm):
 
             # 模型训练和网格搜索
             # 如果是多分类，默认用ovo模式
-            if len(self.table_data[self.config["Y"][0]].unique()) > 2:
-                clf = SVC(random_state=self.config["randomState"])
-                model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'])
-                # todo：如果是多分类目前只显示准确率召回率的报告
-                self.config['show_options'] = ["report"]
-            else:
-                # del self.config["param"]["decision_function_shape"]
-                clf = SVC(random_state=self.config["randomState"])
-                model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'], scoring="roc_auc")
-                # self.config["param"]["decision_function_shape"] = ""
+            if len(self.table_data[self.config["Y"][0]].unique()) > 2 and "roc" in self.config['show_options']:
+                del self.config['show_options'][self.config['show_options'].index("roc")]
+            clf = SVC(random_state=self.config["randomState"])
+            model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'])
             model.fit(x_train, y_train)
             best_param = model.best_params_
             self.model = SVC(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)

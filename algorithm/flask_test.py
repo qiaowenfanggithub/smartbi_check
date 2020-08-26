@@ -329,29 +329,29 @@ if __name__ == '__main__':
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/randomForest/predict', json=kwargs, timeout=50)
 
     # ======================= 支持向量机-训练 =============================
-    # kwargs = {
-    #     "tableName": "buy_computer_new",  # str,数据库表名
-    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-    #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
-    #     # "tableName": "iris",  # str,数据库表名
-    #     # "X": ["x0", "x1", "x2", "x3"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-    #     # "Y": ["label"],  # list,因变量,当表格方向为v是使用
-    #     "rate": "0.3",  # str,测试集训练集分割比例
-    #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
-    #     "cv": "3",  # str,几折交叉验证
-    #     "param": {
-    #         "kernel": ["linear", "poly", "rbf", "sigmoid"],  # str,惩罚项，‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’
-    #         "C": ["2"],  # str,惩罚项系数
-    #         "degree": ["3"],  # 多项式核函数的维度
-    #         "gamma": ["auto"],  # ‘rbf’,‘poly’ 和‘sigmoid’的核函数参数。默认是’auto’，则会选择1/n_features
-    #         "coef0": ["0"],  # 核函数的常数项
-    #         "tol": ["0.001"],  # 停止训练的误差值大小，默认为1e-3
-    #         "max_iter": ["-1"],  # 最大迭代次数。-1为无限制。
-    #         "decision_function_shape": ["ovo", "ovr", ""],  # 最大迭代次数。-1为无限制。
-    #     },
-    #     "show_options": ["report", "matrix", "roc"]
-    # }
-    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/svmClassifier/train', json=kwargs, timeout=50)
+    kwargs = {
+        # "tableName": "buy-computer-new",  # str,数据库表名
+        # "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        # "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
+        "tableName": "iris",  # str,数据库表名
+        "X": ["x0", "x1", "x2", "x3"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+        "Y": ["label"],  # list,因变量,当表格方向为v是使用
+        "rate": "0.3",  # str,测试集训练集分割比例
+        "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
+        "cv": "3",  # str,几折交叉验证
+        "param": {
+            "kernel": ["linear", "poly", "rbf", "sigmoid"],  # str,惩罚项，‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’
+            "C": ["2"],  # str,惩罚项系数
+            "degree": ["3"],  # 多项式核函数的维度
+            "gamma": ["auto"],  # ‘rbf’,‘poly’ 和‘sigmoid’的核函数参数。默认是’auto’，则会选择1/n_features
+            "coef0": ["0"],  # 核函数的常数项
+            "tol": ["0.001"],  # 停止训练的误差值大小，默认为1e-3
+            "max_iter": ["-1"],  # 最大迭代次数。-1为无限制。
+            "decision_function_shape": [""],  # 最大迭代次数。-1为无限制。
+        },
+        "show_options": ["report", "matrix", "roc"]
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/svmClassifier/train', json=kwargs, timeout=50)
     # if res.json()["code"] == "200":
     #     model_info = res.json()["model_info"]
     #     res = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info, timeout=30)
@@ -388,28 +388,28 @@ if __name__ == '__main__':
     #     raise ValueError(res.json()["msg"])
 
     # ======================= adaboost-训练 =============================
-    kwargs = {
-        # "tableName": "buy_computer_new",  # str,数据库表名
-        # "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-        # "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
-        "tableName": "iris",  # str,数据库表名
-        "X": ["x0", "x1", "x2", "x3"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-        "Y": ["label"],  # list,因变量,当表格方向为v是使用
-        "rate": "0.1",  # str,测试集训练集分割比例
-        "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
-        "cv": "10",  # str,几折交叉验证
-        "learning_rate": "0.8",  # str,学习率【默认值："1"，0-1之间的小数】
-        "param": {
-            "criterion": ["gini", "entropy"],  # list, 树划分准则【默认值：["gini"]】
-            "max_depth": ["3", "5"],  # list, 最大树深度【默认值：[none]】
-            "max_features": ["3", "4"],  # list, 最大特征数【默认值：[none]】
-            "min_sample_split": ["1"],  # list, 节点划分最小样本数【默认值：["2"]】
-            "min_samples_leaf": ["1"],  # list, 叶子节点最小数【默认值：["1"]】
-            "n_estimators": ["10", "30"],  # list,弱学习器个数【默认值：["20"]】
-        },
-        "show_options": ["report", "matrix", "roc"]
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/adaboostClassifier/train', json=kwargs, timeout=50)
+    # kwargs = {
+    #     # "tableName": "buy_computer_new",  # str,数据库表名
+    #     # "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     # "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
+    #     "tableName": "iris",  # str,数据库表名
+    #     "X": ["x0", "x1", "x2", "x3"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     "Y": ["label"],  # list,因变量,当表格方向为v是使用
+    #     "rate": "0.1",  # str,测试集训练集分割比例
+    #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
+    #     "cv": "10",  # str,几折交叉验证
+    #     "learning_rate": "0.8",  # str,学习率【默认值："1"，0-1之间的小数】
+    #     "param": {
+    #         "criterion": ["gini", "entropy"],  # list, 树划分准则【默认值：["gini"]】
+    #         "max_depth": ["3", "5"],  # list, 最大树深度【默认值：[none]】
+    #         "max_features": ["3", "4"],  # list, 最大特征数【默认值：[none]】
+    #         "min_sample_split": ["1"],  # list, 节点划分最小样本数【默认值：["2"]】
+    #         "min_samples_leaf": ["1"],  # list, 叶子节点最小数【默认值：["1"]】
+    #         "n_estimators": ["10", "30"],  # list,弱学习器个数【默认值：["20"]】
+    #     },
+    #     "show_options": ["report", "matrix", "roc"]
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/adaboostClassifier/train', json=kwargs, timeout=50)
     # if res.json()["code"] == "200":
     #     model_info = res.json()["model_info"]
     #     res = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info, timeout=30)
@@ -471,32 +471,32 @@ if __name__ == '__main__':
 
     # ======================= 数据探索-可视化 =============================
     # kwargs = {
-    #     # "tableName": "buy-computer",  # str,数据库表名
-    #     "tableName": "bankloan",  # str,数据库表名
-    #     "count": ["年龄", "教育"],  # list,频率直方图字段列表
-    #     # "count_hue": "违约",  # str,频率直方图分类字段
-    #     "dist": ["收入"],  # list,数据分布图字段列表
-    #     "box": ["工龄", "负债率"],  # list,箱型图字段列表
-    #     # "pie": ["违约"],  # list,饼图字段列表
-    #     # "pairPlot": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,特征两两散点图字段列表
-    #     "heatMap": ["年龄", "教育", "收入", "负债率"],  # list,相关系数热度图
-    #     # "heatMap": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,相关系数热度图
-    #     # "yCorr": {
-    #     #     "X": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债"],
-    #     #     "Y": ["违约"]
-    #     # },  # list,自变量和各因变量相关系数图 ==>【分类和聚类算法变灰】
-    #     "scatter": {
-    #         "X": ["收入"],
-    #         # "X": ["收入", "负债率", "信用卡负债"],
-    #         "Y": ["其他负债"]
-    #     },  # list,自变量和各因变量散点图
+    #     "tableName": "buy-computer",  # str,数据库表名
+    #     # "tableName": "bankloan",  # str,数据库表名
+    #     # "count": ["年龄", "教育"],  # list,频率直方图字段列表
+    #     # # "count_hue": "违约",  # str,频率直方图分类字段
+    #     # "dist": ["收入"],  # list,数据分布图字段列表
+    #     # "box": ["工龄", "负债率"],  # list,箱型图字段列表
+    #     # # "pie": ["违约"],  # list,饼图字段列表
+    #     # # "pairPlot": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,特征两两散点图字段列表
+    #     # "heatMap": ["年龄", "教育", "收入", "负债率"],  # list,相关系数热度图
+    #     # # "heatMap": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债", "违约"],  # list,相关系数热度图
+    #     # # "yCorr": {
+    #     # #     "X": ["年龄", "教育", "工龄", "地址", "收入", "负债率", "信用卡负债", "其他负债"],
+    #     # #     "Y": ["违约"]
+    #     # # },  # list,自变量和各因变量相关系数图 ==>【分类和聚类算法变灰】
+    #     # "scatter": {
+    #     #     "X": ["收入"],
+    #     #     # "X": ["收入", "负债率", "信用卡负债"],
+    #     #     "Y": ["其他负债"]
+    #     # },  # list,自变量和各因变量散点图
     #     "crosstab": {
-    #         # "X": ["年龄", "收入层次"],
-    #         "X": ["教育"],
+    #         "X": ["年龄", "收入层次"],
+    #         # "X": ["教育"],
     #         # "X": ["教育", "工龄"],
-    #         "Y": ["违约", "地址"]
+    #         # "Y": ["违约", "地址"]
     #         # "Y": ["违约"],
-    #         # "Y": ["是否单身"]
+    #         "Y": ["是否单身"]
     #         # "Y": ["是否单身", "信用等级"]
     #     },  # list,自变量和各因变量交叉表
     #     "statistic": True
