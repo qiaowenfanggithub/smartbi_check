@@ -29,8 +29,8 @@ class adaboostClassifier(BaseAlgorithm):
         BaseAlgorithm.__init__(self)
         self.one_type = "Classifier"
         self.one_type_name = "分类"
-        self.secone_type = "adaboostClassifier"
-        self.secone_type_name = "adaboost分类"
+        self.second_type = "adaboostClassifier"
+        self.second_type_name = "adaboost分类"
         # super(logisticAlgorithm, self).__init__()
         if method == "train":
             self.get_train_config_from_web()
@@ -77,11 +77,11 @@ class adaboostClassifier(BaseAlgorithm):
             self.config['show_options'] = self.web_data.get("show_options", [])
             self.config['n_estimators'] = self.web_data.get("n_estimators", 200)
             self.config['learning_rate'] = self.web_data.get("learning_rate", 1)
-            self.config["param"]["base_estimator__criterion"] = self.config["param"]["criterion"]
-            self.config["param"]["base_estimator__max_depth"] = [int(d) for d in self.config["param"]["max_depth"]]
-            self.config["param"]["base_estimator__max_features"] = [int(d) for d in self.config["param"]["max_features"]]
-            self.config["param"]["base_estimator__min_sample_split"] = [int(d) for d in self.config["param"]["min_sample_split"]]
-            self.config["param"]["base_estimator__min_samples_leaf"] = [int(d) for d in self.config["param"]["min_samples_leaf"]]
+            self.config["param"]["base_estimator__criterion"] = self.config["param"]["base_estimator__criterion"]
+            self.config["param"]["base_estimator__max_depth"] = [int(d) for d in self.config["param"]["base_estimator__max_depth"]]
+            self.config["param"]["base_estimator__max_features"] = [int(d) for d in self.config["param"]["base_estimator__max_features"]]
+            self.config["param"]["base_estimator__min_samples_split"] = [int(d) for d in self.config["param"]["base_estimator__min_samples_split"]]
+            self.config["param"]["base_estimator__min_samples_leaf"] = [int(d) for d in self.config["param"]["base_estimator__min_samples_leaf"]]
             self.config["param"]["n_estimators"] = [int(d) for d in self.config["param"]["n_estimators"]]
         except Exception as e:
             log.info(e)
@@ -139,9 +139,15 @@ class adaboostClassifier(BaseAlgorithm):
             model = GridSearchCV(clf, self.config["param"], cv=self.config['cv'])
             model.fit(x_train, y_train)
             best_param = model.best_params_
-            self.model = AdaBoostClassifier(**best_param, random_state=self.config["randomState"]).fit(x_test, y_test)
+            best_DecisionTreeClassifier = DecisionTreeClassifier(criterion=best_param["base_estimator__criterion"],
+                                                                 max_depth=best_param["base_estimator__max_depth"],
+                                                                 max_features=best_param["base_estimator__max_features"],
+                                                                 min_samples_split=best_param["base_estimator__min_samples_split"],
+                                                                 min_samples_leaf=best_param["base_estimator__min_samples_leaf"])
+            self.model = AdaBoostClassifier(best_DecisionTreeClassifier, best_param["n_estimators"], random_state=self.config["randomState"]).fit(x_test, y_test)
 
             # 保存模型
+            self.config["param"] = {k: [best_param[k]] for k in best_param}
             # self.save_model(self.model, "randomForest")
             model_info = self.save_model_into_database("adaboostClassifier")
 
