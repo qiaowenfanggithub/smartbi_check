@@ -196,6 +196,7 @@ class BaseAlgorithm(object):
     def plot_and_output_base64_png(plot):
         plot.rcParams["font.sans-serif"] = ["Arial Unicode MS"]
         plot.rcParams["axes.unicode_minus"] = False
+        plot.tight_layout()
         # 写入内存
         save_file = BytesIO()
         plot.savefig(save_file, format='png')
