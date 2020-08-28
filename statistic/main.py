@@ -913,6 +913,7 @@ def results_factor_analysis():
         table_name = request_data['table_name']
         X = request_data['X']
         components = request_data['components']
+        components = int(components)
         standardize = request_data['standardize']
         transpose = request_data['transpose']
     except Exception as e:
