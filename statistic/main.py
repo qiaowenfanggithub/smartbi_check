@@ -866,6 +866,7 @@ def results_principal_components():
         table_name = request_data['table_name']
         X = request_data['X']
         components = request_data['components']
+        components = int(components)
     except Exception as e:
         log.info(e)
         raise e
