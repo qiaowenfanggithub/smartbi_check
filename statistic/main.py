@@ -885,7 +885,7 @@ def results_principal_components():
         res.append(kmo_Bartlett_result)
         PCA_result = PCA(data, components=components)
         log.info("调用PCA函数成功")
-        res.append(PCA_result)
+        res.extend(PCA_result)
         response_data = {"res": res,
                          "code": "200",
                          "msg": "ok!"}
@@ -936,7 +936,7 @@ def results_factor_analysis():
             res.append(bar)
             contribution = ic_fa.var_contribution(data)  # 特征值及贡献率及碎石图
             log.info("调用计算特征值、贡献率、碎石图成功")
-            res.append(contribution)
+            res.extend(contribution)
             before_zaihe = ic_fa.loadings(data)  # 旋转前载荷矩阵
             log.info("调用旋转前载荷矩阵函数成功")
             res.append(before_zaihe)

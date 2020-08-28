@@ -160,9 +160,9 @@ if __name__ == '__main__':
     # kwargs = {
     #     "table_name": "principal",  # str,数据库表名
     #     "X": ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9"],  # list,自变量
-    #     "components": 3,
+    #     "components": "3",
     #     "standardize":True,
-    #     "transpose":True
+    #     "transpose":False
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/statistic/factor_analysis', json=kwargs, timeout=30)
     # ======================= 单样本卡方检验 =============================
