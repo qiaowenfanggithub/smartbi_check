@@ -79,9 +79,7 @@ class FA(object):
         kmo_denom = kmo_num + np.sum(np.square(A)) - np.sum(np.square(np.diagonal(A)))
         kmo_value = kmo_num / kmo_denom
         res = []
-        res.append(["{:.4f}".format(kmo_value)])
-        res.append(["{:.4f}".format(statistic)])
-        res.append(["{:.4f}".format(pvalue)])
+        res.append(["{:.4f}".format(kmo_value), "{:.4f}".format(statistic), "{:.4f}".format(pvalue)])
         col = ["KMO检验统计量", "Bartlett's球状检验统计量", "Bartlett's球状检验显著性"]
         title = "KMO检验和Bartlett's球状检验"
         return {

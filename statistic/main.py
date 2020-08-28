@@ -979,7 +979,7 @@ def results_factor_analysis():
         try:
             contribution = ic_fa.var_contribution(data)  # 特征值及贡献率及碎石图
             log.info("调用计算特征值、贡献率、碎石图成功")
-            res.append(contribution)
+            res.extend(contribution)
         except Exception as e:
             log.error(e)
         try:
