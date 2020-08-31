@@ -182,7 +182,6 @@ if __name__ == '__main__':
         "E": [],#"expect1","expect2"
         "input_e": [["16","16","16","18","18","8"],["6","6","6","8","8","8"]], #[[16,16,16,18,18,8],[6,6,6,8,8,8]],
         "button_type": ["input"] #, "select","input", "null"
-
     }
     res = my_session.post(url='http://127.0.0.1:5000/statistic/one_sample_chi', json=kwargs, timeout=30)
     # ======================= 单层交叉表卡方检验 =============================

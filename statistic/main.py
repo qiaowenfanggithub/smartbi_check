@@ -1038,6 +1038,7 @@ def result_one_sample_chi():
         log.info(e)
         raise e
     assert isinstance([X], list)
+    results = []
     try:
         if button_type[0] == 'null':
             da = exec_sql(table_name, X)
@@ -1053,7 +1054,7 @@ def result_one_sample_chi():
                 d = d.astype(float)
                 d = format_data_col(d)
                 res = d.values.tolist()
-                return transform_table_data_to_html({
+                results = transform_table_data_to_html({
                     'title': title,
                     'col': col,
                     'row': row,
@@ -1068,7 +1069,7 @@ def result_one_sample_chi():
                 d = d.astype(float)
                 d = format_data_col(d)
                 res = d.values.tolist()
-                return transform_table_data_to_html({
+                results = transform_table_data_to_html({
                     'title': title,
                     'col': col,
                     'row': row,
@@ -1093,7 +1094,7 @@ def result_one_sample_chi():
                 d = d.astype(float)
                 d = format_data_col(d)
                 res = d.values.tolist()
-                return transform_table_data_to_html({
+                results = transform_table_data_to_html({
                     'title': title,
                     'col': col,
                     'row': row,
@@ -1108,7 +1109,7 @@ def result_one_sample_chi():
                 d = d.astype(float)
                 d = format_data_col(d)
                 res = d.values.tolist()
-                return transform_table_data_to_html({
+                results = transform_table_data_to_html({
                     'title': title,
                     'col': col,
                     'row': row,
@@ -1135,7 +1136,7 @@ def result_one_sample_chi():
                 d = d.astype(float)
                 d = format_data_col(d)
                 res = d.values.tolist()
-                return transform_table_data_to_html({
+                results = transform_table_data_to_html({
                     'title': title,
                     'col': col,
                     'row': row,
@@ -1150,17 +1151,18 @@ def result_one_sample_chi():
                 d = d.astype(float)
                 d = format_data_col(d)
                 res = d.values.tolist()
-                return transform_table_data_to_html({
+                results =  transform_table_data_to_html({
                     'title': title,
                     'col': col,
                     'row': row,
                     'data': res
                 })
             log.info("用户输入的期望频率情况分析完成")
-            response_data = {
+        response_data = {
                              "code": "200",
-                             "msg": "ok!"}
-            return jsonify(response_data)
+                             "msg": "ok!",
+                             "res":results}
+        return jsonify(response_data)
     except Exception as e:
         log.error(e)
         raise e
