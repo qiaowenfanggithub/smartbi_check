@@ -148,12 +148,12 @@ if __name__ == '__main__':
     # print(res.text)
 
     # ======================= 主成分分析 =============================
-    kwargs = {
-        "table_name": "principal",  # str,数据库表名
-        "X": ["x1","x2","x3","x4","x5","x6","x7","x8","x9"],  # list,自变量
-        "components":"2"
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/statistic/principal_components', json=kwargs, timeout=30)
+    # kwargs = {
+    #     "table_name": "principal",  # str,数据库表名
+    #     "X": ["x1","x2","x3","x4","x5","x6","x7","x8","x9"],  # list,自变量
+    #     "components":"2"
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/statistic/principal_components', json=kwargs, timeout=30)
 
     # # print(json.loads(res.text, encoding="utf-8"))
     # ======================= 因子分析 =============================
@@ -175,6 +175,16 @@ if __name__ == '__main__':
     #
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/statistic/one_sample_chi', json=kwargs, timeout=30)
+    # ======================= 单样本卡方检验 =============================
+    kwargs = {
+        "table_name": "one_sample_chi1",  # str,数据库表名
+        "X": ["test1","test2"],  # list,自变量 , "test2"
+        "E": [],#"expect1","expect2"
+        "input_e": [["16","16","16","18","18","8"],["6","6","6","8","8","8"]], #[[16,16,16,18,18,8],[6,6,6,8,8,8]],
+        "button_type": ["input"] #, "select","input", "null"
+
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/statistic/one_sample_chi', json=kwargs, timeout=30)
     # ======================= 单层交叉表卡方检验 =============================
     # kwargs = {
     #     "table_name": "crosstable",  # str,数据库表名

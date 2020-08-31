@@ -92,12 +92,14 @@ def PCA(x, components=None): # x 是接收的只包含特征变量的dataframe�
 
     fig, (ax1, ax2) = plt.subplots(1, 2)
     fig.set_size_inches(6.8, 3)
-    fig.subplots_adjust(wspace=0.4)
+    fig.subplots_adjust(wspace=0.5) # 改一下大小
+
     ax1.plot(range(1, len(EigenValue_contribution) + 1), EigenValue_contribution['EigenValue'], 'o-')
     ax1.set_title('Scree Plot')
     ax1.set_xlabel('Principal Components')
     ax1.set_ylabel('Eigenvalue')
     ax1.grid()
+
 
     ax2.plot(range(1, len(EigenValue_contribution) + 1), EigenValue_contribution['Proportion'], 'o-')
     ax2.plot(range(1, len(EigenValue_contribution) + 1), EigenValue_contribution['Cumulative'], 'bo-.')

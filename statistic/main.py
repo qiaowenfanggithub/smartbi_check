@@ -24,6 +24,7 @@ import pandas as pd
 from flask_cors import *
 
 from factor_analysis import FA
+from fenceng_crosstable_chi import cross_chis
 from util import get_dataframe_from_mysql, transform_h_table_data_to_v, transform_table_data_to_html, \
     exec_sql, format_data, transform_v_table_data_to_h, format_dataframe, format_data_col
 from flask.json import JSONEncoder as _JSONEncoder
@@ -1030,7 +1031,7 @@ def result_one_sample_chi():
         table_name = request_data['table_name']
         X = request_data['X']
         E = request_data['E']
-        input_e = request_data['input_e']
+        input_e = request_data['input_e'] #############################
         button_type = request_data['button_type']
 
     except Exception as e:
@@ -1120,6 +1121,9 @@ def result_one_sample_chi():
             te = te.astype(float)
             test = [te[i] for i in X]
             expect = input_e
+            expect = pd.DataFrame(expect)
+            expect = expect.astype(float)
+            expect = expect.values.tolist()
             log.info("输入数据大小:{}".format(len(test)))
 
             if te.shape[1] == 1:
