@@ -227,6 +227,60 @@ def evaluate():
     response_data = evaluateModel().model_evaluate()
     return jsonify(response_data)
 
+# ================================ 层次分析法 ==============================
+@app.route('/algorithm/ahp', methods=['POST', 'GET'])
+def ahp():
+    """
+    前端传过来的参数
+    {
+        "tableName": firstLayer,
+        "l1Matrix": ［］,
+        "l2Matrix": ［］
+    }
+    :return:
+    """
+    log_file = "algorithm.log"
+    logging.basicConfig(filename=log_file,
+                        format="%(asctime)s [ %(levelname)-6s ] %(message)s",
+                        level='INFO')
+    try:
+        from ahp import AHP
+        request_data = request.json
+        tableName = request_data["tableName"]
+
+
+        l1 = request_data.get("l1Matrix")
+        l2 = request_data.get("l2Matrix")
+
+        l1_factors, l2_factors = len(l1[0]), len(l2[0])
+        if not l1:
+            print("read the first layer Matrix fail, please check")
+            return
+        if l1_factors != len(l2):
+            print("the second layer's Matrix Number not equal the first layer Factors")
+            return
+
+        l1_Weight = []
+        for mat in l1:
+            a = AHP(mat)
+            w = a.get_Weight()
+            l1_Weight.append(w)
+
+        l2_Weight = []
+        for mat in l2:
+            a = AHP(mat)
+            w = a.get_Weight()
+            l2_Weight.append(w)
+        score = np.dot(np.array(l2_Weight).T, np.array(l1_Weight).T)
+        print("ok")
+    except NotImplementedError as e:
+        raise e
+    response_data = {"res": score,
+                     "code": "200",
+                     "msg": "ok!"}
+    return jsonify(response_data)
+
+
 
 # ================================ 预测总入口 ==============================
 @app.route('/algorithm/predict', methods=['POST', 'GET'])

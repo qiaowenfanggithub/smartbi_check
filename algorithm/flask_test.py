@@ -387,29 +387,29 @@ if __name__ == '__main__':
     # else:
     #     raise ValueError(res.json()["msg"])
 
-    # ======================= adaboost-训练 =============================
-    kwargs = {
-        "tableName": "buy-computer-new",  # str,数据库表名
-        "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-        "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
-        # "tableName": "iris",  # str,数据库表名
-        # "X": ["x0", "x1", "x2", "x3"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
-        # "Y": ["label"],  # list,因变量,当表格方向为v是使用
-        "rate": "0.1",  # str,测试集训练集分割比例
-        "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
-        "cv": "3",  # str,几折交叉验证
-        "learning_rate": "0.8",  # str,学习率【默认值："1"，0-1之间的小数】
-        "param": {
-            "base_estimator__criterion": ["gini", "entropy"],  # list, 树划分准则【默认值：["gini"]】
-            "base_estimator__max_depth": ["3", "5"],  # list, 最大树深度【默认值：[none]】
-            "base_estimator__max_features": ["3", "4"],  # list, 最大特征数【默认值：[none]】
-            "base_estimator__min_samples_split": ["2"],  # list, 节点划分最小样本数【默认值：["2"]】
-            "base_estimator__min_samples_leaf": ["1"],  # list, 叶子节点最小数【默认值：["1"]】
-            "n_estimators": ["10", "30"],  # list,弱学习器个数【默认值：["20"]】
-        },
-        "show_options": ["report", "matrix", "roc"]
-    }
-    res = my_session.post(url='http://127.0.0.1:5000/algorithm/adaboostClassifier/train', json=kwargs, timeout=50)
+    # # ======================= adaboost-训练 =============================
+    # kwargs = {
+    #     "tableName": "buy-computer-new",  # str,数据库表名
+    #     "X": ["年龄", "收入层次", "是否单身", "信用等级"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     "Y": ["是否购买电脑"],  # list,因变量,当表格方向为v是使用
+    #     # "tableName": "iris",  # str,数据库表名
+    #     # "X": ["x0", "x1", "x2", "x3"],  # list,自变量，当表格方向为h时表示多个变量名，为v时表示分类变量字段
+    #     # "Y": ["label"],  # list,因变量,当表格方向为v是使用
+    #     "rate": "0.1",  # str,测试集训练集分割比例
+    #     "randomState": "2020",  # str,测试集训练集分割比例时的随机种子数
+    #     "cv": "3",  # str,几折交叉验证
+    #     "learning_rate": "0.8",  # str,学习率【默认值："1"，0-1之间的小数】
+    #     "param": {
+    #         "base_estimator__criterion": ["gini", "entropy"],  # list, 树划分准则【默认值：["gini"]】
+    #         "base_estimator__max_depth": ["3", "5"],  # list, 最大树深度【默认值：[none]】
+    #         "base_estimator__max_features": ["3", "4"],  # list, 最大特征数【默认值：[none]】
+    #         "base_estimator__min_samples_split": ["2"],  # list, 节点划分最小样本数【默认值：["2"]】
+    #         "base_estimator__min_samples_leaf": ["1"],  # list, 叶子节点最小数【默认值：["1"]】
+    #         "n_estimators": ["10", "30"],  # list,弱学习器个数【默认值：["20"]】
+    #     },
+    #     "show_options": ["report", "matrix", "roc"]
+    # }
+    # res = my_session.post(url='http://127.0.0.1:5000/algorithm/adaboostClassifier/train', json=kwargs, timeout=50)
     # if res.json()["code"] == "200":
     #     model_info = res.json()["model_info"]
     #     res = my_session.post(url='http://127.0.0.1:5000/algorithm/saveModel', json=model_info, timeout=30)
@@ -426,6 +426,29 @@ if __name__ == '__main__':
     #     "show_options": ["report", "matrix", "roc"]
     # }
     # res = my_session.post(url='http://127.0.0.1:5000/algorithm/evaluate', json=kwargs, timeout=50)
+
+    # ======================= 层次分析法 =============================
+    kwargs = {
+        "tableName": "data2",
+        "l1Matrix": [[[1.0, 2.0, 7.0, 5.0, 5.0],
+                    [0.5, 1.0, 4.0, 3.0, 3.0],
+                    [0.14285714285714285, 0.25, 1.0, 0.5, 0.3333333333333333],
+                    [0.2, 0.3333333333333333, 2.0, 1.0, 1.0],
+                    [0.2, 0.3333333333333333, 3.0, 1.0, 1.0]]],
+        "l2Matrix": [[[1.0, 0.3333333333333333, 0.125],
+                    [3.0, 1.0, 0.3333333333333333],
+                    [8.0, 3.0, 1.0]],
+                    [[1.0, 2.0, 5.0], [0.5, 1.0, 2.0], [0.2, 0.5, 1.0]],
+                    [[1.0, 1.0, 3.0],
+                    [1.0, 1.0, 3.0],
+                    [0.3333333333333333, 0.3333333333333333, 1.0]],
+                    [[1.0, 3.0, 4.0], [0.3333333333333333, 1.0, 1.0], [0.25, 1.0, 1.0]],
+                    [[1.0, 4.0, 0.5], [0.25, 1.0, 0.5], [2.0, 4.0, 1.0]]],
+        "others": ["0", "1", "2", "3"],
+        # "X": [5.1, 3.5, 1.4, 0.2]
+
+    }
+    res = my_session.post(url='http://127.0.0.1:5000/algorithm/ahp', json=kwargs, timeout=50)
 
     # ======================= 预测-总入口 =============================
     # kwargs = {
